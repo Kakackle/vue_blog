@@ -2,6 +2,8 @@
 import Hero from '../components/Hero.vue';
 import Banner from '../components/Banner.vue'
 import PreviewList from '../components/PreviewList.vue';
+import PreviewCard from '../components/PreviewCard.vue';
+import Carousel from '../components/Carousel.vue';
 import { usePostsStore } from '../stores/posts';
 const postsStore = usePostsStore();
 </script>
@@ -10,6 +12,7 @@ const postsStore = usePostsStore();
   <main>
     <Banner></Banner>
     <Hero></Hero>
+    <Carousel></Carousel>
     <section class="main-section">
       <container class="preview-list">
         <PreviewList v-for="(post, post_id) in postsStore.posts" :post_id="post_id"></PreviewList>

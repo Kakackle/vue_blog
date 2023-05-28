@@ -2,9 +2,7 @@
 import { storeToRefs } from 'pinia';
 import { usePostsStore } from '../stores/posts';
 import { useUserStore } from '../stores/users';
-
 import { useRouter } from 'vue-router';
-
 const router = useRouter();
 
 const postsStore = usePostsStore();
@@ -21,7 +19,7 @@ const props = defineProps(['post_id'])
 <template>
 <div class="list-preview hover" @click="router.push(`/post/${post_id}`)">
     <div class="left">
-        <p class="date">{{ post.date }}</p>
+        <img :src=post.img class="img">
     </div>
     <div class="right">
         <p class="title">{{ post.title }}</p>
@@ -29,9 +27,10 @@ const props = defineProps(['post_id'])
             <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
         </div>
         <p class="author">{{ user.name }}</p>
-        <p class="content">{{ post.contents.slice(0,100) }}...</p>
+        <p class="content">{{ post.contents.slice(0,250) }}...</p>
     </div>
     <p class="post_id">{{ post.id }}</p>
+    <p class="date">{{ post.date }}</p>
 </div>
 </template>
 
@@ -48,9 +47,16 @@ const props = defineProps(['post_id'])
 
 .left{
     display: flex;
-    align-items: center;
+    /* align-items: center; */
+    flex-direction: column;
+    justify-content: center;
     font-size: 2rem;
     color: #636e72;
+}
+
+.img{
+    height: 10rem;
+    width: 15rem;
 }
 
 .right{
@@ -81,10 +87,15 @@ const props = defineProps(['post_id'])
 .content{
     font-size: 1.2rem;
 }
-.post_id{
+.post_id, .date{
     font-size: 1.5rem;
     position: absolute;
     top: 1rem;
     right: 1rem;
+}
+
+.date{
+    right: 2.5rem;
+    color:#636e72;
 }
 </style>

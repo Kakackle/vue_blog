@@ -59,6 +59,7 @@
 - submit itd
 
 ## UserView
-### strona na dane o uzytkowniku z mozliwoscia edycji
+### Strona z informacjami o uzytkowniku oraz jego postami, jego najczestszymi tagami itd
+- dodatkowo jesli zalogowany uzytkownik odpowiada uzytkownikowi ktorego strone wyswietlamy, wyswietl przyciski umozliwiajace edycje pol
 
 ## Register View? czy tylko dropdown z navbara

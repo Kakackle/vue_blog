@@ -23,16 +23,56 @@ onMounted(()=>{
 
 <template>
   <main>
-    <!-- {{ $route.params }} -->
-    <container class="post">
-        <h1>{{ post.title }}</h1>
-        <h3>{{ post.author }}</h3>
-        <p>{{ post.date }}</p>
-        <p>{{ post.contents }}</p>
-        <img :src="post.img">
-    </container>
+    <section class="post-main">
+      <div class="post">
+        <p class="post-title">{{ post.title }}</p>
+        <p class="post-author">{{ post.author }}</p>
+        <p class="post-date">{{ post.date }}</p>
+        <div class="post-tags">
+          <p class="tag" v-for="(tag, tag_id) in post.tags">{{ tag }}</p>
+        </div>
+        <div class="post-contents">{{ post.contents }}</div>
+        <img :src="post.img" class="post-img">
+      </div>
+      <div class="post-side">
+      </div>
+    </section>
+    <section class="comments">
+      <div class="comment">
+
+      </div>
+    </section>
+
   </main>
 </template>
 
 <style scoped>
+.post-main{
+  width: 100%;
+  display: flex;
+}
+.post{
+  width: clamp(40rem, 75vw, 120rem);
+}
+.post-title{
+}
+.post-author{
+}
+.post-date{
+}
+.post-tags{
+}
+.post-contents{
+}
+.post-img{
+  height: 40rem;
+  width: 60rem;
+}
+.post-side{
+  width: clamp(20rem, 25vw, 40rem);
+}
+.comments{
+
+}
+
 </style>
