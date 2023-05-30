@@ -7,6 +7,15 @@
 
 3. TODO: daty i wgl
 
+# REST / API wykorzystanie
+-powiedzmy ze mam juz post
+-teraz fajnie by wiecej
+-i polaczyc wszystko linkami do stron tagow itd
+-i moze pomyslec o polaczeniu z store
+-a potem kwestia uzytkownikow w postaci np stworzenia custom wariacji -wbudowanego user modelu w django / rest i potem jakos to polaczyc, jakos trzymac w programie, moze w localstorage, moze store zalogowanego uzytkownika
+-potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
+-potem komentarze moze
+
 ## Konkretniej
 1. **linki do stron kategorii, uzytkownikow**
 2. ~~stworzyc jakis store userow czy cos, z username, login, avatarem, haslem, mailem, bio~~

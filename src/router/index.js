@@ -9,6 +9,8 @@ import UserView from "../views/UserView.vue"
 import TagView from "../views/TagView.vue"
 import NotFoundView from "../views/NotFoundView.vue"
 import TagNotFoundView from "../views/TagNotFoundView.vue"
+import APITestView from "../views/APITestView.vue"
+import PostViewRest from "../views/PostViewRest.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +54,16 @@ const router = createRouter({
       path: '/tag/:tag_id',
       name: 'tag',
       component: TagView
+    },
+    {
+      path: '/apitest',
+      name: 'apitest',
+      component: APITestView
+    },
+    {
+      path: '/apipost/:post_id',
+      name: 'apipost',
+      component: PostViewRest
     },
     {
       path: '/tag/:afterTag(.*)',
