@@ -8,6 +8,7 @@ export const usePostsStore = defineStore('posts', () => {
       title: "First blog post",
       author: 0,
       date: "26/05/2023",
+      views: 0,
       tags: ["programming", "progress", "howto"],
       contents: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident",
       img: "https://images.unsplash.com/photo-1684868623430-aa353b5da28d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1228&q=80"
@@ -17,6 +18,7 @@ export const usePostsStore = defineStore('posts', () => {
       title: "Green is mean",
       author: 1,
       date: "26/05/2023",
+      views: 0,
       tags: ["games", "hobby","guide"],
       contents: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
       img: "https://images.unsplash.com/photo-1520121401995-928cd50d4e27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
@@ -26,6 +28,7 @@ export const usePostsStore = defineStore('posts', () => {
       title: "Yellow is Mellow",
       author: 1,
       date: "26/05/2023",
+      views: 0,
       tags: ["games", "hobby"],
       contents: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.",
       img: "https://images.unsplash.com/photo-1520121401995-928cd50d4e27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
@@ -43,6 +46,34 @@ export const usePostsStore = defineStore('posts', () => {
     );
     return tags;
   }
+  const getPostsByAuthor = function(author_id){
+    let a_posts = [];
+    this.posts.forEach(post =>{
+      if(post.author === parseInt(author_id)){
+        a_posts.push(post);
+      }
+    })
+    return a_posts;
+  }
+  const filterByTags = function(tags){
+    console.log(`tag in filter: ${tags}`)
+    let f_posts = [];
+    if (tags.length === 0){
+      f_posts = posts.value;
+      console.log(`len: ${tags.length}`)
+      return f_posts;
+    }
+    tags.forEach(tag=>{
+      this.posts.forEach(post=>{
+        if (post.tags.includes(tag)){
+          if (!f_posts.includes(post)){
+            f_posts.push(post);
+          }
+        }
+      })
+    })
+    return f_posts;
+  }
 
   const addPost = (newPost) =>{
       posts.value.push(newPost);
@@ -52,5 +83,5 @@ export const usePostsStore = defineStore('posts', () => {
   //   count.value++
   // }
 
-  return { posts, getTags, addPost}
+  return { posts, getTags, addPost, getPostsByAuthor, filterByTags}
 })

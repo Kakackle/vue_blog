@@ -2,14 +2,16 @@
 import { storeToRefs } from 'pinia';
 import { usePostsStore } from '../stores/posts';
 import { onMounted } from 'vue';
+import { ref } from 'vue';
 const postsStore = usePostsStore();
 const tags = postsStore.getTags();
+const checkedTags = ref([]);
 // const {posts, getTags} = storeToRefs(postsStore)
-onMounted(()=>{
-    // const tags = postsStore.getTags()
-    // console.log(tags)
+const emit = defineEmits(['filterBox'])
+const emitBoxes = () =>{
+    let boxes = checkedTags.value;
+    emit('filterBox', boxes);
 }
-)
 </script>
 
 <template>
@@ -19,7 +21,9 @@ onMounted(()=>{
         <p class="boxes-title">FILTER BY TAGS:</p>
         <div class="boxes">
             <div v-for="(tag, tag_id) in tags" class="box">    
-                <input type="checkbox" :id=tag_id name="tag-box" class="tag-box hover">
+                <input type="checkbox" :id=tag_id name="tag-box" class="tag-box hover"
+                :value=tag v-model="checkedTags"
+                @click="emitBoxes">
                 <label :for=tag_id>{{ tag }}</label>
             </div>         
         </div>

@@ -11,11 +11,13 @@ const route = useRoute()
 const postsStore = usePostsStore();
 
 const {posts} = storeToRefs(postsStore)
-const post = posts.value[route.params.post_id]
+const post = posts.value[route.params.post_id-1]
 
 onMounted(()=>{
-  const str = JSON.stringify(post)
-  console.log(`post: ${str}`)
+  // const str = JSON.stringify(post)
+  // console.log(`post: ${str}`)
+  post.views +=1;
+  console.log(post.views);
 })
 
 

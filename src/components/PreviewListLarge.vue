@@ -7,17 +7,17 @@ const router = useRouter();
 
 const postsStore = usePostsStore();
 const {posts} = storeToRefs(postsStore)
-const post = posts.value[props.post_id]
+const post = props.post
 
 const userStore = useUserStore();
 const {users} = storeToRefs(userStore)
 const user = users.value[post.author];
 
-const props = defineProps(['post_id'])
+const props = defineProps(['post'])
 </script>
 
 <template>
-<div class="list-preview hover" @click="router.push(`/post/${post_id}`)">
+<div class="list-preview hover" @click="router.push(`/post/${post.id}`)">
     <div class="left">
         <img :src=post.img class="img">
     </div>

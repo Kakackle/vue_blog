@@ -7,7 +7,7 @@ const postsStore = usePostsStore();
 <template>
     <section class="sect">
         <container class="carousel">
-            <PreviewCard v-for="(post, post_id) in postsStore.posts" :post_id="post_id"></PreviewCard>
+            <PreviewCard v-for="(post, post_id) in postsStore.posts" :post="post"></PreviewCard>
         </container>
     </section>
 </template>

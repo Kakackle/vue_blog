@@ -15,7 +15,7 @@ const postsStore = usePostsStore();
     <Carousel></Carousel>
     <section class="main-section">
       <container class="preview-list">
-        <PreviewList v-for="(post, post_id) in postsStore.posts" :post_id="post_id"></PreviewList>
+        <PreviewList v-for="(post, post_id) in postsStore.posts" :post="post"></PreviewList>
       </container>
       <container class="side">
       </container>

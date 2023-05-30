@@ -13,7 +13,7 @@ export const useUserStore = defineStore('users', ()=>{
             avatar: "https://randomuser.me/portraits/men/30.jpg",
         },
         {
-            id: 1,
+            id: 2,
             username: "rajj",
             name: "Rajj Patel",
             password: "rajjrajj",

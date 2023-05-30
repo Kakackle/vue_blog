@@ -4,7 +4,14 @@ import FilterSide from '../components/FilterSide.vue';
 import PreviewListLarge from '../components/PreviewListLarge.vue';
 import {usePostsStore} from "../stores/posts.js"
 import { RouterLink, RouterView } from 'vue-router'
+import { ref, render } from 'vue';
 const postsStore = usePostsStore();
+const posts = postsStore.posts.values;
+const renderPosts = ref(posts);
+const filterByBoxes = function(checkedTags){
+  console.log(`checkedTags: ${checkedTags}`)
+  renderPosts.value = postsStore.filterByTags(checkedTags);
+}
 </script>
 
 <template>
@@ -14,11 +21,11 @@ const postsStore = usePostsStore();
     <p class="blog-title">BLOG TITLE</p>
     <section class="blog-sect">
       <div class="blog-list">
-        <PreviewListLarge v-for="(post, post_id) in postsStore.posts" :post_id="post_id"></PreviewListLarge>
+        <PreviewListLarge v-for="(post, post_id) in renderPosts" :post="post"></PreviewListLarge>
       </div>
         
       <div class="side">
-        <FilterSide></FilterSide>
+        <FilterSide @filterBox="filterByBoxes"></FilterSide>
       </div>
     </section>
   </main>
