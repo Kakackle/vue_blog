@@ -15,6 +15,26 @@
 -a potem kwestia uzytkownikow w postaci np stworzenia custom wariacji -wbudowanego user modelu w django / rest i potem jakos to polaczyc, jakos trzymac w programie, moze w localstorage, moze store zalogowanego uzytkownika
 -potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
 -potem komentarze moze
+- potem sposob (w django najpierw) na slugi stworzone z nazw tagow itp
+- moze wyszukiwanie postow po autorze i innych
+
+# Problemy REST:
+1. przydaloby sie zrobic jakies composables z podawanym linkiem ktore fetchowaloby dane i zwracalo po prostu, a obsluga czy to jest jeden post czy wiele poza nim zaleznie od potrzeb
++ mogloby tez zwracac error msg albo cos poza siebie jesli bys chcial do elementu, a ustawianie wyswietlania na zewnatrz, po odebraniu danych z composable i sprawdzeniu czy puste czy nie
++ also czy jesli mam funkcje w ktorej zamkniety jest axios to musi byc async a potem dane z niej wyciagac await?
+2. poszukac moze info na relacji kiedy fetchowac dane w vue, a axiosem lub inaczej (axios vs vue lifecycle hooks czy cos)
+3. kwestia hyperlinkedrelatedfields - czy jest mi to potrzebne czy nie i latwiej byloby stringrelated czy czyms, bo hyperlinked wygodne dla admina ale oznacza koniecznosc chainowania fetchy, co nawet nam nie pomaga z routerlinkiem, bo on dziala tez na parametrze takim jak ID
+idealnie by wiec zwracac nazwy...
+
+i jesli nazwy bylyby uniknalne to mozna tez wysylac query szukajace po tych nazwach (trzeba by to zbudowac w django)
+- ale to znowu chainowanie fetchow, a wszystko po to zeby uzyskac wiele danych..
+
+ALE:
+mozesz przeciez zwracac cale obiekty w obiektach w endpoincie, tylko w serializatorach musisz podac ich serializatory
+- i to jest niewygodne dla admina, bo jesli duzo to wypcha i trudno przegladac
+- ALE jest IDEALNE dla naszego problemu - i wyeliminuje zaleznosc jednego fetcha od drugiego i powinno to wszystko usprawnic
+4. Moze warto by rozwazyc by bylo lacznie mniej miejsc w ktorych fetchujesz, glownie takie ogolne, top level i one spuszczaja dane nizej, bo ponownie, propy nie sa zle, to jest dobre narzedzie, po cos zostalo stworzone, a zdecydowanie latwiej zarzadzac stanem z jednego albo ogolnie mniejszej ilosci miejsc
+5. ..
 
 ## Konkretniej
 1. **linki do stron kategorii, uzytkownikow**

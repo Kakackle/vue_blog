@@ -4,8 +4,27 @@ import Banner from '../components/Banner.vue'
 import PreviewList from '../components/PreviewList.vue';
 import PreviewCard from '../components/PreviewCard.vue';
 import Carousel from '../components/Carousel.vue';
-import { usePostsStore } from '../stores/posts';
-const postsStore = usePostsStore();
+// import { usePostsStore } from '../stores/posts';
+// const postsStore = usePostsStore();
+import { ref, onBeforeMount } from 'vue';
+import axios from 'axios';
+
+const posts = ref()
+
+const getPosts = function(){
+  axios.get(`http://127.0.0.1:8000/api/posts/`)
+  .then((res)=>{
+    posts.value = res.data;
+    console.log(`home: ${JSON.stringify(posts.value)}`);
+    // console.log(`len: ${posts.value.length}`)
+  }
+  )
+}
+
+onBeforeMount(()=>{
+  getPosts();
+})
+
 </script>
 
 <template>
@@ -15,7 +34,9 @@ const postsStore = usePostsStore();
     <Carousel></Carousel>
     <section class="main-section">
       <container class="preview-list">
-        <PreviewList v-for="(post, post_id) in postsStore.posts" :post="post"></PreviewList>
+        <PreviewList v-for="post in posts" :post="post"></PreviewList>
+        <p class="big" v-for="post in posts"> Post: {{post.title}}</p>
+        <p class="big" v-for="n in 3">n</p>
       </container>
       <container class="side">
       </container>
@@ -42,4 +63,7 @@ const postsStore = usePostsStore();
   background-color: #636e72;
 }
 
+.big{
+  font-size: 2.4rem;
+}
 </style>

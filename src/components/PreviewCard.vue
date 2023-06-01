@@ -2,18 +2,39 @@
 import { storeToRefs } from 'pinia';
 import { usePostsStore } from '../stores/posts';
 import { useUserStore } from '../stores/users';
+import {ref, onBeforeMount, onMounted} from 'vue';
+
 
 import { useRouter } from 'vue-router';
 
+import axios from 'axios';
+
 const router = useRouter();
 
-const postsStore = usePostsStore();
-const {posts} = storeToRefs(postsStore)
+// const postsStore = usePostsStore();
+// const {posts} = storeToRefs(postsStore)
 const post = props.post
 
-const userStore = useUserStore();
-const {users} = storeToRefs(userStore)
-const user = users.value[post.author];
+// const userStore = useUserStore();
+// const {users} = storeToRefs(userStore)
+// const user = users.value[post.author];
+
+const user = ref();
+const getUserById = function(id){
+    axios.get(`http://127.0.0.1:8000/api/users/${id}`)
+    .then((response)=>{
+        user.value=response.data;
+        // console.log(JSON.stringify(user.value))
+    })
+    .catch((error)=>{
+        console.log(`error: ${error}`)
+        router.push({name: 'catchall', params: {}});
+    })
+}
+onBeforeMount(()=>{
+    // console.log(`props: ${JSON.stringify(post)}`)
+    getUserById(post.author);
+})
 
 const props = defineProps(['post'])
 </script>
@@ -29,8 +50,8 @@ const props = defineProps(['post'])
             <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
         </div>
         <p class="author">{{ user.name }}</p>
-        <p class="content">{{ post.contents.slice(0,100) }}...</p>
-        <p class="date">{{ post.date }}</p>
+        <p class="content">{{ post.content.slice(0,100) }}...</p>
+        <p class="date">{{ post.date_posted }}</p>
     </div>
     <p class="post_id">{{ post.id }}</p>
 

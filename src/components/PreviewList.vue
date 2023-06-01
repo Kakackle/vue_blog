@@ -4,16 +4,37 @@ import { usePostsStore } from '../stores/posts';
 import { useUserStore } from '../stores/users';
 
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { onMounted, onBeforeMount, ref } from 'vue';
 
 const router = useRouter();
 
-const postsStore = usePostsStore();
-const {posts} = storeToRefs(postsStore)
+// FIXME: sprobuj w prop przesylac i post i usera zeby wszystko przesylac naraz bo moze przez to sa problemy? idk
+// 
+
+// const postsStore = usePostsStore();
+// const {posts} = storeToRefs(postsStore)
 const post = props.post
 
-const userStore = useUserStore();
-const {users} = storeToRefs(userStore)
-const user = users.value[post.author];
+// const userStore = useUserStore();
+// const {users} = storeToRefs(userStore)
+// const user = users.value[post.author];
+const user = ref();
+const getUserById = function(id){
+    axios.get(`http://127.0.0.1:8000/api/users/${id}`)
+    .then((response)=>{
+        user.value=response.data;
+        // console.log(JSON.stringify(user.value))
+    })
+    .catch((error)=>{
+        console.log(`error: ${error}`)
+        router.push({name: 'catchall', params: {}});
+    })
+}
+onBeforeMount(()=>{
+    // console.log(`props: ${JSON.stringify(post)}`)
+    getUserById(post.author);
+})
 
 const props = defineProps(['post'])
 </script>
@@ -21,7 +42,7 @@ const props = defineProps(['post'])
 <template>
 <div class="list-preview hover" @click="router.push(`/post/${post.id}`)">
     <div class="left">
-        <p class="date">{{ post.date }}</p>
+        <p class="date">{{ post.date_posted }}</p>
     </div>
     <div class="right">
         <p class="title">{{ post.title }}</p>
@@ -29,7 +50,7 @@ const props = defineProps(['post'])
             <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
         </div>
         <p class="author">{{ user.name }}</p>
-        <p class="content">{{ post.contents.slice(0,100) }}...</p>
+        <p class="content">{{ post.content.slice(0,100) }}...</p>
     </div>
     <p class="post_id">{{ post.id }}</p>
 </div>

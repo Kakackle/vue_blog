@@ -1,28 +1,55 @@
 <script setup>
 import { useRoute, useRouter} from 'vue-router';
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
+import axios from 'axios';
+import PreviewList from "../components/PreviewList.vue"
 const route = useRoute();
 const router = useRouter();
 const tag_id = route.params.tag_id;
+const tag = ref();
 const tagExists = ref(1);
-const testTags = [
-    {name: "programming", desc:"All things programming, languages etc", posts:["aa","bb","cc"]},
-    {name: "games", desc:"Videogames", posts:["dd","ee","ff"]},
-    ]
-onBeforeMount(() =>{
-    if(!testTags[tag_id]){
+const errorMsg = ref("");
+
+const getTagById = function(){
+    axios.get(`http://127.0.0.1:8000/api/tags/${tag_id}`)
+    .then((response) => {
+        tagExists.value = 1;
+        tag.value = response.data;
+        console.log("Success");
+    })
+    .then(() => {
+        tag.value.posts.forEach(post=>{
+            getPostByHyperlink(post);
+        })
+    })
+    .catch((error) =>{
+        tagExists.value = 0;
+        errorMsg.value = error;
+        console.log("Failure");
         tagExists.value = 0;
         router.push({name: 'catchall', params: {tag_id: tag_id}});
-    }
+        
+    })
+}
+const posts = ref([]);
+const getPostByHyperlink = function(link){
+    axios.get(link)
+    .then((res)=>{
+        posts.value.push(res.data)
+    })
+}
+onBeforeMount(() => {
+    getTagById();
 })
 </script>
 
 
 <template>
     <section class="tag-view" v-if="tagExists">
-        <p class="tag-name">{{testTags[tag_id].name}}</p>
-        <p class="tag-desc">{{testTags[tag_id].desc}}</p>
-        <p v-for="post in testTags[tag_id].posts" class="tag-post">Post: {{post}}</p>
+        <p class="tag-name">Name: {{tag.name}}</p>
+        <p class="tag-desc">Desc: {{tag.description}}</p>
+        <p> Posts:</p>
+        <PreviewList v-for="post in posts.slice(0,3)" class="tag-post hover" :post="post"></PreviewList>
     </section>
 </template>
 
