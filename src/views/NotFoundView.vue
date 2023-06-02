@@ -1,10 +1,12 @@
 <script setup>
 import { useRoute } from 'vue-router';
+import GoBackButton from '../components/GoBackButton.vue';
 const route = useRoute();
 </script>
 
 <template>
     <div class="main">
+        <GoBackButton></GoBackButton>
         <p class="title">404 Page Not Found</p>
         <p class="msg">perhaps you entered in a wrong id</p>
         <p class="msg">supplied route params: {{ route.params }}</p>

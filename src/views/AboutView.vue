@@ -1,8 +1,10 @@
 <script setup>
+import GoBackButton from '../components/GoBackButton.vue';
 </script>
 
 <template>
   <main class="main">
+    <GoBackButton></GoBackButton>
     <p class="title">Something about the site or author idk</p>
   </main>
 </template>

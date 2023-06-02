@@ -1,18 +1,20 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { usePostsStore } from '../stores/posts';
-import { useUserStore } from '../stores/users';
+// import { storeToRefs } from 'pinia';
+// import { usePostsStore } from '../stores/posts';
+// import { useUserStore } from '../stores/users';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 const router = useRouter();
 
-const postsStore = usePostsStore();
-const {posts} = storeToRefs(postsStore)
+// const postsStore = usePostsStore();
+// const {posts} = storeToRefs(postsStore)
 const post = props.post
 
-const userStore = useUserStore();
-const {users} = storeToRefs(userStore)
-const user = users.value[post.author];
-
+// const userStore = useUserStore();
+// const {users} = storeToRefs(userStore)
+// const user = users.value[post.author];
+const user = ref();
+user.value = post.author;
 const props = defineProps(['post'])
 </script>
 
@@ -27,7 +29,7 @@ const props = defineProps(['post'])
             <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
         </div>
         <p class="author">{{ user.name }}</p>
-        <p class="content">{{ post.contents.slice(0,250) }}...</p>
+        <p class="content">{{ post.content.slice(0,250) }}...</p>
     </div>
     <p class="post_id">{{ post.id }}</p>
     <p class="date">{{ post.date }}</p>

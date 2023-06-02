@@ -1,58 +1,54 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { usePostsStore } from '../stores/posts';
-import { useUserStore } from '../stores/users';
 
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { onMounted, onBeforeMount, ref } from 'vue';
+import { ref } from 'vue';
 
 const router = useRouter();
 
-// FIXME: sprobuj w prop przesylac i post i usera zeby wszystko przesylac naraz bo moze przez to sa problemy? idk
-// 
-
-// const postsStore = usePostsStore();
-// const {posts} = storeToRefs(postsStore)
 const post = props.post
 
-// const userStore = useUserStore();
-// const {users} = storeToRefs(userStore)
-// const user = users.value[post.author];
+// const user = ref();
+// const getUserById = function(id){
+//     axios.get(`http://127.0.0.1:8000/api/users/${id}`)
+//     .then((response)=>{
+//         user.value=response.data;
+//         // console.log(JSON.stringify(user.value))
+//     })
+//     .catch((error)=>{
+//         console.log(`error: ${error}`)
+//         router.push({name: 'catchall', params: {}});
+//     })
+// }
+// onBeforeMount(()=>{
+//     // console.log(`props: ${JSON.stringify(post)}`)
+//     getUserById(post.author);
+// })
 const user = ref();
-const getUserById = function(id){
-    axios.get(`http://127.0.0.1:8000/api/users/${id}`)
-    .then((response)=>{
-        user.value=response.data;
-        // console.log(JSON.stringify(user.value))
-    })
-    .catch((error)=>{
-        console.log(`error: ${error}`)
-        router.push({name: 'catchall', params: {}});
-    })
-}
-onBeforeMount(()=>{
-    // console.log(`props: ${JSON.stringify(post)}`)
-    getUserById(post.author);
-})
+user.value = post.author;
 
 const props = defineProps(['post'])
 </script>
 
 <template>
-<div class="list-preview hover" @click="router.push(`/post/${post.id}`)">
+<div class="list-preview">
     <div class="left">
         <p class="date">{{ post.date_posted }}</p>
     </div>
     <div class="right">
         <p class="title">{{ post.title }}</p>
         <div class="tags">
-            <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
+            <p v-for="tag in post.tags" class="tag hover"
+            @click="router.push(`/tag/${tag.id}`)"
+            >{{ tag.name }}</p>
         </div>
-        <p class="author">{{ user.name }}</p>
+        <p class="author hover"
+         @click="router.push(`/user/${user.id}`)">{{ user.name }}</p>
         <p class="content">{{ post.content.slice(0,100) }}...</p>
     </div>
     <p class="post_id">{{ post.id }}</p>
+    <ion-icon class="arr-icon hover" name="arrow-forward-outline"
+    @click="router.push(`/post/${post.id}`)"></ion-icon>
 </div>
 </template>
 
@@ -106,6 +102,13 @@ const props = defineProps(['post'])
     font-size: 1.5rem;
     position: absolute;
     top: 1rem;
+    right: 1rem;
+}
+
+.arr-icon{
+    position: absolute;
+    font-size: 1.5rem;
+    bottom: 1rem;
     right: 1rem;
 }
 </style>

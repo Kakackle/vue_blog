@@ -6,7 +6,7 @@ const newPassword = ref("")
 const newMail = ref("")
 const newBio = ref("")
 const newAvatar = ref("")
-
+import GoBackButton from '../components/GoBackButton.vue';
 const submitForm = function(){
 //TODO: tak samo jak create post
 }
@@ -15,6 +15,7 @@ const submitForm = function(){
 
 <template>
     <section class="create">
+        <GoBackButton></GoBackButton>
     <span class="title">REGISTER A NEW USER</span>
     <div class="input-form">
         <div class="form-labels">

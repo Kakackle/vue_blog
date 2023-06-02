@@ -8,15 +8,13 @@
 3. TODO: daty i wgl
 
 # REST / API wykorzystanie
--powiedzmy ze mam juz post
--teraz fajnie by wiecej
--i polaczyc wszystko linkami do stron tagow itd
--i moze pomyslec o polaczeniu z store
+-? i moze pomyslec o polaczeniu z store
 -a potem kwestia uzytkownikow w postaci np stworzenia custom wariacji -wbudowanego user modelu w django / rest i potem jakos to polaczyc, jakos trzymac w programie, moze w localstorage, moze store zalogowanego uzytkownika
 -potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
 -potem komentarze moze
 - potem sposob (w django najpierw) na slugi stworzone z nazw tagow itp
 - moze wyszukiwanie postow po autorze i innych
+- ### WAZNE: queries/searches wplywajace na filtry, bo dane plyna po prostu z pobierania - wymaga modyfikacji kompunentu FilterSide 
 
 # Problemy REST:
 1. przydaloby sie zrobic jakies composables z podawanym linkiem ktore fetchowaloby dane i zwracalo po prostu, a obsluga czy to jest jeden post czy wiele poza nim zaleznie od potrzeb

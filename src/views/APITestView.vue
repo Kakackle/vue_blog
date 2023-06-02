@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios'
 import {ref} from 'vue'
+import GoBackButton from '../components/GoBackButton.vue';
 const results = ref([])
 const getResults = function(){
     axios.get("http://127.0.0.1:8000/api/posts/")
@@ -11,6 +12,7 @@ const getResults = function(){
 
 <template>
     <div class="main">
+        <GoBackButton></GoBackButton>
         <p class="title">API TEST VIEW</p>
         <div class="results">
             <p>Currently being tested: Posts</p>

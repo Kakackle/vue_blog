@@ -1,6 +1,7 @@
 <script setup>
 import { usePostsStore } from '../stores/posts';
 import { ref } from 'vue';
+import GoBackButton from '../components/GoBackButton.vue';
 const postsStore = usePostsStore();
 
 
@@ -29,6 +30,7 @@ const submitForm = function(){
 
 <template>
     <section class="reg">
+    <GoBackButton></GoBackButton>
     <span class="title">CREATE A NEW POST:</span>
     <div class="input-form">
         <div class="form-labels">

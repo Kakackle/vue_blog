@@ -2,26 +2,34 @@
 import PostView from './PostView.vue';
 import FilterSide from '../components/FilterSide.vue';
 import PreviewListLarge from '../components/PreviewListLarge.vue';
-import {usePostsStore} from "../stores/posts.js"
+import GoBackButton from '../components/GoBackButton.vue';
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, render } from 'vue';
-const postsStore = usePostsStore();
-const posts = postsStore.posts.values;
+import { getDataFromLink } from '../composables/axiosComposables';
+
+const posts = ref([]);
 const renderPosts = ref(posts);
 const filterByBoxes = function(checkedTags){
   console.log(`checkedTags: ${checkedTags}`)
-  renderPosts.value = postsStore.filterByTags(checkedTags);
+  renderPosts.value = posts.value.filterByTags(checkedTags);
 }
+
+const getPosts = async function(){
+  posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
+}
+getPosts();
+
 </script>
 
 <template>
   <main>
+    <GoBackButton></GoBackButton>
     <!-- <PostView v-for="(post, post_id) in postsStore.posts" :post_id="post_id"></PostView> -->
     <!-- <RouterLink v-for="(post, post_id) in postsStore.posts" :to="`/post/${post_id}`">Post {{ post_id }}</RouterLink> -->
     <p class="blog-title">BLOG TITLE</p>
-    <section class="blog-sect">
+    <section class="blog-sect" v-if="posts">
       <div class="blog-list">
-        <PreviewListLarge v-for="(post, post_id) in renderPosts" :post="post"></PreviewListLarge>
+        <PreviewListLarge v-for="(post, post_id) in posts" :post="post"></PreviewListLarge>
       </div>
         
       <div class="side">

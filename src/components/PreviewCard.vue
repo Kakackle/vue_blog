@@ -2,8 +2,7 @@
 import { storeToRefs } from 'pinia';
 import { usePostsStore } from '../stores/posts';
 import { useUserStore } from '../stores/users';
-import {ref, onBeforeMount, onMounted} from 'vue';
-
+import {ref} from 'vue';
 
 import { useRouter } from 'vue-router';
 
@@ -20,40 +19,45 @@ const post = props.post
 // const user = users.value[post.author];
 
 const user = ref();
-const getUserById = function(id){
-    axios.get(`http://127.0.0.1:8000/api/users/${id}`)
-    .then((response)=>{
-        user.value=response.data;
-        // console.log(JSON.stringify(user.value))
-    })
-    .catch((error)=>{
-        console.log(`error: ${error}`)
-        router.push({name: 'catchall', params: {}});
-    })
-}
-onBeforeMount(()=>{
-    // console.log(`props: ${JSON.stringify(post)}`)
-    getUserById(post.author);
-})
+// const getUserById = function(id){
+//     axios.get(`http://127.0.0.1:8000/api/users/${id}`)
+//     .then((response)=>{
+//         user.value=response.data;
+//         // console.log(JSON.stringify(user.value))
+//     })
+//     .catch((error)=>{
+//         console.log(`error: ${error}`)
+//         router.push({name: 'catchall', params: {}});
+//     })
+// }
+// onBeforeMount(()=>{
+//     // console.log(`props: ${JSON.stringify(post)}`)
+//     getUserById(post.author);
+// })
+user.value = post.author;
 
 const props = defineProps(['post'])
 </script>
 
 <template>
-<div class="card-preview hover" @click="router.push(`/post/${post.id}`)">
+<div class="card-preview" >
     <div class="top">
         <img class="card-img" :src=post.img>
     </div>
     <div class="bottom">
         <p class="title">{{ post.title }}</p>
         <div class="tags">
-            <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
+            <p v-for="tag in post.tags" class="tag hover"
+            @click="router.push(`/tag/${tag.id}`)">{{ tag.name }}</p>
         </div>
-        <p class="author">{{ user.name }}</p>
+        <p class="author hover"
+        @click="router.push(`/user/${user.id}`)">{{ user.name }}</p>
         <p class="content">{{ post.content.slice(0,100) }}...</p>
         <p class="date">{{ post.date_posted }}</p>
     </div>
-    <p class="post_id">{{ post.id }}</p>
+    <!-- <p class="post_id">{{ post.id }}</p> -->
+    <ion-icon class="arr-icon hover" name="arrow-forward-outline"
+    @click="router.push(`/post/${post.id}`)"></ion-icon>
 
 </div>
 </template>
@@ -113,6 +117,13 @@ const props = defineProps(['post'])
 .date{
     position: absolute;
     top: 1rem;
+    right: 1rem;
+    filter: opacity(0.5);
+}
+.arr-icon{
+    position: absolute;
+    font-size: 1.5rem;
+    bottom: 1rem;
     right: 1rem;
 }
 </style>

@@ -6,24 +6,17 @@ import PreviewCard from '../components/PreviewCard.vue';
 import Carousel from '../components/Carousel.vue';
 // import { usePostsStore } from '../stores/posts';
 // const postsStore = usePostsStore();
-import { ref, onBeforeMount } from 'vue';
+import { ref} from 'vue';
 import axios from 'axios';
+
+import { getDataFromLink } from '../composables/axiosComposables';
 
 const posts = ref()
 
-const getPosts = function(){
-  axios.get(`http://127.0.0.1:8000/api/posts/`)
-  .then((res)=>{
-    posts.value = res.data;
-    console.log(`home: ${JSON.stringify(posts.value)}`);
-    // console.log(`len: ${posts.value.length}`)
-  }
-  )
+const getPosts = async function(){
+  posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
 }
-
-onBeforeMount(()=>{
-  getPosts();
-})
+getPosts();
 
 </script>
 
@@ -35,8 +28,6 @@ onBeforeMount(()=>{
     <section class="main-section">
       <container class="preview-list">
         <PreviewList v-for="post in posts" :post="post"></PreviewList>
-        <p class="big" v-for="post in posts"> Post: {{post.title}}</p>
-        <p class="big" v-for="n in 3">n</p>
       </container>
       <container class="side">
       </container>
