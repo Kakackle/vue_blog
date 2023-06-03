@@ -11,6 +11,7 @@ import NotFoundView from "../views/NotFoundView.vue"
 import TagNotFoundView from "../views/TagNotFoundView.vue"
 import APITestView from "../views/APITestView.vue"
 import PostViewRest from "../views/PostViewRest.vue"
+import FilterView from "../views/FilterView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +65,11 @@ const router = createRouter({
       path: '/apipost/:post_id',
       name: 'apipost',
       component: PostViewRest
+    },
+    {
+      path: "/posts_search",
+      name: "posts_search",
+      component: FilterView
     },
     {
       path: '/tag/:afterTag(.*)',
