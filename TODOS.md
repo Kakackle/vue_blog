@@ -20,7 +20,7 @@
 - ### WAZNE: POST! bo poki co get latwo a posty z axiosem zobaczym
 - TODO: zwiazane z filtrowaniem: mam juz przyklad, teraz przydaloby sie dodac to na innych stronach
 - ale co z wieloma tagami? bo poki co mam po jednym ale jakos liste by sie przydalo zrobic cos typu "get list from query params"
-- ### WAZNE: paginacja
+- ### WAZNE: paginacja - ale poniewaz dodalem paginacje, wszedzie teraz rezultaty nie sa dawane bezposrednio tylko wpakowane sa w results . , przy czym tam gdzie lista, pojedyncze rezultaty dzialaja nadal gites
 
 # Problemy REST:
 1. przydaloby sie zrobic jakies composables z podawanym linkiem ktore fetchowaloby dane i zwracalo po prostu, a obsluga czy to jest jeden post czy wiele poza nim zaleznie od potrzeb
