@@ -1,56 +1,33 @@
-1. ~~TODO: Router~~
 
-2. TODO: Post Preview
-    1. preview_list
-    2. preview_list_large
-    3. preview_card
-
-3. TODO: daty i wgl
+1. TODO: daty i wgl
 
 # REST / API wykorzystanie
--? i moze pomyslec o polaczeniu z store
--a potem kwestia uzytkownikow w postaci np stworzenia custom wariacji wbudowanego user modelu w django / rest i potem jakos to polaczyc,  -jakos trzymac w programie, moze w localstorage, moze store zalogowanego uzytkownika
--potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
--potem komentarze moze
+- ? i moze pomyslec o polaczeniu z store
+- custom user / profile i logowanie
+- potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
+- **komentarze - sposob powiazania w django i odpowiadania i forma na tworzenie**
 - potem sposob (w django najpierw) na slugi stworzone z nazw tagow itp
-- moze wyszukiwanie postow po autorze i innych
+- jak uporam sie z paginacja, to filtrowanie, jak nizej
 - ### WAZNE: queries/searches wplywajace na filtry, bo dane plyna po prostu z pobierania - wymaga modyfikacji kompunentu FilterSide 
 - cos robic chcialem przy dodawaniu signalem ...
 - albo perform_create by moc dodawac na konkretnym url komenty albo cos typu /post/1/comment i tam post leci
-- ### WAZNE: POST! bo poki co get latwo a posty z axiosem zobaczym
+- ### WAZNE: POST requests! bo poki co get latwo a posty z axiosem zobaczym
 - TODO: zwiazane z filtrowaniem: mam juz przyklad, teraz przydaloby sie dodac to na innych stronach
-- ale co z wieloma tagami? bo poki co mam po jednym ale jakos liste by sie przydalo zrobic cos typu "get list from query params"
 - ### WAZNE: paginacja - ale poniewaz dodalem paginacje, wszedzie teraz rezultaty nie sa dawane bezposrednio tylko wpakowane sa w results . , przy czym tam gdzie lista, pojedyncze rezultaty dzialaja nadal gites
 
 # Problemy REST:
-1. przydaloby sie zrobic jakies composables z podawanym linkiem ktore fetchowaloby dane i zwracalo po prostu, a obsluga czy to jest jeden post czy wiele poza nim zaleznie od potrzeb
-+ mogloby tez zwracac error msg albo cos poza siebie jesli bys chcial do elementu, a ustawianie wyswietlania na zewnatrz, po odebraniu danych z composable i sprawdzeniu czy puste czy nie
-+ also czy jesli mam funkcje w ktorej zamkniety jest axios to musi byc async a potem dane z niej wyciagac await?
-2. poszukac moze info na relacji kiedy fetchowac dane w vue, a axiosem lub inaczej (axios vs vue lifecycle hooks czy cos)
-3. kwestia hyperlinkedrelatedfields - czy jest mi to potrzebne czy nie i latwiej byloby stringrelated czy czyms, bo hyperlinked wygodne dla admina ale oznacza koniecznosc chainowania fetchy, co nawet nam nie pomaga z routerlinkiem, bo on dziala tez na parametrze takim jak ID
-idealnie by wiec zwracac nazwy...
+1. TODO: lepsze composables z srodkowym zwracaniem stanow itd ale to by wymagalo **zrozumienia promises etc**
 
-i jesli nazwy bylyby uniknalne to mozna tez wysylac query szukajace po tych nazwach (trzeba by to zbudowac w django)
-- ale to znowu chainowanie fetchow, a wszystko po to zeby uzyskac wiele danych..
+2. [**czesciowo zrealizowane**] Moze warto by rozwazyc by bylo lacznie mniej miejsc w ktorych fetchujesz, glownie takie ogolne, top level i one spuszczaja dane nizej, bo ponownie, propy nie sa zle, to jest dobre narzedzie, po cos zostalo stworzone, a zdecydowanie latwiej zarzadzac stanem z jednego albo ogolnie mniejszej ilosci miejsc
 
-ALE:
-mozesz przeciez zwracac cale obiekty w obiektach w endpoincie, tylko w serializatorach musisz podac ich serializatory
-- i to jest niewygodne dla admina, bo jesli duzo to wypcha i trudno przegladac
-- ALE jest IDEALNE dla naszego problemu - i wyeliminuje zaleznosc jednego fetcha od drugiego i powinno to wszystko usprawnic
-4. Moze warto by rozwazyc by bylo lacznie mniej miejsc w ktorych fetchujesz, glownie takie ogolne, top level i one spuszczaja dane nizej, bo ponownie, propy nie sa zle, to jest dobre narzedzie, po cos zostalo stworzone, a zdecydowanie latwiej zarzadzac stanem z jednego albo ogolnie mniejszej ilosci miejsc
-5. ..
+3. ..
 
 ## Konkretniej
 1. **linki do stron kategorii, uzytkownikow**
-2. ~~stworzyc jakis store userow czy cos, z username, login, avatarem, haslem, mailem, bio~~
-3. ~~userview~~
-4. ~~component do dropdownu logowania/registracji, przejdz do konta itd~~
 6. komponent side dla homeview z jakims najpop autorem itd
-7. count ile postow z tagiem, ile postow ma autor itd 
-8. wgl tagi to moglby byc wlasny store/model w db
-9. ~~na start prosta strona tworzenia postow z poki co polem tresciowym tylko na tekst~~
-10. ~~przesylanie z submitu do store nowego postu~~
-11. filtrowanie - uzytkownik wybiera filtr i wywoluje funkcje ze store ktora to filtruje (podobne zachowanie do rest gdzie wysylasz request z parametrami i zwraca ci queryset)
+7. count ile postow z tagiem, ile postow ma autor itd - moze w django
+10. przesylanie z submitu do bazy danych
+11. realizacja wielu filtrow na stronie do rest
 12. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen
 13. **~~wlasciwosci views, likes (views latwiejsze)~~**
 14. sortowanie po views, likes
@@ -75,3 +52,17 @@ i jeszcze to filtrowanie jakos zjebanie dziala ...
 poza tym ok
 
 3. Sortowanie po views, likes etc - w taki sposob (ordered) najlepiej gdyby byly zwracane z store/db, to juz moze zostawie na integracje z django rest, bo tam latwo sie orderuje, tylko kwestia jak taki queryset wywolywac poprzez endpoint? moze parametr ?sorted_by=views&order=asc czy cos
+
+
+# Zatem tematy do wyszukania:
+- DRF sorting etc
+- slugs
+- axios post
+
+konkretne kroki by zrealizowac post:
+1. zamienic w serializatorach uzytkownika na ID? albo moc przesylac ID a view odczytuje to ID i na podstawie niego wybiera uzytkownika (chyba lepsza opcja)
+2. jakos przesylac tego uzytkownika z programu - ostatecznie powinno byc ze zalogowany uzytnik automatycznie ale moze trzeba bedzie jakos wybierac wpierw
+3. albo dodac forme tworzenia nowego postu jako podstrone strony uzytnika by przesylalo
+**problemy:**
+1. kwestia tworzenia nowych tagow - nie sa juz po prostu nazwami, jesli bys chcial dodawac nowy tag tylko po nazwie, to trzeba by desc bylo opcjonalne a potem przy przetwarzaniu post requestu, jesli zaden z tagow nie ma nazwy takiej jaka podana, to tworzy nowy na backendzie i przypisuje      - co moze nie jest takie trudne ale na pewno nie takie oczywiste i natychmiastowe jakbym chcial
+2. w takim razie musze dac uzytnikowi liste istniejacych tagow i wybor, ale potem tez trzeba to przesylac i akceptowac ale widze ze beda problemy, bo w formie generowanej przez DRF ich nie ma, bo sa to related fields i serializator musialby byc bez nich czy cos... [https://stackoverflow.com/questions/67685843/allow-related-field-in-post-request-in-drf]

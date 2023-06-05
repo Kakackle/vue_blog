@@ -11,15 +11,16 @@ const pages = ref([])
 const base_link=`http://127.0.0.1:8000/api/posts/`;
 
 const getPosts = async function(link){
+    posts.value = [];
+    renderPosts.value = [];
     const data = (await getDataFromLink(link)).value;
+    console.log(`results: ${JSON.stringify(data.results)}`)
     posts.value = data.results;
+    console.log(`posts.: ${JSON.stringify(data.results)}`)
     pages.value = data.context.page_links;
     renderPosts.value = posts.value;
 }
-//FIXME: z jakiegos powodu ta strona zwraca tylko pierwsze (ostatnie bo ordering -id)
-// posty, nawet jesli przechodzisz na ?page=2
-// co kompletnie nie ma sensu
-// nawet jesli zwieksze page size, co dziala w rest a na tej stronie nie? ehhhh
+
 const getPostsByPage = async function(link){
     getPosts(link);
 }

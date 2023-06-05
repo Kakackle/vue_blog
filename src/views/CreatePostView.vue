@@ -1,30 +1,58 @@
 <script setup>
-import { usePostsStore } from '../stores/posts';
 import { ref } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
-const postsStore = usePostsStore();
-
+import axios from 'axios';
+import { useRoute } from 'vue-router'
+import { getDataFromLink } from '../composables/axiosComposables';
+const route = useRoute();
 
 const newTitle = ref("")
-const newAuthor = ref(0)
+const newAuthor = ref()
 const newDate = ref("22/05/1999")
-const newTag = ref("")
+const newTags = ref([])
 const newContent = ref("")
 const newImg = ref("")
 
+const tags = ref([]);
+const users = ref([]);
+const tagsExist = ref(0);
+const usersExist = ref(0);
+
+const getTags = async function(){
+    tags.value = (await getDataFromLink(`http://127.0.0.1:8000/api/tags/`)).value;
+    tagsExist.value=1;
+}
+
+const getUsers = async function(){
+    users.value = (await getDataFromLink(`http://127.0.0.1:8000/api/users/`)).value;
+    usersExist.value=1;
+}
+
 const submitForm = function(){
     const newPost = {
-        id: 4,
-        title: newTitle,
-        author: newAuthor,
-        date: newDate,
-        tags: [newTag],
-        contents: newContent,
-        img: newImg
+        csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
+        title: newTitle.value,
+        tags: [newTags.value],
+        content: newContent.value,
+        img: newImg.value,
+        views: 0,
+        author: newAuthor.value.id
     }
-    postsStore.addPost(newPost);
-    console.log(postsStore.posts);
+    // console.log(`newAuthor.value.id: ${newAuthor.value.id}`)
+    console.log(`object sent: ${JSON.stringify(newPost)}`)
+    axios.post(`http://127.0.0.1:8000/api/users/${newAuthor.value.id}/post`, 
+        newPost
+    )
+    .then((res)=>{
+        console.log(`res:${res}`);
+    })
+    .catch((err)=>{
+        console.log(`err: ${err}`);
+    })
 }
+
+getTags();
+getUsers();
 
 </script>
 
@@ -32,20 +60,24 @@ const submitForm = function(){
     <section class="reg">
     <GoBackButton></GoBackButton>
     <span class="title">CREATE A NEW POST:</span>
-    <div class="input-form">
+    <div class="input-form" v-if="tagsExist && usersExist">
         <div class="form-labels">
             <label for="title">title:</label>
             <label for="author">author:</label>
-            <label for="date">date:</label>
-            <label for="tag">tag:</label>
+            <!-- <label for="date">date:</label> -->
+            <label for="tags">tags:</label>
             <label for="content">content:</label>
             <label for="img">img:</label>
         </div>
         <div class="form-inputs">
             <input type="text" class="text-input" id="title" v-model="newTitle">
-            <input type="text" class="text-input" id="author" v-model="newAuthor">
-            <input type="text" class="text-input" id="date" v-model="newDate">
-            <input type="text" class="text-input" id="tag" v-model="newTag">
+            <select class="text-input" id="author" v-model="newAuthor">
+                <option v-for="user in users" :value=user>{{ user.name }}</option>
+            </select>
+            <!-- <input type="text" class="text-input" id="date" v-model="newDate"> -->
+            <select class="text-input" id="tags" v-model="newTags" multiple>
+                <option v-for="tag in tags" :value=tag>{{ tag.name }}</option>
+            </select>
             <input type="text" class="text-input" id="content" v-model="newContent">
             <input type="text" class="text-input" id="img" v-model="newImg">
         </div>
@@ -75,6 +107,7 @@ const submitForm = function(){
 .form-labels, .form-inputs{
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     gap: 1rem;
     font-size: 2rem;
     /* height: 1.5rem; */

@@ -5,6 +5,7 @@ import {useRouter, useRoute, routerKey} from "vue-router"
 import {ref} from "vue"
 import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposables";
 import GoBackButton from "../components/GoBackButton.vue"
+import axios from "axios";
 
 const route = useRoute()
 const router = useRouter()
@@ -25,6 +26,9 @@ const getPost = async function(){
     router.push({name: 'catchall', params: {post_id: post_id}});
   }
   postExists.value = 1;
+  axios.patch(`http://127.0.0.1:8000/api/posts/${post_id}`, {
+    views: post.value.views+1
+  });
 }
 
 getPost();
@@ -50,6 +54,8 @@ onMounted(()=>{
             @click="router.push(`/user/${post.author.id}`)">{{ post.author.name }}</p>
             <p class="centerdot">&centerdot;</p>
             <p class="post-date">{{ post.date_posted }}</p>
+            <p class="centerdot">&centerdot;</p>
+            <p class="post-date">views: {{ post.views }}</p>
           </div>
           
           <div class="post-tags">

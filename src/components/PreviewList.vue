@@ -46,7 +46,8 @@ const props = defineProps(['post'])
          @click="router.push(`/user/${user.id}`)">{{ user.name }}</p>
         <p class="content">{{ post.content.slice(0,100) }}...</p>
     </div>
-    <p class="post_id">{{ post.id }}</p>
+    <p class="post_id">id: {{ post.id }}</p>
+    <p class="post_id views">views: {{ post.views }}</p>
     <ion-icon class="arr-icon hover" name="arrow-forward-outline"
     @click="router.push(`/post/${post.id}`)"></ion-icon>
 </div>
@@ -104,7 +105,9 @@ const props = defineProps(['post'])
     top: 1rem;
     right: 1rem;
 }
-
+.views{
+    top: 2.5rem;
+}
 .arr-icon{
     position: absolute;
     font-size: 1.5rem;
