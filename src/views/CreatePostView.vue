@@ -4,11 +4,13 @@ import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import { getDataFromLink } from '../composables/axiosComposables';
+//TODO: przechodzenie do tej strony od strony z postem,
+//przekazywanie od ktorego sie przeszlo w route
+//i automatycznie wkladanie tego jako wybrany post
 const route = useRoute();
 
 const newTitle = ref("")
 const newAuthor = ref()
-const newDate = ref("22/05/1999")
 const newTags = ref([])
 const newTag = ref('')
 const newContent = ref("")
@@ -16,27 +18,73 @@ const newImg = ref("")
 
 const tags = ref([]);
 const users = ref([]);
+const posts = ref([]);
+const pages = ref([]);
 const tagsExist = ref(0);
 const usersExist = ref(0);
+const postsExist = ref([]);
 
 const success = ref('');
 const error = ref('');
+
+const selectedPost = ref();
+const selectedPage = ref(0);
 
 const addToTags = function(){
     newTags.value.push(newTag.value);
 }
 
 const getTags = async function(){
-    tags.value = (await getDataFromLink(`http://127.0.0.1:8000/api/tags/`)).value;
+    tags.value = (await getDataFromLink(`tags/`)).value;
     tagsExist.value=1;
 }
 
 const getUsers = async function(){
-    users.value = (await getDataFromLink(`http://127.0.0.1:8000/api/users/`)).value;
+    users.value = (await getDataFromLink(`users/`)).value;
     usersExist.value=1;
 }
 
-const submitForm = function(){
+const getPosts = async function(link){
+    posts.value = [];
+    postsExist.value = 0;
+    const data = axios.get(link)
+    .then((res)=>{
+        posts.value = res.data.results;
+        pages.value = res.data.context.page_links;
+        postsExist.value = 1;
+    })
+    .catch((err)=>
+    {
+        postsExist.value = 0;
+        console.log(err);
+    })
+}
+const getPostsByPage = async function(link, page_id){
+    getPosts(link);
+    selectedPage.value = page_id;
+}
+
+const selectPost = function(post){
+    selectedPost.value = post;
+    newTitle.value = selectedPost.value.title
+    newAuthor.value = users.value.filter(user => selectedPost.value.author === user.id)[0];
+    console.log(`newAuth: ${newAuthor.value}`);
+    let selectedTags = [];
+    selectedPost.value.tags.forEach((tag)=>{
+        // console.log(`tag: ${tag}`);
+        const stag = tags.value.filter((ttag)=>{
+            // console.log(`ttag.id: ${ttag.id}`)
+            return parseInt(ttag.id) === parseInt(tag)})
+        // console.log(`stag: ${JSON.stringify(stag)}`)
+        selectedTags.push(stag[0].name);
+    })
+    newTags.value = selectedTags;
+    // newTags.value = undefined
+    newContent.value = selectedPost.value.content
+    newImg.value = selectedPost.value.img
+}
+
+const submitForm = function(method){
     success.value = '';
     error.value = '';
     
@@ -46,10 +94,10 @@ const submitForm = function(){
         tags: [newTags.value],
         content: newContent.value,
         img: newImg.value,
-        views: 0,
         author: newAuthor.value.id
     }
-    axios.post(`http://127.0.0.1:8000/api/users/${newAuthor.value.id}/post`, 
+    if (method === "post"){
+    axios.post(`users/${newAuthor.value.id}/post`, 
         newPost
     )
     .then((res)=>{
@@ -71,16 +119,64 @@ const submitForm = function(){
         getUsers();
     }
     )
+    }
+
+    if (method === "patch"){
+        axios.patch(`posts/${selectedPost.value.id}`, newPost)
+        .then((res)=>{
+        // console.log(`res:${res.status}`);
+        success.value += res.status + ' ' + res.statusText; 
+    })
+    .catch((err)=>{
+        // console.log(`err: ${err}`);
+        error.value += err;
+    })
+    .finally(()=>{
+        newTitle.value = undefined
+        newAuthor.value = undefined
+        newTags.value = [] // dla tablicy
+        // newTags.value = undefined
+        newContent.value = undefined
+        newImg.value = undefined
+        selectedPost.value = undefined 
+        getTags();
+        getUsers();
+    }
+    )
+    }
 }
 
 getTags();
 getUsers();
+getPosts(`posts/`);
 
 </script>
 
 <template>
-    <section class="reg">
+    <div class="main">
     <GoBackButton></GoBackButton>
+    <div class="columns">
+
+    
+    <section class="select-sect">
+        <p class="title">SELECT A POST TO UPDATE:</p>
+        <!-- <select class="post-selection" v-if="postsExist">
+            <option v-for="post in posts" :value="post.id">{{ post.title }}</option>
+        </select> -->
+        <div class="post-selection" v-if="postsExist">
+            <p v-for="post in posts"
+            @click=selectPost(post)>{{ post.title }}</p>
+        </div>
+        <div class="pages">
+            <p class="page" v-for="(page, page_id) in pages" 
+            @click="getPostsByPage(page[0], page_id)"
+            :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
+        </div>
+        <p class="title">selected post:</p>
+        <p class="title" v-if="selectedPost">{{selectedPost.title}}</p>
+    </section>
+
+    <section class="post-sect">
     <span class="title">CREATE A NEW POST:</span>
     <div class="input-form" v-if="tagsExist && usersExist">
         <div class="form-inputs">
@@ -119,23 +215,36 @@ getUsers();
             </div>
         </div>
     </div>
-    <button class="submit-button hover" @click="submitForm">POST &rarr;</button>
+    <div class="buttons">
+        <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
+        <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+    </div>
     <p v-if="success" class="success">{{success}}</p>
     <p v-if="error" class="error">{{error}}</p>
+
+    </section>
     <div class="useful">
         <p>USEFUL LINKS:</p>
         <a href="https://unsplash.com/"> IMAGES</a>
         <a href="https://getlorem.com/">LOREM</a>
     </div>
-    </section>
+</div>
+</div>
 </template>
 
 <style scoped>
-.reg{
+.columns{
+    display: flex;
+    gap: 2rem;
+    /* align-items: center; */
+    justify-content: center;
+    padding: 2rem;
+}
+.post-sect, .select-sect{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     gap: 2rem;
     padding: 2rem;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
@@ -183,10 +292,10 @@ getUsers();
     filter: brightness(0.7);
 }
 .useful{
-    position: absolute;
+    /* position: absolute; */
     display: flex;
     flex-direction: column;
-    right: 2rem;
+    /* right: 2rem; */
     font-size: 2rem;
 }
 .success, .error{
@@ -196,5 +305,37 @@ getUsers();
 }
 .error{
     color: red;
+}
+
+.post-selection{
+    font-size: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.post-selection p:nth-of-type(2n){
+    background-color: rgba(0,0,0,0.1);
+}
+.post-selection p:hover{
+    font-weight: 600;
+    filter: brightness(0.7);
+}
+.pages{
+    display: flex;
+    font-size: 2.5rem;
+    gap: 1rem;
+}
+
+.page:hover{
+    font-weight: 600;
+    cursor: pointer;
+}
+.selected{
+    font-weight: 700;
+}
+.buttons{
+    display: flex;
+    gap: 1rem;
 }
 </style>
