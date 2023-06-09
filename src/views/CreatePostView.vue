@@ -10,6 +10,7 @@ const newTitle = ref("")
 const newAuthor = ref()
 const newDate = ref("22/05/1999")
 const newTags = ref([])
+const newTag = ref('')
 const newContent = ref("")
 const newImg = ref("")
 
@@ -17,6 +18,13 @@ const tags = ref([]);
 const users = ref([]);
 const tagsExist = ref(0);
 const usersExist = ref(0);
+
+const success = ref('');
+const error = ref('');
+
+const addToTags = function(){
+    newTags.value.push(newTag.value);
+}
 
 const getTags = async function(){
     tags.value = (await getDataFromLink(`http://127.0.0.1:8000/api/tags/`)).value;
@@ -29,6 +37,9 @@ const getUsers = async function(){
 }
 
 const submitForm = function(){
+    success.value = '';
+    error.value = '';
+    
     const newPost = {
         csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
         title: newTitle.value,
@@ -38,17 +49,28 @@ const submitForm = function(){
         views: 0,
         author: newAuthor.value.id
     }
-    // console.log(`newAuthor.value.id: ${newAuthor.value.id}`)
-    console.log(`object sent: ${JSON.stringify(newPost)}`)
     axios.post(`http://127.0.0.1:8000/api/users/${newAuthor.value.id}/post`, 
         newPost
     )
     .then((res)=>{
-        console.log(`res:${res}`);
+        // console.log(`res:${res.status}`);
+        success.value += res.status + ' ' + res.statusText; 
     })
     .catch((err)=>{
-        console.log(`err: ${err}`);
+        // console.log(`err: ${err}`);
+        error.value += err;
     })
+    .finally(()=>{
+        newTitle.value = undefined
+        newAuthor.value = undefined
+        newTags.value = [] // dla tablicy
+        // newTags.value = undefined
+        newContent.value = undefined
+        newImg.value = undefined
+        getTags();
+        getUsers();
+    }
+    )
 }
 
 getTags();
@@ -61,28 +83,50 @@ getUsers();
     <GoBackButton></GoBackButton>
     <span class="title">CREATE A NEW POST:</span>
     <div class="input-form" v-if="tagsExist && usersExist">
-        <div class="form-labels">
-            <label for="title">title:</label>
-            <label for="author">author:</label>
-            <!-- <label for="date">date:</label> -->
-            <label for="tags">tags:</label>
-            <label for="content">content:</label>
-            <label for="img">img:</label>
-        </div>
         <div class="form-inputs">
-            <input type="text" class="text-input" id="title" v-model="newTitle">
-            <select class="text-input" id="author" v-model="newAuthor">
-                <option v-for="user in users" :value=user>{{ user.name }}</option>
-            </select>
-            <!-- <input type="text" class="text-input" id="date" v-model="newDate"> -->
-            <select class="text-input" id="tags" v-model="newTags" multiple>
-                <option v-for="tag in tags" :value=tag>{{ tag.name }}</option>
-            </select>
-            <input type="text" class="text-input" id="content" v-model="newContent">
-            <input type="text" class="text-input" id="img" v-model="newImg">
+            <div class="form-label">
+                <label for="title">title:</label>
+                <input type="text" class="text-input" id="title" v-model="newTitle">
+            </div>
+            <div class="form-label">
+                <label for="author">author:</label>
+                <select class="text-input" id="author" v-model="newAuthor">
+                    <option v-for="user in users" :value=user>{{ user.name }}</option>
+                </select>
+            </div>
+
+            <div class="form-label">
+                <label for="tags">tags:</label>
+                <select class="text-input" id="tags" v-model="newTags" multiple>
+                    <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
+                </select>
+            </div>
+            
+            <div class="form-label">
+                <label for="new_tag">new tag:</label>
+                <input type="text" id="new_tag" v-model="newTag">
+                <ion-icon class="tag-icon hover" name="add-outline"
+                @click="addToTags()"></ion-icon>
+            </div>
+            <p>tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
+            <div class="form-label">
+                <label for="content">content:</label>
+                <textarea id="content" class="text-input" v-model="newContent"></textarea>
+            </div>
+            <div class="form-label">
+                <label for="img">img:</label>
+                <input type="text" class="text-input" id="img" v-model="newImg">
+            </div>
         </div>
     </div>
     <button class="submit-button hover" @click="submitForm">POST &rarr;</button>
+    <p v-if="success" class="success">{{success}}</p>
+    <p v-if="error" class="error">{{error}}</p>
+    <div class="useful">
+        <p>USEFUL LINKS:</p>
+        <a href="https://unsplash.com/"> IMAGES</a>
+        <a href="https://getlorem.com/">LOREM</a>
+    </div>
     </section>
 </template>
 
@@ -96,6 +140,7 @@ getUsers();
     padding: 2rem;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
     /* width: 60%; */
+    position: relative;
 }
 .input-form{
     display: flex;
@@ -104,7 +149,7 @@ getUsers();
 .title{
     font-size: 2.5rem;
 }
-.form-labels, .form-inputs{
+.form-inputs{
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -113,11 +158,43 @@ getUsers();
     /* height: 1.5rem; */
     padding: 0;
 }
+.form-label{
+    font-size: 2rem;
+    display: flex;
+    gap: 1rem;
+    min-height: 2rem;
+}
+.form-label label{
+    width: 4rem;
+}
+.form-label input{
+    width: 20rem;
+    height: 2rem;
+}
+.form-label select, .form-label textarea{
+    height: 6rem;
+    width: 20rem;
+}
 .submit-button{
     font-size: 2rem;
 }
 .hover:hover{
     cursor: pointer;
     filter: brightness(0.7);
+}
+.useful{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    right: 2rem;
+    font-size: 2rem;
+}
+.success, .error{
+    font-size: 2rem;
+    font-weight: 500;
+    color: green;
+}
+.error{
+    color: red;
 }
 </style>

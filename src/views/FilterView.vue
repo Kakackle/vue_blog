@@ -8,7 +8,7 @@ const renderPosts = ref(posts);
 const authorField = ref("");
 const pages = ref([])
 
-const base_link=`http://127.0.0.1:8000/api/posts/`;
+const base_link=`posts/`;
 
 const getPosts = async function(link){
     posts.value = [];

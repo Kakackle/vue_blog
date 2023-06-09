@@ -66,3 +66,16 @@ konkretne kroki by zrealizowac post:
 **problemy:**
 1. kwestia tworzenia nowych tagow - nie sa juz po prostu nazwami, jesli bys chcial dodawac nowy tag tylko po nazwie, to trzeba by desc bylo opcjonalne a potem przy przetwarzaniu post requestu, jesli zaden z tagow nie ma nazwy takiej jaka podana, to tworzy nowy na backendzie i przypisuje      - co moze nie jest takie trudne ale na pewno nie takie oczywiste i natychmiastowe jakbym chcial
 2. w takim razie musze dac uzytnikowi liste istniejacych tagow i wybor, ale potem tez trzeba to przesylac i akceptowac ale widze ze beda problemy, bo w formie generowanej przez DRF ich nie ma, bo sa to related fields i serializator musialby byc bez nich czy cos... [https://stackoverflow.com/questions/67685843/allow-related-field-in-post-request-in-drf]
+
+
+# 09.06.2023
+1. Mozliwosc edycji postow
+2. Mozliwosc edycji tagow / strona tagow
+3. Mozliwosc dodawania, edycji userow
+4. Mozliwosc usuwania postow
+5. Usuwanie reszty
+6. Jakies tam laczenie tego
+7. lepsza forma dodawnia postow z markdownem?
+8. userzy itd
+
+9. slugowanie

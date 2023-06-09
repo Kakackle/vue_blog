@@ -19,67 +19,80 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: {desc: 'Home view with a banner etc'}
     },
     {
       path: '/about',
       name: 'about',
-      component: AboutView
+      component: AboutView,
+      meta: {desc: 'About author/project page + site map?'}
     },
     {
       path: '/post/:post_id',
       name: 'post',
-      component: PostView
+      component: PostView,
+      meta: {desc: 'Single post view specified by post_id id [for now]'}
     },
     {
       path: '/blog',
       name: 'blog',
-      component: BlogView
+      component: BlogView,
+      meta: {desc: 'Blog view with posts displayed in multiple forms and side filtering'}
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: RegisterView,
+      meta: {desc: 'View for registering users (POST form)'}
     },
     {
       path: '/create',
       name: 'create',
-      component: CreatePostView
+      component: CreatePostView,
+      meta: {desc: 'View for creating a post instance (POST form)'}
     },
     {
       path: '/user/:user_id',
       name: 'user',
-      component: UserView
+      component: UserView,
+      meta: {desc: 'Single user info view specified by user_id [for now]'}
     },
     {
       path: '/tag/:tag_id',
       name: 'tag',
-      component: TagView
+      component: TagView,
+      meta: {desc: 'Tag/category view specified by Id'}
     },
     {
       path: '/apitest',
       name: 'apitest',
-      component: APITestView
+      component: APITestView,
+      meta: {desc: 'View for testing the API requests [currently testing viewing posts]'}
     },
     {
       path: '/apipost/:post_id',
       name: 'apipost',
-      component: PostViewRest
+      component: PostViewRest,
+      meta: {desc: 'Some testing idk - to be trashed?'}
     },
     {
       path: "/posts_search",
       name: "posts_search",
-      component: FilterView
+      component: FilterView,
+      meta: {desc: 'Test filtering/querying from db and in website'}
     },
     {
       path: '/tag/:afterTag(.*)',
       name: 'tag404',
-      component: TagNotFoundView
+      component: TagNotFoundView,
+      meta: {desc: 'Page if specified tag was not found - trash?'}
     },
     {
       path: "/:pathMatch(.*)*",
       name: "catchall",
-      component: NotFoundView
+      component: NotFoundView,
+      meta: {desc: 'Catchall for errors, will try to display input params'}
     }
   ]
 })

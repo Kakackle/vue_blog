@@ -3,9 +3,18 @@ import axios from 'axios'
 import {ref} from 'vue'
 import GoBackButton from '../components/GoBackButton.vue';
 const results = ref([])
+const gotData = ref(0);
 const getResults = function(){
-    axios.get("http://127.0.0.1:8000/api/posts/")
-    .then(response => results.value = response.data)
+    gotData.value = 0;
+    axios.get("posts/")
+    .then(response => {
+        results.value = response.data.results
+        gotData.value = 1;
+    })
+    .catch(err=>{
+        console.log(err);
+        gotData.value = 0;
+    })
 }
 
 </script>
@@ -17,7 +26,7 @@ const getResults = function(){
         <div class="results">
             <p>Currently being tested: Posts</p>
             <p>Data:</p>
-            <ul>
+            <ul v-if="gotData">
                 <li v-for="item in results" class="results-list">
                     <p>id: {{ item.id }}</p>
                     <p>tags: {{ item.tags }}</p>
@@ -25,7 +34,8 @@ const getResults = function(){
                     <p>title {{ item.title }}</p>
                     <p>date_posted: {{ item.date_posted }}</p>
                     <p>date_updated: {{ item.date_updated }}</p>
-                    <p>content.slice(0,50): {{ item.content.slice(0,50) }}</p>
+                    <!-- <p>content.slice(0,50): {{ item.content.slice(0,5) }}</p> -->
+                    <p>content: {{ item.content }}</p>
                     <img class="data-img" :src=item.img>
                 </li>
             </ul>
