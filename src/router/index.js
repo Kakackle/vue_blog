@@ -59,7 +59,7 @@ const router = createRouter({
       meta: {desc: 'Single user info view specified by user_id [for now]'}
     },
     {
-      path: '/tag/:tag_id',
+      path: '/tag/:tag_slug',
       name: 'tag',
       component: TagView,
       meta: {desc: 'Tag/category view specified by Id'}

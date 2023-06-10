@@ -45,9 +45,8 @@ const getTagByHyperlink = function(link){
 }
 
 onMounted(()=>{
-  // const str = JSON.stringify(post)
-  // console.log(`post: ${str}`)
-    getPostById();
+
+  getPostById();
     
 })
 

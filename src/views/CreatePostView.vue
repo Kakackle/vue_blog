@@ -30,6 +30,44 @@ const error = ref('');
 const selectedPost = ref();
 const selectedPage = ref(0);
 
+const confirmDelete = ref(0)
+
+const cleanInputs = async function(){
+    newTitle.value = undefined
+    newAuthor.value = undefined
+    newTags.value = [] // dla tablicy
+    // newTags.value = undefined
+    newContent.value = undefined
+    newImg.value = undefined
+    selectedPost.value = undefined 
+    getTags();
+    getUsers();
+}
+
+const confirmDel = ()=>{
+    confirmDelete.value = 1;
+}
+const cancelDel = ()=>{
+    confirmDelete.value = 0;
+}
+
+const deletePost = async function(){
+    axios.delete(`posts/${selectedPost.value.id}`)
+    .then((res)=>{
+        success.value += res.status + ' ' + res.statusText; 
+    })
+    .catch((err)=>{
+        error.value += err;
+    })
+    .finally(()=>{
+        cleanInputs();
+        confirmDelete.value = 0;
+        getPosts(`posts/`);
+    })
+}
+
+
+
 const addToTags = function(){
     newTags.value.push(newTag.value);
 }
@@ -108,17 +146,7 @@ const submitForm = function(method){
         // console.log(`err: ${err}`);
         error.value += err;
     })
-    .finally(()=>{
-        newTitle.value = undefined
-        newAuthor.value = undefined
-        newTags.value = [] // dla tablicy
-        // newTags.value = undefined
-        newContent.value = undefined
-        newImg.value = undefined
-        getTags();
-        getUsers();
-    }
-    )
+    .finally(cleanInputs)
     }
 
     if (method === "patch"){
@@ -131,18 +159,7 @@ const submitForm = function(method){
         // console.log(`err: ${err}`);
         error.value += err;
     })
-    .finally(()=>{
-        newTitle.value = undefined
-        newAuthor.value = undefined
-        newTags.value = [] // dla tablicy
-        // newTags.value = undefined
-        newContent.value = undefined
-        newImg.value = undefined
-        selectedPost.value = undefined 
-        getTags();
-        getUsers();
-    }
-    )
+    .finally(cleanInputs)
     }
 }
 
@@ -156,8 +173,6 @@ getPosts(`posts/`);
     <div class="main">
     <GoBackButton></GoBackButton>
     <div class="columns">
-
-    
     <section class="select-sect">
         <p class="title">SELECT A POST TO UPDATE:</p>
         <!-- <select class="post-selection" v-if="postsExist">
@@ -174,6 +189,14 @@ getPosts(`posts/`);
         </div>
         <p class="title">selected post:</p>
         <p class="title" v-if="selectedPost">{{selectedPost.title}}</p>
+        <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
+        <div class="confirm-delete" v-if="confirmDelete">
+            <p class="title">ARE YOU SURE?</p>
+            <div class="buttons">
+                <button class="submit-button hover" @click="deletePost">YES</button>
+                <button class="submit-button hover" @click="cancelDel">NO</button>
+            </div>
+        </div>
     </section>
 
     <section class="post-sect">
@@ -337,5 +360,10 @@ getPosts(`posts/`);
 .buttons{
     display: flex;
     gap: 1rem;
+    justify-content: center;
+}
+.confirm-delete{
+    display: flex;
+    flex-direction: column;
 }
 </style>

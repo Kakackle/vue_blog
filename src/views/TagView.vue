@@ -7,13 +7,13 @@ import GoBackButton from "../components/GoBackButton.vue"
 
 const route = useRoute();
 const router = useRouter();
-const tag_id = route.params.tag_id;
+const tag_slug = route.params.tag_slug;
 const tag = ref();
 const tagExists = ref(0);
 const errorMsg = ref("");
 
 const getTagById = function(){
-    axios.get(`http://127.0.0.1:8000/api/tags/${tag_id}`)
+    axios.get(`tags/${tag_slug}`)
     .then((response) => {
         tag.value = response.data;
         tagExists.value = 1;
@@ -28,7 +28,7 @@ const getTagById = function(){
         tagExists.value = 0;
         errorMsg.value = error;
         console.log("Failure");
-        router.push({name: 'catchall', params: {tag_id: tag_id}});
+        router.push({name: 'catchall', params: {tag_slug: tag_slug}});
         
     })
 }
