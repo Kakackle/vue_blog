@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import PreviewList from "../components/PreviewList.vue"
 import GoBackButton from "../components/GoBackButton.vue"
+import PostsPaginated from '../components/PostsPaginated.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -12,7 +13,7 @@ const tag = ref();
 const tagExists = ref(0);
 const errorMsg = ref("");
 
-const getTagById = function(){
+const getTagBySlug = function(){
     axios.get(`tags/${tag_slug}`)
     .then((response) => {
         tag.value = response.data;
@@ -20,9 +21,7 @@ const getTagById = function(){
         console.log("Success");
     })
     .then(() => {
-        tag.value.posts.forEach(post=>{
-            getPostByHyperlink(post);
-        })
+        getPostsByTag(`posts/?tag=${tag.value.id}`)
     })
     .catch((error) =>{
         tagExists.value = 0;
@@ -33,14 +32,17 @@ const getTagById = function(){
     })
 }
 const posts = ref([]);
-const getPostByHyperlink = async function(link){
+const pages = ref([]);
+
+const getPostsByTag = async function(link){
     await axios.get(link)
     .then((res)=>{
-        posts.value.push(res.data)
+        posts.value = res.data.results;
+        pages.value = res.data.context.page_links;
     })
 }
 
-getTagById();
+getTagBySlug();
 </script>
 
 
@@ -51,9 +53,11 @@ getTagById();
     <section class="tag-view" v-if="tagExists">
         <p class="tag-name">Name: {{tag.name}}</p>
         <p class="tag-desc">Desc: {{tag.description}}</p>
-        <p class="posts"> Posts:</p>
-        <PreviewList v-for="post in posts.slice(0,3)" class="tag-post hover" :post="post"></PreviewList>
+        <p class="posts" v-if="posts"> Posts:</p>
+        <!-- <PreviewList v-for="post in posts.slice(0,3)" class="tag-post hover" :post="post"></PreviewList> -->
     </section>
+    <p v-if="posts">paginated posts should be showing...</p>
+        <PostsPaginated v-if="posts" :posts="posts" :pages="pages"></PostsPaginated>
 </div>
 </template>
 

@@ -87,6 +87,10 @@ ALSO: zakladajac ze bedziemy uzywac slugu zamiast id, trzeba bedzie to uwzgledni
 gdzie:  
 wygodniej by bylo gdyby byly wyswietlane nazwy, ale problem z tym jest taki, ze wtedy by trzeba szukac po nazwie, co zakladaloby ze jest unikalna i nie pod to nastawione sa moje endpointy itd.. 
 
+- **rozwiazaniem sa slugi!**, bo mozesz miec endpoint po slugu i wyswietlac sie bedzie jako ladna nazwa itd w ramach serializacji po slugfield
+.. ale ponownie, refactoru bedzie wymagalo a to praca ehhh
+.. ale mozna miec oba - branie po id numerkowo i po slugach dla latwosci uzytkownika, jest okej
+
 # 10.06.2023 W celu ujednolicenia rest
 1. Mozna by np dodac wiecej views w Django typu
 /users/user_id/posts, ktore zwraca wszystkie posty uzytkownika
@@ -100,3 +104,15 @@ Dziala routowanie tagow po slugu
 teraz przydaloby sie uzytkownikow tez (django i vue)
 potem mozliwosc edycji, dodawania usuwania tagow
 potem jednolicenie wszedzie
+
+a konkretniej konwersja routes z id na slug i zmiana endpointow z jakich pobierane sa dane z id na slugi
+
+# MEGA GIGA WAZNE:
+Cos jest nie tak z vue...
+czasem nie pokazuje tego co powinno (zwiazane z callami) a po refreshu juz tak
+albo po dodaniu byle jakiej zmiany i zapisaniu
+albo czasem nie
+myslalem ze chodzi o calle w ifach zaleznych od innych calli ale chyba nie, bo jak wyciagnalem to nic to nie dalo
+hmm
+
+A poza tym to cleanup TODOS

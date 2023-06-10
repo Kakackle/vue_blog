@@ -34,6 +34,7 @@ const routesSorted = routes.sort(function(a,b) {
           <li class="route">/api/posts/int:pk - single post get/put/delete</li>
           <li class="route">/api/tags - all tags retrieve</li>
           <li class="route">/api/tag/int:pk - tag by id</li>
+          <li class="route">/api/tag/slug:slug - tag by slug</li>
           <li class="route">/api/users</li>
           <li class="route">/api/users/int:pk - user by id</li>
           <li class="route">/api/users/int:pk/post - create post belonging to user</li>
