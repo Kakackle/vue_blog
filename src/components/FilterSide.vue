@@ -1,30 +1,53 @@
 <script setup>
-import { storeToRefs } from 'pinia';
-import { usePostsStore } from '../stores/posts';
-import { onMounted } from 'vue';
-import { ref } from 'vue';
-const postsStore = usePostsStore();
-const tags = postsStore.getTags();
+import axios from 'axios';
+import { nextTick, onMounted } from 'vue';
+import { ref, reactive } from 'vue';
+import { getCurrentInstance } from 'vue';
+
+const query = ref([]);
+const tags = ref([]);
+
+const getTags = async function(){
+    axios.get('tags/')
+    .then((res)=>{
+        tags.value = res.data;
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+}
+
+getTags();
+
 const checkedTags = ref([]);
 // const {posts, getTags} = storeToRefs(postsStore)
-const emit = defineEmits(['filterBox'])
-const emitBoxes = () =>{
-    let boxes = checkedTags.value;
-    emit('filterBox', boxes);
+const emit = defineEmits(['filterBox', 'filterTerm'])
+const emitBoxes = async () =>{
+    await nextTick(()=>{
+        emit('filterBox', checkedTags.value);
+    });
 }
+
+const emitQuery = async() => {
+    await nextTick(()=>{
+        emit('filterTerm', query.value);
+    });
+}
+
 </script>
 
 <template>
     <div class="side-div">
         <p class="boxes-title">FILTER BY SEARCH</p>
-        <input type="search" class="search" placeholder="title etc..">
+        <input type="search" class="search" placeholder="post title"
+        v-model="query" @keyup.enter="emitQuery">
         <p class="boxes-title">FILTER BY TAGS:</p>
-        <div class="boxes">
+        <div class="boxes" v-if="tags.length">
             <div v-for="(tag, tag_id) in tags" class="box">    
                 <input type="checkbox" :id=tag_id name="tag-box" class="tag-box hover"
-                :value=tag v-model="checkedTags"
-                @click="emitBoxes">
-                <label :for=tag_id>{{ tag }}</label>
+                :value=tag.id v-model="checkedTags"
+                @change="emitBoxes">
+                <label :for=tag_id>{{ tag.name }}</label>
             </div>         
         </div>
         <p class="boxes-title">FILTER BY DATE:</p>

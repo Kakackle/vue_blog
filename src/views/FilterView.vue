@@ -25,6 +25,7 @@ const getPostsByPage = async function(link, page_id){
     selectedPage.value = page_id;
 }
 
+//search by author name query (only)
 const filterBySearch = async function(){
     renderPosts.value = ( await getDataFromLink(base_link+`?author=${authorField.value}`)).value.results;
 }
