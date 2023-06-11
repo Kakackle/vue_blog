@@ -7,6 +7,7 @@ import RegisterView from '../views/RegisterView.vue'
 import CreatePostView from '../views/CreatePostView.vue'
 import UserView from "../views/UserView.vue"
 import TagView from "../views/TagView.vue"
+import TagListView from "../views/TagListView.vue"
 import NotFoundView from "../views/NotFoundView.vue"
 import TagNotFoundView from "../views/TagNotFoundView.vue"
 import APITestView from "../views/APITestView.vue"
@@ -29,7 +30,7 @@ const router = createRouter({
       meta: {desc: 'About author/project page + site map?'}
     },
     {
-      path: '/post/:post_id',
+      path: '/posts/:post_id',
       name: 'post',
       component: PostView,
       meta: {desc: 'Single post view specified by post_id id [for now]'}
@@ -53,7 +54,7 @@ const router = createRouter({
       meta: {desc: 'View for creating a post instance (POST form)'}
     },
     {
-      path: '/user/:user_id',
+      path: '/users/:user_id',
       name: 'user',
       component: UserView,
       meta: {desc: 'Single user info view specified by user_id [for now]'}
@@ -65,10 +66,16 @@ const router = createRouter({
     //   meta: {desc: 'Makes no sense, would need a component that accepts both slug and id'}
     // }
     {
-      path: '/tag/:tag_slug',
+      path: '/tags/:tag_slug',
       name: 'tag',
       component: TagView,
       meta: {desc: 'Tag/category view specified by slug'}
+    },
+    {
+      path: '/tags',
+      name: 'tags',
+      component: TagListView,
+      meta: {desc: 'Tag/category list view'}
     },
     {
       path: '/apitest',
@@ -89,7 +96,7 @@ const router = createRouter({
       meta: {desc: 'Test filtering/querying from db and in website'}
     },
     {
-      path: '/tag/:afterTag(.*)',
+      path: '/tags/:afterTag(.*)',
       name: 'tag404',
       component: TagNotFoundView,
       meta: {desc: 'Page if specified tag was not found - trash?'}

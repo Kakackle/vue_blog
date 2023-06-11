@@ -105,14 +105,15 @@ const getPostsByPage = async function(link, page_id){
 const selectPost = function(post){
     selectedPost.value = post;
     newTitle.value = selectedPost.value.title
-    newAuthor.value = users.value.filter(user => selectedPost.value.author === user.id)[0];
-    console.log(`newAuth: ${newAuthor.value}`);
+    // console.log(`selectedPost.author: ${selectedPost.value.author}`);
+    newAuthor.value = users.value.filter(user => selectedPost.value.author === user.username)[0];
+    // console.log(`newAuth: ${newAuthor.value}`);
     let selectedTags = [];
     selectedPost.value.tags.forEach((tag)=>{
         // console.log(`tag: ${tag}`);
         const stag = tags.value.filter((ttag)=>{
             // console.log(`ttag.id: ${ttag.id}`)
-            return parseInt(ttag.id) === parseInt(tag)})
+            return ttag.name === tag})
         // console.log(`stag: ${JSON.stringify(stag)}`)
         selectedTags.push(stag[0].name);
     })
@@ -129,11 +130,14 @@ const submitForm = function(method){
     const newPost = {
         csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
         title: newTitle.value,
-        tags: [newTags.value],
+        tags: newTags.value,
         content: newContent.value,
         img: newImg.value,
-        author: newAuthor.value.id
+        author: parseInt(newAuthor.value.id)
     }
+
+    console.log(`data sent: ${JSON.stringify(newPost)}`)
+    
     if (method === "post"){
     axios.post(`users/${newAuthor.value.id}/post`, 
         newPost

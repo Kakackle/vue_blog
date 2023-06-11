@@ -24,11 +24,14 @@
 3. **linki do stron kategorii, uzytkownikow** wszedzie
 
 4. ## 09.06.2023
-    2. Mozliwosc edycji tagow / strona tagow
-    3. Mozliwosc dodawania, edycji userow
-    5. Usuwanie tagow, uzytnikow
+    2. ~~Mozliwosc edycji tagow~~ / ~~strona tagow~~ - przydaloby sie dodac paginacje, moze komponentem, moze zmienic PostsPaginated na obsluge slotow? ale kwestia ze kompletnie rozne dane, ktore chce pobierac tez wewnatrz wiec chyba nie, idk
+    3. Mozliwosc dodawania ~~tagow~~ i userow [POST] (chodzi o czy beda problemy ze slug)
+    4. Routowanie w vue po slugach do postow i uzytkownikow - ale duzo bedzie naprawiania
+    5. ~~Usuwanie tagow~~, uzytnikow
     6. Jakies tam laczenie tego wszystkiego
-    
+
+5. ## WAZNE: refactor sekcji script wiekszosci componentow
+    tzn tak by wykorzystac zalete composition api i script setup, czyli mozliwosc grupowania funkcjonalnosci w jednym miejscu, bo teraz troche porozrzucane sa, trzeba skakac przegladajac
 
 
 
@@ -58,10 +61,6 @@ A potem ze strony rejestracji po submicie powrot do strony glownej albo POPRZEDN
 4. ## Sotowanie
 Sortowanie po views, likes etc - w taki sposob (ordered) najlepiej gdyby byly zwracane z store/db, to juz moze zostawie na integracje z django rest, bo tam latwo sie orderuje, tylko kwestia jak taki queryset wywolywac poprzez endpoint? moze parametr ?sorted_by=views&order=asc czy cos
 
-# Wazne linki, itd:
-1. https://stackoverflow.com/questions/67685843/allow-related-field-in-post-request-in-drf
-
-
 5. ## Refactor serializatorow i requestow
     1. slugowanie - co bedzie wymagalo zmiany nie tylko w django ale i w vue w pozyskiwaniu rzeczy nie po tagu tylko po slugu
     **I moze najlepiej gdyby zaczac od slugowania tagow po name i userow po username, bo sa krotkie i wygodne, a posty pozniej, bo dluzsze**
@@ -84,6 +83,8 @@ Sortowanie po views, likes etc - w taki sposob (ordered) najlepiej gdyby byly zw
     .. co byc moze mozna rozwiazac takze poprzez queries! w sensie wystarczy jeden view ale zawierajacy wiele queries
     hmm
 
+# Wazne linki, itd:
+1. https://stackoverflow.com/questions/67685843/allow-related-field-in-post-request-in-drf
 
 ## Konkretnie:
 Dziala routowanie tagow po slugu

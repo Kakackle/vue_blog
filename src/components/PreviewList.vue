@@ -39,17 +39,18 @@ const props = defineProps(['post'])
         <p class="title">{{ post.title }}</p>
         <div class="tags">
             <p v-for="tag in post.tags" class="tag hover"
-            @click="router.push(`/tag/${tag.id}`)"
+            @click="router.push({name: 'tag', params: {tag_slug: tag.name}})"
             >{{ tag.name }}</p>
         </div>
         <p class="author hover"
-         @click="router.push(`/user/${user.id}`)">{{ user.name }}</p>
+         @click="router.push({name: 'user', params: {user_id: user.id}})">{{ user.name }}</p>
         <p class="content">{{ post.content.slice(0,100) }}...</p>
     </div>
     <p class="post_id">id: {{ post.id }}</p>
     <p class="post_id views">views: {{ post.views }}</p>
     <ion-icon class="arr-icon hover" name="arrow-forward-outline"
-    @click="router.push(`/post/${post.id}`)"></ion-icon>
+    @click="router.push({name: 'post', params:{post_id: post.id}})"
+    ></ion-icon>
 </div>
 </template>
 

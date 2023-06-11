@@ -19,7 +19,7 @@ const props = defineProps(['post'])
 </script>
 
 <template>
-<div class="list-preview hover" @click="router.push(`/post/${post.id}`)">
+<div class="list-preview hover" @click="router.push({name: 'post', params:{post_id : post.id}})">
     <div class="left">
         <img :src=post.img class="img">
     </div>
