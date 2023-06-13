@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * @file PreviewList.vue - component for displaying a list version of posts
+ * @author MM
+ * @see <a href="https://google.com"> Google </a>
+ */
 
 import { useRouter } from 'vue-router';
 import axios from 'axios';
@@ -12,6 +17,10 @@ const post = props.post
 const user = ref();
 user.value = post.author;
 
+/**
+ * Funkcja zwracajaca autora postu na podstawie jego slugu, uzyskanego z przekazanego
+ * do komponentu obiektu post
+ */
 const getAuthor = async function(){
     axios.get(`users/${user.value}`)
     .then((res)=>{

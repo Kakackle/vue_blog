@@ -1,0 +1,19 @@
+{
+    "source": {
+      "include": ["src"],
+      "includePattern": "\\.(vue|js)$",
+      "excludePattern": "(node_modules/|docs)"
+    },
+    "plugins": ["plugins/markdown",
+    "node_modules/jsdoc-vuejs"],
+    "templates": {
+      "cleverLinks": true,
+      "monospaceLinks": true
+    },
+    "opts": {
+      "recurse": true,
+      "destination": "./docs/",
+      "tutorials": "./tutorials/"
+    }
+  }
+  

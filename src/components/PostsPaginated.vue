@@ -1,4 +1,15 @@
+<script>
+/**
+ * @file PostsPaginated.vue - pag
+ * @author MM
+ * @see <a href="https://google.com"> Google </a>
+ */
+
+</script>
+
 <script setup>
+
+
 import { nextTick, ref } from 'vue';
 import PreviewList from './PreviewList.vue';
 import PreviewListLarge from './PreviewListLarge.vue'
@@ -18,12 +29,16 @@ import axios from 'axios';
 
 const selectedPage = ref(0);
 
+/**
+ * Get posts from backend by supplied link
+ * @param {*} link 
+ */
 const getPosts = async function(link){
     posts.value = [];
     pages.value = [];
     await nextTick();
     // const data = (await getDataFromLink(link)).value;
-    axios.get('posts/')
+    axios.get(link)
     .then((res)=>{
         posts.value = res.data.results;
         pages.value = res.data.context.page_links;

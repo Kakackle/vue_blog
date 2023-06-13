@@ -1,3 +1,6 @@
+/**
+ * @file main.js of the whole Vue app, work jsdoc, god damn it
+ */
 import './assets/base.css'
 
 import { createApp } from 'vue'
