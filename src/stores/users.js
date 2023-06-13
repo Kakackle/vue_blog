@@ -1,3 +1,7 @@
+/**
+ * TODO: [OUTDATED, UNUSED, TO BE DELETED] or modified to fit different needs
+ */
+
 import { defineStore } from "pinia";
 import {ref, reactive, computed} from 'vue'
 

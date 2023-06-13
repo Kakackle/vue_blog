@@ -1,8 +1,18 @@
+<!-- 
+    View tymczasowo wyswietlajacy site map z vue routera
+    Domyslnie wyswietlajacy takze informacje o stronie/autorze etc
+    TODO: te dodatkowe informacje, nad site mapa np
+ -->
 <script setup>
 import GoBackButton from '../components/GoBackButton.vue';
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
 const routes = router.getRoutes();
+
+/**
+ * sort routes from vue router alphabetically, return in array form
+ */
 const routesSorted = routes.sort(function(a,b) {
   if(a.name < b.name){
     return -1;
@@ -19,6 +29,7 @@ const routesSorted = routes.sort(function(a,b) {
     <GoBackButton></GoBackButton>
     <p class="title">Something about the site idk, anyway here are all the available routes:</p>
     <div class="lists">
+      
       <div class="left">
         <p class="title">VUE ROUTES:</p>
         <ul class="route-list">
@@ -26,6 +37,7 @@ const routesSorted = routes.sort(function(a,b) {
             <RouterLink :to="route.path">{{ route.name }}</RouterLink> - {{ route.path }} - {{ route.meta.desc }}</li>
         </ul>
       </div>
+
       <div class=right>
         <p class="title">DRF ROUTES: [base: http://127.0.0.1:8000]</p>
         <ul class="route-list">

@@ -1,16 +1,34 @@
+<!-- 
+    Komponent realizujacy funkcję navbara z routerlinkami
+ -->
 <script setup>
+import axios from 'axios';
 import {ref} from 'vue'
 import {useRouter} from 'vue-router'
 const router = useRouter();
 
-import {useUserStore} from '../stores/users'
-const userStore = useUserStore();
 // FIXME: gdzie przetrzymywac zalogowanego uzytkownika? ten nav jest dosyc globalny, nwm
+
 const loggedUser = ref(0);
-const user = userStore.users[loggedUser.value]
+const user = ref()
 const loggedIn = ref(0);
 const logInDrop = ref(0);
 const accDrop = ref(0);
+
+const getUser = function(user_slug){
+    axios.get(`users/${user_slug}`)
+    .then((res)=>{
+        user.value = res.data;
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+}
+
+/**
+ * Funkcje oblugujace widocznosc dropdownow login/logout/register
+ * TODO: konwersja ich na podkomponenty?
+ */
 const register = ()=>{
     logInDrop.value = 0;
     router.push('/register')

@@ -1,4 +1,7 @@
-<!-- Whole post view -->
+<!-- 
+    Whole post view with rest communication
+    TODO:[outdated, to be deleted]
+-->
 <script setup>
 import {usePostsStore} from "../stores/posts.js"
 import { onMounted } from "vue";

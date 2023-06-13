@@ -31,21 +31,23 @@ getAuthor();
     <div class="left">
         <p class="date">{{ post.date_posted }}</p>
     </div>
+
     <div class="right">
         <p class="title">{{ post.title }}</p>
         <div class="tags">
             <p v-for="tag in post.tags" class="tag hover"
-            @click="router.push({name: 'tag', params: {tag_slug: tag}})"
+                @click="router.push({name: 'tag', params: {tag_slug: tag}})"
             >{{ tag }}</p>
         </div>
         <p class="author hover" v-if="user.name"
-         @click="router.push({name: 'user', params: {user_slug: user.slug}})">{{ user.name }}</p>
+            @click="router.push({name: 'user', params: {user_slug: user.slug}})">{{ user.name }}</p>
         <p class="content">{{ post.content.slice(0,100) }}...</p>
     </div>
+
     <p class="post_id">id: {{ post.id }}</p>
     <p class="post_id views">views: {{ post.views }}</p>
     <ion-icon class="arr-icon hover" name="arrow-forward-outline"
-    @click="router.push({name: 'post', params:{post_slug: post.slug}})"
+        @click="router.push({name: 'post', params:{post_slug: post.slug}})"
     ></ion-icon>
 </div>
 </template>

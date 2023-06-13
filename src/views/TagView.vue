@@ -1,3 +1,6 @@
+<!-- 
+    TODO: cleanup
+ -->
 <script setup>
 import { useRoute, useRouter} from 'vue-router';
 import { ref } from 'vue';
@@ -39,7 +42,6 @@ const getPostsByTag = async function(link){
     await axios.get(link)
     .then((res)=>{
         posts.value = res.data.results;
-        // console.log(`posts: ${JSON.stringify(posts.value)}`)
         pages.value = res.data.context.page_links;
     })
 }

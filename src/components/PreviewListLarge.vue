@@ -30,6 +30,7 @@ getAuthor();
     <div class="left">
         <img :src=post.img class="img">
     </div>
+
     <div class="right">
         <p class="title">{{ post.title }}</p>
         <div class="tags">
@@ -39,15 +40,17 @@ getAuthor();
         </div>
         
         <p class="author hover" v-if="user.name"
-        @click="router.push({name: 'user', params: {user_slug: user.slug}})"
+            @click="router.push({name: 'user', params: {user_slug: user.slug}})"
         >{{ user.name }}</p>
         
         <p class="content">{{ post.content.slice(0,250) }}...</p>
     </div>
+
     <p class="post_id">{{ post.id }}</p>
     <p class="date">{{ post.date_posted }}</p>
+    
     <ion-icon class="arr-icon hover" name="arrow-forward-outline"
-    @click="router.push({name: 'post', params:{post_slug: post.slug}})"
+        @click="router.push({name: 'post', params:{post_slug: post.slug}})"
     ></ion-icon>
 </div>
 </template>

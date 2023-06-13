@@ -7,6 +7,11 @@ import { getDataFromLink } from '../composables/axiosComposables';
 //TODO: przechodzenie do tej strony od strony z postem,
 //przekazywanie od ktorego sie przeszlo w route
 //i automatycznie wkladanie tego jako wybrany post
+
+//TODO: czy serio nie da sie lepiej tego wyboru metody? chyba wlasnie sie da!
+//poprzez zamiast robienie axios.put albo axios.patch przesylanie jakos w meta/obiekcie
+//rzeczy takich jak method: 'put' itd
+
 const route = useRoute();
 
 const newTitle = ref("")
@@ -66,8 +71,6 @@ const deletePost = async function(){
     })
 }
 
-
-
 const addToTags = function(){
     newTags.value.push(newTag.value);
 }
@@ -105,9 +108,7 @@ const getPostsByPage = async function(link, page_id){
 const selectPost = function(post){
     selectedPost.value = post;
     newTitle.value = selectedPost.value.title
-    // console.log(`selectedPost.author: ${selectedPost.value.author}`);
     newAuthor.value = users.value.filter(user => selectedPost.value.author === user.username)[0];
-    // console.log(`newAuth: ${newAuthor.value}`);
     let selectedTags = [];
     selectedPost.value.tags.forEach((tag)=>{
         // console.log(`tag: ${tag}`);

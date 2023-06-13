@@ -1,10 +1,13 @@
+<!-- 
+  Komponent realizujacy funkcje routera cofania do strony poprzedniej
+ -->
 <script setup>
 import {useRouter} from 'vue-router'
 const router = useRouter();
 </script>
 
 <template>
-<a class="go-back hover" @click="router.back()">&larr; GO BACK</a>
+  <a class="go-back hover" @click="router.back()">&larr; GO BACK</a>
 </template>
 
 <style scoped>

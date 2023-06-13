@@ -1,3 +1,7 @@
+<!-- 
+    TODO: Outdated, to be deleted
+    mial byc osobny view jesli bylo podane zle id tagu ale moze byc w catchall, w/e
+ -->
 <script>
 import { useRoute } from 'vue-router';
 const route = useRoute();

@@ -14,9 +14,12 @@ import { nextTick, onMounted } from 'vue';
 import { ref, reactive } from 'vue';
 import { getCurrentInstance } from 'vue';
 
-const query = ref([]);
+
 const tags = ref([]);
 
+/**
+ * Funckja odbierajaca wszystkie tagi z API
+ */
 const getTags = async function(){
     axios.get('tags/')
     .then((res)=>{
@@ -30,13 +33,15 @@ const getTags = async function(){
 getTags();
 
 const checkedTags = ref([]);
-// const {posts, getTags} = storeToRefs(postsStore)
+
 const emit = defineEmits(['filterBox', 'filterTerm'])
 const emitBoxes = async () =>{
     await nextTick(()=>{
         emit('filterBox', checkedTags.value);
     });
 }
+
+const query = ref([]);
 
 const emitQuery = async() => {
     await nextTick(()=>{
@@ -49,14 +54,17 @@ const emitQuery = async() => {
 <template>
     <div class="side-div">
         <p class="boxes-title">FILTER BY SEARCH</p>
+
         <input type="search" class="search" placeholder="post title"
-        v-model="query" @keyup.enter="emitQuery">
+            v-model="query" @keyup.enter="emitQuery">
+
         <p class="boxes-title">FILTER BY TAGS:</p>
         <div class="boxes" v-if="tags.length">
             <div v-for="(tag, tag_id) in tags" class="box">    
-                <input type="checkbox" :id=tag_id name="tag-box" class="tag-box hover"
-                :value=tag.id v-model="checkedTags"
-                @change="emitBoxes">
+                <input type="checkbox" :id=tag_id name="tag-box"
+                    class="tag-box hover"
+                    :value=tag.id v-model="checkedTags"
+                    @change="emitBoxes">
                 <label :for=tag_id>{{ tag.name }}</label>
             </div>         
         </div>

@@ -1,3 +1,6 @@
+<!-- 
+    TODO: Cleanup
+ -->
 <script setup>
 import { useRouter, useRoute, routerKey } from 'vue-router';
 

@@ -1,4 +1,7 @@
-<!-- Whole post view -->
+<!-- 
+    Whole post view
+
+-->
 <script setup>
 import { onMounted } from "vue";
 import {useRouter, useRoute, routerKey} from "vue-router"
@@ -18,8 +21,6 @@ const errorMsg = ref("");
 
 const getPost = async function(){
   post.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/${post_slug}`)).value;
-  // ({post.value, postExists.value, errorMsg.value} = getDataWithSuccess(`http://127.0.0.1:8000/api/posts/${post_id}`));   
-  // let {post, postExists, errorMsg} = (await getDataWithSuccess(`http://127.0.0.1:8000/api/posts/${post_id}`)); 
   if(!post){
     postExists.value = 0;
     console.log("post not found");
@@ -32,12 +33,6 @@ const getPost = async function(){
 }
 
 getPost();
-
-onMounted(()=>{
-  // post.views +=1;
-  // console.log(post.views);
-})
-
 
 </script>
 

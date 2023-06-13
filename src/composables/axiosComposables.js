@@ -16,8 +16,10 @@ export async function getDataFromLink(link){
     return data
 }
 
-//FIXME: nie mam pojecie jak z tego korzystac, bo przy destructuring nie mozesz uzywac await czy cos wiec chuja to daje
-//ale moze to kwestia spojrzenia w to jak dziala axios / fetchowanie bardziej i tam szukac odpowiedzi
+// TODO: czemu niby odbieranie z destrukturyzacja mialoby nie dzialc z axiosem?
+// przeciez zwracac powinno tylko jak przejdzie przez wszystko?
+// czy raczej albo zrobic await data = get
+// lub robic return w .then zeby bylo tylko po skonczeniu
 export function getDataWithSuccess(link){
     const data = ref()
     const success = ref(false);

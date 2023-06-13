@@ -10,6 +10,7 @@ import { ref} from 'vue';
 import axios from 'axios';
 
 import { getDataFromLink } from '../composables/axiosComposables';
+//TODO: chyba jednak beda przywracane pobieranie pages i posts do paginated
 
 // const posts = ref()
 // const pages = ref()

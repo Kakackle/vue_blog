@@ -1,8 +1,6 @@
 <script setup>
 import {ref} from 'vue';
-
 import { useRouter } from 'vue-router';
-
 import axios from 'axios';
 
 const router = useRouter();
@@ -28,26 +26,30 @@ getAuthor();
 </script>
 
 <template>
-<div class="card-preview" >
-    <div class="top">
-        <img class="card-img" :src=post.img>
-    </div>
-    <div class="bottom">
-        <p class="title">{{ post.title }}</p>
-        <div class="tags">
-            <p v-for="tag in post.tags" class="tag hover"
-            @click="router.push({name:tag, params:{tag_slug: tag}})">{{ tag }}</p>
+    <div class="card-preview" >
+        <div class="top">
+            <img class="card-img" :src=post.img>
         </div>
-        <p class="author hover" v-if="user.name"
-        @click="router.push({name: 'user', params:{user_slug: user.slug}})">{{ user.name }}</p>
-        <p class="content">{{ post.content.slice(0,100) }}...</p>
-        <p class="date">{{ post.date_posted }}</p>
-    </div>
-    <!-- <p class="post_id">{{ post.id }}</p> -->
-    <ion-icon class="arr-icon hover" name="arrow-forward-outline"
-    @click="router.push({name: 'post', params:{post_slug : post.slug}})"></ion-icon>
 
-</div>
+        <div class="bottom">
+            <p class="title">{{ post.title }}</p>
+            <div class="tags">
+                <p v-for="tag in post.tags" class="tag hover"
+                    @click="router.push({name:tag, params:{tag_slug: tag}})"
+                >{{ tag }}</p>
+            </div>
+            <p class="author hover" v-if="user.name"
+                @click="router.push({name: 'user', params:{user_slug: user.slug}})"
+            >{{ user.name }}</p>
+            <p class="content">{{ post.content.slice(0,100) }}...</p>
+            <p class="date">{{ post.date_posted }}</p>
+        </div>
+
+        <!-- <p class="post_id">{{ post.id }}</p> -->
+        <ion-icon class="arr-icon hover" name="arrow-forward-outline"
+            @click="router.push({name: 'post', params:{post_slug : post.slug}})"
+        ></ion-icon>
+    </div>
 </template>
 
 <style scoped>

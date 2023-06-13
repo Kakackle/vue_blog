@@ -1,9 +1,15 @@
+<!-- 
+    View for testing purposes, currently slightly outdated?
+    TODO: To be deleted? doesn't ntroduce anything new
+ -->
 <script setup>
 import axios from 'axios'
 import {ref} from 'vue'
 import GoBackButton from '../components/GoBackButton.vue';
+
 const results = ref([])
 const gotData = ref(0);
+
 const getResults = function(){
     gotData.value = 0;
     axios.get("posts/")

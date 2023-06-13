@@ -1,3 +1,6 @@
+// TODO: czy moge jakos zebrac ladniej te importy mimo ze z roznych plikow? pewnie nie
+// TODO: Cleanup nie uzywanych
+// TODO: title podstron oraz podstawowy prefix tytulow
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BlogView from '../views/BlogView.vue'

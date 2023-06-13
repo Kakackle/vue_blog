@@ -1,3 +1,7 @@
+<!-- 
+    Komponent do filtracji po searchu, poki co po autorze
+    [do usuniecia?]
+ -->
 <script setup>
 import PreviewList from "../components/PreviewList.vue";
 import {ref, render} from 'vue';

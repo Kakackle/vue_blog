@@ -1,3 +1,7 @@
+<!-- 
+    View tworzenia nowych uzytkownikow
+    TODO: gdzies przechodzenie tutaj, najlepiej od "register" w dropdownie w Nav.vue
+ -->
 <script setup>
 import { ref } from 'vue';
 const newUser = ref("")
