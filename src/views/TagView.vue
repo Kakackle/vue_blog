@@ -101,7 +101,7 @@ const deleteTag = async function(){
         <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
         <p class="posts" v-if="posts"> Posts:</p>
         <!-- <p v-if="posts.length">paginated posts should be showing...</p> -->
-        <PostsPaginated v-if="posts.length" :posts="posts" :pages="pages"></PostsPaginated>
+        <PostsPaginated v-if="posts.length" :type="'small'"></PostsPaginated>
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>
     </section>

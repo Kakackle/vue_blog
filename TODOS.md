@@ -11,6 +11,8 @@
 9. footer costam
 10. ~~przerzucenie kodu accdrop i logindrop w wlasne komponenty ~~ - jebac?
 11. lepsza forma dodawnia postow z markdownem? **i ogolnie markdown**
+12. **TOSTY NA SUKCES/ERROR ODBIORU**
+13. **CLEANUP I JSDOC NA WZOR POPRZEDNICH PROJEKTOW**
 
 # Duze rzeczy
 1. custom user / profile i logowanie
@@ -33,7 +35,8 @@
 5. ## WAZNE: refactor sekcji script wiekszosci componentow
     tzn tak by wykorzystac zalete composition api i script setup, czyli mozliwosc grupowania funkcjonalnosci w jednym miejscu, bo teraz troche porozrzucane sa, trzeba skakac przegladajac
 
-
+6. ## dodaj title do wszystkich podstron
+    i moze jakis sposob by zrobic tytul w postaci Blog | podstrona , gdzie podstrona to tytul podstrony ofc
 
 # Fixes
 1. TODO: lepsze composables z srodkowym zwracaniem stanow itd ale to by wymagalo **zrozumienia promises etc**

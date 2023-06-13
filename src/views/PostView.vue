@@ -9,7 +9,7 @@ import axios from "axios";
 
 const route = useRoute()
 const router = useRouter()
-const post_id = route.params.post_id;
+const post_slug = route.params.post_slug;
 
 const post = ref()
 const postExists = ref(0);
@@ -17,16 +17,16 @@ const errorMsg = ref("");
 
 
 const getPost = async function(){
-  post.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/${post_id}`)).value;
+  post.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/${post_slug}`)).value;
   // ({post.value, postExists.value, errorMsg.value} = getDataWithSuccess(`http://127.0.0.1:8000/api/posts/${post_id}`));   
   // let {post, postExists, errorMsg} = (await getDataWithSuccess(`http://127.0.0.1:8000/api/posts/${post_id}`)); 
   if(!post){
     postExists.value = 0;
     console.log("post not found");
-    router.push({name: 'catchall', params: {post_id: post_id}});
+    router.push({name: 'catchall', params: {post_slug: post_slug}});
   }
   postExists.value = 1;
-  axios.patch(`http://127.0.0.1:8000/api/posts/${post_id}`, {
+  axios.patch(`http://127.0.0.1:8000/api/posts/${post_slug}`, {
     views: post.value.views+1
   });
 }
@@ -51,7 +51,7 @@ onMounted(()=>{
           <p class="post-title">{{ post.title }}</p>
           <div class="second-row">
             <p class="post-author hover"
-            @click="router.push({name: 'user', params:{user_id: post.author.id}})">{{ post.author.name }}</p>
+            @click="router.push({name: 'user', params:{user_slug: post.author}})">{{ post.author}}</p>
             <p class="centerdot">&centerdot;</p>
             <p class="post-date">{{ post.date_posted }}</p>
             <p class="centerdot">&centerdot;</p>
@@ -59,7 +59,9 @@ onMounted(()=>{
           </div>
           
           <div class="post-tags">
-            <p class="tag hover" v-for="(tag, tag_id) in post.tags">{{ tag.name }}</p>
+            <p class="tag hover" v-for="(tag, tag_id) in post.tags"
+            @click="router.push({name: 'tag', params: {tag_slug: tag}})"
+            >{{ tag }}</p>
           </div>
           
           <img :src="post.img" class="post-img">

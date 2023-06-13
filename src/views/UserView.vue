@@ -10,7 +10,7 @@ import { getDataFromLink } from "../composables/axiosComposables";
 
 const route = useRoute();
 const router = useRouter();
-const user_id = parseInt(route.params.user_id);
+const user_slug = route.params.user_slug;
 
 const user = ref();
 const userExists = ref(0);
@@ -36,14 +36,14 @@ const openEdit = () =>{
     beingEdited.value = 1;
 }
 
-const submitEdit = async function(id){
+const submitEdit = async function(slug){
     const newPost = {
         name: newName.value,
         username: newUsername.value,
         mail: newMail.value,
         bio: newBio.value
     }
-    axios.patch(`users/${id}`, newPost)
+    axios.patch(`users/${slug}`, newPost)
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText; 
     })
@@ -55,13 +55,13 @@ const submitEdit = async function(id){
         newUsername.value = '';
         newMail.value = '';
         newBio.value = '';
-        getUser(user_id);
+        getUser(user_slug);
         beingEdited.value = 0;
     })
 }
 
-const getUser = function(id){
-    axios.get(`users/${id}`)
+const getUser = function(slug){
+    axios.get(`users/${slug}`)
     .then((res)=>{
         user.value = res.data;
         userExists.value = 1;
@@ -71,12 +71,12 @@ const getUser = function(id){
         //     getPostByHyperlink(post);
         // })
         // console.log(`path sent: posts/?author=${user_id}`)
-        getPosts(`posts/?author=${user_id}`);
+        getPosts(`posts/?author=${user_slug}`);
     })
     .catch((error)=>{
         userExists.value = 0;
         errorMsg.value = error;
-        router.push({name: 'catchall', params:{user_id: user_id}});
+        router.push({name: 'catchall', params:{user_slug: user_slug}});
     })
 }
 
@@ -93,14 +93,7 @@ const getPosts = async function(link){
     })
 }
 
-const getPostsById = async function(){
-    await axios.get(link)
-    .then((res)=>{
-        posts.value.push(res.data);
-    })
-}
-
-getUser(user_id);
+getUser(user_slug);
 
 </script>
 
@@ -136,7 +129,7 @@ getUser(user_id);
             </div>
         </div>
         <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT USER</button>
-        <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_id)">CONFIRM</button>
+        <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_slug)">CONFIRM</button>
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>
         <p class="user-info"> {{ user.name }}'s posts:</p>
@@ -144,7 +137,7 @@ getUser(user_id);
             <PreviewList v-for="(post, post_id) in posts" :post="post"></PreviewList>
         </div> -->
         <!-- <p v-if="posts">paginated should be displayed...</p> -->
-        <PostsPaginated v-if="posts" :posts="posts" :pages="pages"></PostsPaginated>
+        <PostsPaginated v-if="posts" :posts="posts" :pages="pages" :type="'small'"></PostsPaginated>
 
     </div>
 </template>

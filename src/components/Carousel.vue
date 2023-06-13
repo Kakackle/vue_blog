@@ -1,6 +1,5 @@
 <script setup>
 import PreviewCard from './PreviewCard.vue';
-import { usePostsStore } from '../stores/posts';
 // const postsStore = usePostsStore();
 import { ref} from 'vue';
 import axios from 'axios';
@@ -8,20 +7,19 @@ import axios from 'axios';
 const posts = ref()
 
 const getPosts = function(){
-  axios.get(`http://127.0.0.1:8000/api/posts/`)
+  axios.get(`posts/`)
   .then((res)=>{
-    posts.value = res.data;
-  }
-  )
+    posts.value = res.data.results;
+  })
 }
 getPosts();
 </script>
 
 <template>
     <section class="sect">
-        <container class="carousel">
+        <div class="carousel">
             <PreviewCard v-for="(post, post_id) in posts" :post="post"></PreviewCard>
-        </container>
+        </div>
     </section>
 </template>
 

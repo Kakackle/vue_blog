@@ -30,16 +30,17 @@ const router = createRouter({
       meta: {desc: 'About author/project page + site map?'}
     },
     {
-      path: '/posts/:post_id',
+      path: '/posts/:post_slug',
       name: 'post',
       component: PostView,
-      meta: {desc: 'Single post view specified by post_id id [for now]'}
+      meta: {desc: 'Single post view specified by post_slug slug [for now]'}
     },
     {
       path: '/blog',
       name: 'blog',
       component: BlogView,
-      meta: {desc: 'Blog view with posts displayed in multiple forms and side filtering'}
+      meta: {desc: 'Blog view with posts displayed in multiple forms and side filtering',
+            title: 'blog'}
     },
     {
       path: '/register',
@@ -54,10 +55,10 @@ const router = createRouter({
       meta: {desc: 'View for creating a post instance (POST form)'}
     },
     {
-      path: '/users/:user_id',
+      path: '/users/:user_slug',
       name: 'user',
       component: UserView,
-      meta: {desc: 'Single user info view specified by user_id [for now]'}
+      meta: {desc: 'Single user info view specified by user_slug [for now]'}
     },
     // {
     //   path: `/tag/:tag_id(//d+)`,
@@ -108,6 +109,18 @@ const router = createRouter({
       meta: {desc: 'Catchall for errors, will try to display input params'}
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  // Get the page title from the route meta data that we have defined
+  // See further down below for how we setup this data
+  const title = to.meta.title
+// If the route has a title, set it as the page title of the document/page
+  if (title) {
+    document.title = title
+  }
+  // Continue resolving the route
+  next()
 })
 
 export default router

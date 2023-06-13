@@ -2,21 +2,30 @@
 import Hero from '../components/Hero.vue';
 import Banner from '../components/Banner.vue'
 import PreviewList from '../components/PreviewList.vue';
+import PostsPaginated from '../components/PostsPaginated.vue';
 import PreviewCard from '../components/PreviewCard.vue';
 import Carousel from '../components/Carousel.vue';
-// import { usePostsStore } from '../stores/posts';
-// const postsStore = usePostsStore();
+
 import { ref} from 'vue';
 import axios from 'axios';
 
 import { getDataFromLink } from '../composables/axiosComposables';
 
-const posts = ref()
+// const posts = ref()
+// const pages = ref()
 
-const getPosts = async function(){
-  posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
-}
-getPosts();
+// const getPosts = async function(){
+//   // posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
+//   axios.get('posts/')
+//   .then((res)=>{
+//     posts.value = res.data.results;
+//     pages.value = res.data.context.page_links;
+//   })
+//   .catch((err)=>{
+//     console.log(err);
+//   })
+// }
+// getPosts();
 
 </script>
 
@@ -26,11 +35,13 @@ getPosts();
     <Hero></Hero>
     <Carousel></Carousel>
     <section class="main-section">
-      <container class="preview-list">
-        <PreviewList v-for="post in posts" :post="post"></PreviewList>
-      </container>
-      <container class="side">
-      </container>
+      <div class="preview-list">
+        <!-- <PreviewList v-for="post in posts" :post="post"></PreviewList> -->
+        <!-- <PostsPaginated :posts="posts" :pages="pages" :type="'large'"></PostsPaginated> -->
+        <PostsPaginated :type="'large'"></PostsPaginated>
+      </div>
+      <div class="side">
+      </div>
     </section>  
   </main>
 </template>

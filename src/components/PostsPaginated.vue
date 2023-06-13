@@ -1,30 +1,49 @@
 <script setup>
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import PreviewList from './PreviewList.vue';
-const props = defineProps(['posts', 'pages']);
-const posts = ref(props.posts);
-const pages = ref(props.pages);
+import PreviewListLarge from './PreviewListLarge.vue'
+// const props = defineProps(['posts', 'pages', 'type']);
+const props = defineProps(['type']);
+// const posts = ref(props.posts);
+// const pages = ref(props.pages);
+const posts = ref([]);
+const pages = ref([]);
 
+const type = ref(props.type);
+// const checkType = function(){
+//     console.log(`type: ${type === 'small'}`)
+// }
 import { getDataFromLink } from "../composables/axiosComposables";
+import axios from 'axios';
 
 const selectedPage = ref(0);
 
 const getPosts = async function(link){
     posts.value = [];
-    const data = (await getDataFromLink(link)).value;
-    posts.value = data.results;
-    pages.value = data.context.page_links;
+    pages.value = [];
+    await nextTick();
+    // const data = (await getDataFromLink(link)).value;
+    axios.get('posts/')
+    .then((res)=>{
+        posts.value = res.data.results;
+        pages.value = res.data.context.page_links;
+    })
+
 }
 
 const getPostsByPage = async function(link, page_id){
     getPosts(link);
     selectedPage.value = page_id;
 }
+
+getPostsByPage('http://127.0.0.1:8000/api/posts', selectedPage.value);
+
 </script>
 
 <template>
     <div class="post-list" v-if="posts">
-        <PreviewList v-for="(post, post_id) in posts" :post="post"></PreviewList>
+        <PreviewList v-for="(post, post_id) in posts" :post="post" v-if="type === 'small'"></PreviewList>
+        <PreviewListLarge v-for="(post, post_id) in posts" :post="post" v-if="type === 'large'"></PreviewListLarge>
         <div class="pages" v-if="pages">
             <p class="page" v-for="(page, page_id) in pages"
             @click="getPostsByPage(page[0], page_id)"
@@ -38,6 +57,11 @@ const getPostsByPage = async function(link, page_id){
     display: flex;
     justify-content: center;
     font-size: 2.5rem;
+    gap: 1rem;
+}
+.post-list{
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 }
 

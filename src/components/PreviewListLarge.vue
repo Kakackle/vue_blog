@@ -1,38 +1,54 @@
 <script setup>
-// import { storeToRefs } from 'pinia';
-// import { usePostsStore } from '../stores/posts';
-// import { useUserStore } from '../stores/users';
+
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import axios from 'axios';
 const router = useRouter();
 
-// const postsStore = usePostsStore();
-// const {posts} = storeToRefs(postsStore)
+const props = defineProps(['post'])
 const post = props.post
 
-// const userStore = useUserStore();
-// const {users} = storeToRefs(userStore)
-// const user = users.value[post.author];
 const user = ref();
 user.value = post.author;
-const props = defineProps(['post'])
+
+const getAuthor = async function(){
+    axios.get(`users/${user.value}`)
+    .then((res)=>{
+        user.value = res.data;
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+}
+
+getAuthor();
+
 </script>
 
 <template>
-<div class="list-preview hover" @click="router.push({name: 'post', params:{post_id : post.id}})">
+<div class="list-preview hover">
     <div class="left">
         <img :src=post.img class="img">
     </div>
     <div class="right">
         <p class="title">{{ post.title }}</p>
         <div class="tags">
-            <p v-for="tag in post.tags" class="tag hover">{{ tag }}</p>
+            <p v-for="tag in post.tags" class="tag hover"
+            @click="router.push({name: 'tag', params: {tag_slug: tag}})"
+            >{{ tag }}</p>
         </div>
-        <p class="author">{{ user.name }}</p>
+        
+        <p class="author hover" v-if="user.name"
+        @click="router.push({name: 'user', params: {user_slug: user.slug}})"
+        >{{ user.name }}</p>
+        
         <p class="content">{{ post.content.slice(0,250) }}...</p>
     </div>
     <p class="post_id">{{ post.id }}</p>
-    <p class="date">{{ post.date }}</p>
+    <p class="date">{{ post.date_posted }}</p>
+    <ion-icon class="arr-icon hover" name="arrow-forward-outline"
+    @click="router.push({name: 'post', params:{post_slug: post.slug}})"
+    ></ion-icon>
 </div>
 </template>
 
@@ -97,7 +113,13 @@ const props = defineProps(['post'])
 }
 
 .date{
-    right: 2.5rem;
+    right: 3.5rem;
     color:#636e72;
+}
+.arr-icon{
+    position: absolute;
+    font-size: 1.5rem;
+    bottom: 1rem;
+    right: 1rem;
 }
 </style>
