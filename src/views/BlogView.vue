@@ -13,7 +13,12 @@ TODO: kwestia jest ze PostsPaginated i FilterSide to osobne komponenty, polaczon
       bo to nie zawsze jest pelne, a przewaznie wlasnie przefiltrowane
       co dziala, poniewaz przesylamy rowniez linki z query stringami zawartymi w nich
       do celow paginacji
+
+TODO: tutaj wgl nie ma PostsPaginated! a przydaloby sie dodac jak w reszcie elementow
+- dlatego ze jest filtracja, ale to nie jest problem, jesli przekazujemy w paginated
+linki do stron z zaaplikowana filtracja
 -->
+
 <script setup>
 
 import FilterSide from '../components/FilterSide.vue';
@@ -23,7 +28,9 @@ import { RouterLink, RouterView } from 'vue-router'
 import { ref, render } from 'vue';
 import axios from 'axios';
 
+//posts przechowywane jako backup wszystkich postow
 const posts = ref([]);
+//renderPosts jako posty uzyskiwane poprzez API z filtracja z query
 const renderPosts = ref(posts);
 const pages = ref([]);
 
@@ -61,8 +68,7 @@ const getPostsByFilters = async function(tags, page, search){
   console.log(`resulting query: ${query_string}`);
   axios.get(query_string)
   .then((res)=>{
-    posts.value = res.data.results;
-    renderPosts.value = posts.value;
+    renderPosts.value = res.data.results;
     pages.value = res.data.context.page_links;
   })
   .catch((err)=>
@@ -79,34 +85,28 @@ const getPostsByFilters = async function(tags, page, search){
 const filterByBoxes = function(checkedTags){
   checked.value = checkedTags;
   renderPosts.value=[];
-  posts.value=[];
   getPostsByFilters(checked.value, selectedPage.value, queryTerm.value);
 }
 
 const filterByTerm = function(query){
   queryTerm.value = query;
   renderPosts.value=[];
-  posts.value=[];
   getPostsByFilters(checked.value, selectedPage.value, queryTerm.value);
 }
 
 const getPostsByPage = async function(page_id){
   renderPosts.value=[];
-  posts.value=[];
   selectedPage.value = page_id;
   getPostsByFilters(checked.value, page_id, queryTerm.value);
 }
 
-/**
- * TODO: poczatkowa funkcja pobierania tagow, bez zadnych query - zbyteczna?
- */
+//initial state, for backup
 const getPosts = async function(){
   axios.get('posts/')
   .then((res)=>
   {
-    renderPosts.value=[];
     posts.value = res.data.results;
-    renderPosts.value = posts.value;
+    renderPosts.value = res.data.results;
     pages.value = res.data.context.page_links;
   })
   .catch((err)=>{
@@ -127,7 +127,7 @@ getPosts();
         <div class="blog-list">
           <PreviewListLarge v-for="(post, post_id) in renderPosts" :post="post"></PreviewListLarge>
         </div>
-        
+
         <div class="pages" v-if="pages">
               <p class="page" v-for="page in pages"
               @click="getPostsByPage(page[1])"

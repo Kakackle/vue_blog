@@ -10,23 +10,22 @@ import { ref} from 'vue';
 import axios from 'axios';
 
 import { getDataFromLink } from '../composables/axiosComposables';
-//TODO: chyba jednak beda przywracane pobieranie pages i posts do paginated
 
-// const posts = ref()
-// const pages = ref()
+const posts = ref()
+const pages = ref()
 
-// const getPosts = async function(){
-//   // posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
-//   axios.get('posts/')
-//   .then((res)=>{
-//     posts.value = res.data.results;
-//     pages.value = res.data.context.page_links;
-//   })
-//   .catch((err)=>{
-//     console.log(err);
-//   })
-// }
-// getPosts();
+const getPosts = async function(){
+  // posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
+  axios.get('posts/')
+  .then((res)=>{
+    posts.value = res.data.results;
+    pages.value = res.data.context.page_links;
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
+getPosts();
 
 </script>
 
@@ -38,8 +37,8 @@ import { getDataFromLink } from '../composables/axiosComposables';
     <section class="main-section">
       <div class="preview-list">
         <!-- <PreviewList v-for="post in posts" :post="post"></PreviewList> -->
-        <!-- <PostsPaginated :posts="posts" :pages="pages" :type="'large'"></PostsPaginated> -->
-        <PostsPaginated :type="'large'"></PostsPaginated>
+        <PostsPaginated :posts="posts" :pages="pages" :type="'large'"></PostsPaginated>
+        <!-- <PostsPaginated :type="'large'"></PostsPaginated> -->
       </div>
       <div class="side">
       </div>

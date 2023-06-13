@@ -15,22 +15,20 @@ import PreviewListLarge from './PreviewListLarge.vue'
 // import { getDataFromLink } from "../composables/axiosComposables";
 import axios from 'axios';
 
-// const props = defineProps(['posts', 'pages', 'type']);
-const props = defineProps(['type']);
+const props = defineProps(['posts', 'pages', 'type']);
+// const props = defineProps(['type']);
 const type = ref(props.type);
 
-// const posts = ref(props.posts);
-// const pages = ref(props.pages);
-const posts = ref([]);
-const pages = ref([]);
+//posts oraz pages - moga byc pelne lub po filtracji z zewnetrznego view
+const posts = ref(props.posts);
+const pages = ref(props.pages);
+// console.log(`pages: ${pages.value}`)
+// const posts = ref([]);
+// const pages = ref([]);
 const selectedPage = ref(0);
 
 const getPosts = async function(link){
-    posts.value = [];
-    pages.value = [];
-    await nextTick();
-
-    axios.get('posts/')
+    axios.get(link)
     .then((res)=>{
         posts.value = res.data.results;
         pages.value = res.data.context.page_links;
@@ -39,16 +37,19 @@ const getPosts = async function(link){
 }
 
 const getPostsByPage = async function(link, page_id){
+    posts.value = [];
+    pages.value = [];
+    await nextTick();
     getPosts(link);
     selectedPage.value = page_id;
 }
 
-getPostsByPage('http://127.0.0.1:8000/api/posts', selectedPage.value);
+getPostsByPage('posts/', selectedPage.value);
 
 </script>
 
 <template>
-    <div class="post-list" v-if="posts">
+    <div class="post-list" v-if="posts.length">
         <PreviewList v-for="(post, post_id) in posts" :post="post"
             v-if="type === 'small'"></PreviewList>
         <PreviewListLarge v-for="(post, post_id) in posts" :post="post" 
