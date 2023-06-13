@@ -1,3 +1,8 @@
+<!-- 
+    [So far] static banner element
+
+
+ -->
 <script setup>
 
 </script>

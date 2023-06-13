@@ -1,3 +1,13 @@
+<!-- 
+    Komponent majacy pelnic funkcje umieszczalnego z boku strony dodajacy funkcje filtracji
+    postow po query lub wyborze checkboxow
+    poki co glownie zajmuje sie wyswietlaniem ich oraz oblusga wpisywania,
+    TODO: fajnie gdyby jednak zawieral tez funkcje filtracji i to on decydowal
+    jakie zestawy sa renderowane na stronie ktora go zawiera
+    pytanie jaki to ma sens, czy moze by trzeba sparowac z uzywanym razem zawsze z tym
+    komponentem jakims plikiem mixinow
+ -->
+
 <script setup>
 import axios from 'axios';
 import { nextTick, onMounted } from 'vue';

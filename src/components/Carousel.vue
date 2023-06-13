@@ -1,6 +1,12 @@
+<!-- 
+    Carousel for displaying PreviewCard components for a quick moving display
+    of either most recent, popular or belongng to user posts
+    TODO: overflow i dynamcizna ilosc mieszczacych sie cards
+    TODO: ruch, zmiana wyswietlanych?
+ -->
+
 <script setup>
 import PreviewCard from './PreviewCard.vue';
-// const postsStore = usePostsStore();
 import { ref} from 'vue';
 import axios from 'axios';
 
