@@ -14,6 +14,8 @@ import { getDataFromLink } from '../composables/axiosComposables';
 const posts = ref()
 const pages = ref()
 
+const PAGE_SIZES = [5,10,15];
+
 const getPosts = async function(){
   // posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
   axios.get('posts/')
@@ -37,7 +39,8 @@ getPosts();
     <section class="main-section">
       <div class="preview-list">
         <!-- <PreviewList v-for="post in posts" :post="post"></PreviewList> -->
-        <PostsPaginated :posts="posts" :pages="pages" :type="'large'"></PostsPaginated>
+        <PostsPaginated :posts="posts" :pages="pages" :type="'large'"
+        v-if="posts"></PostsPaginated>
         <!-- <PostsPaginated :type="'large'"></PostsPaginated> -->
       </div>
       <div class="side">

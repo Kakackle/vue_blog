@@ -1,6 +1,7 @@
 <!-- 
     Whole post view
-
+    TODO: Upieknienie
+    TODO: Markdown ale to zacznie sie od tworzenia contentu w takiej formie
 -->
 <script setup>
 import { onMounted } from "vue";
@@ -51,6 +52,9 @@ getPost();
             <p class="post-date">{{ post.date_posted }}</p>
             <p class="centerdot">&centerdot;</p>
             <p class="post-date">views: {{ post.views }}</p>
+            <p class="centerdot">&centerdot;</p>
+            <button class="go-button hover"
+              @click="router.push({name: 'create', params:{post_slug: post.slug}})">EDIT POST</button>
           </div>
           
           <div class="post-tags">
@@ -141,5 +145,11 @@ getPost();
   cursor: pointer;
   filter: brightness(0.5);
   /* border-bottom: 1px solid black */
+}
+.go-button{
+  height: 2.2rem;
+  width: 10rem;
+  font-size: 1.5rem;
+  padding: 0.2rem;
 }
 </style>

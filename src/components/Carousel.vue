@@ -2,6 +2,7 @@
     Carousel for displaying PreviewCard components for a quick moving display
     of either most recent, popular or belongng to user posts
     TODO: overflow i dynamcizna ilosc mieszczacych sie cards
+    FIXME: overflow zjebany
     TODO: ruch, zmiana wyswietlanych?
  -->
 
@@ -45,6 +46,6 @@ getPosts();
     gap: 2rem;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
     padding: 2rem;
-    overflow: hidden;
+    overflow-x: scroll;
 }
 </style>

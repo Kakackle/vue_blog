@@ -1,6 +1,4 @@
-// TODO: czy moge jakos zebrac ladniej te importy mimo ze z roznych plikow? pewnie nie
-// TODO: Cleanup nie uzywanych
-// TODO: title podstron oraz podstawowy prefix tytulow
+// TODO: Lazy loading? Moze jesli initial load strony stanie sie dlugi
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BlogView from '../views/BlogView.vue'
@@ -12,9 +10,6 @@ import UserView from "../views/UserView.vue"
 import TagView from "../views/TagView.vue"
 import TagListView from "../views/TagListView.vue"
 import NotFoundView from "../views/NotFoundView.vue"
-import TagNotFoundView from "../views/TagNotFoundView.vue"
-import APITestView from "../views/APITestView.vue"
-import PostViewRest from "../views/PostViewRest.vue"
 import FilterView from "../views/FilterView.vue"
 
 const router = createRouter({
@@ -24,44 +19,57 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: {desc: 'Home view with a banner etc'}
+      meta: {
+      desc: 'Home view with a banner etc',
+      title: 'Home'}
     },
     {
       path: '/about',
       name: 'about',
       component: AboutView,
-      meta: {desc: 'About author/project page + site map?'}
+      meta: {
+      desc: 'About author/project page + site map?',
+      title: 'About'}
     },
     {
       path: '/posts/:post_slug',
       name: 'post',
       component: PostView,
-      meta: {desc: 'Single post view specified by post_slug slug [for now]'}
+      meta: {
+      desc: 'Single post view specified by post_slug slug [for now]',
+      title: 'Post'}
     },
     {
       path: '/blog',
       name: 'blog',
       component: BlogView,
-      meta: {desc: 'Blog view with posts displayed in multiple forms and side filtering',
-            title: 'blog'}
+      meta: {
+      desc: 'Blog view with posts displayed in multiple forms and side filtering',
+      title: 'Blog'}
     },
     {
       path: '/register',
       name: 'register',
       component: RegisterView,
-      meta: {desc: 'View for registering users (POST form)'}
+      meta: {
+      desc: 'View for registering users (POST form)',
+      title: 'Register'}
     },
     {
-      path: '/create',
+      path: '/create/:post_slug?',
       name: 'create',
       component: CreatePostView,
-      meta: {desc: 'View for creating a post instance (POST form)'}
+      meta: {
+      desc: 'View for creating a post instance (POST form)',
+      title: 'Create post'}
     },
     {
       path: '/users/:user_slug',
       name: 'user',
       component: UserView,
-      meta: {desc: 'Single user info view specified by user_slug [for now]'}
+      meta: {
+      desc: 'Single user info view specified by user_slug [for now]',
+      title: 'User'}
     },
     // {
     //   path: `/tag/:tag_id(//d+)`,
@@ -73,43 +81,33 @@ const router = createRouter({
       path: '/tags/:tag_slug',
       name: 'tag',
       component: TagView,
-      meta: {desc: 'Tag/category view specified by slug'}
+      meta: {
+      desc: 'Tag/category view specified by slug',
+      title: 'Tag'}
     },
     {
       path: '/tags',
       name: 'tags',
       component: TagListView,
-      meta: {desc: 'Tag/category list view'}
-    },
-    {
-      path: '/apitest',
-      name: 'apitest',
-      component: APITestView,
-      meta: {desc: 'View for testing the API requests [currently testing viewing posts]'}
-    },
-    {
-      path: '/apipost/:post_id',
-      name: 'apipost',
-      component: PostViewRest,
-      meta: {desc: 'Some testing idk - to be trashed?'}
+      meta: {
+      desc: 'Tag/category list view',
+      title: 'Tag List'}
     },
     {
       path: "/posts_search",
       name: "posts_search",
       component: FilterView,
-      meta: {desc: 'Test filtering/querying from db and in website'}
-    },
-    {
-      path: '/tags/:afterTag(.*)',
-      name: 'tag404',
-      component: TagNotFoundView,
-      meta: {desc: 'Page if specified tag was not found - trash?'}
+      meta: {
+      desc: 'Test filtering/querying from db and in website',
+      title: 'Filtering'}
     },
     {
       path: "/:pathMatch(.*)*",
       name: "catchall",
       component: NotFoundView,
-      meta: {desc: 'Catchall for errors, will try to display input params'}
+      meta: {
+      desc: 'Catchall for errors, will try to display input params',
+      title: 'Error'}
     }
   ]
 })
@@ -120,7 +118,7 @@ router.beforeEach((to, from, next) => {
   const title = to.meta.title
 // If the route has a title, set it as the page title of the document/page
   if (title) {
-    document.title = title
+    document.title = title + " | Vue Blog"
   }
   // Continue resolving the route
   next()

@@ -13,6 +13,7 @@ import { getDataFromLink } from '../composables/axiosComposables';
 //rzeczy takich jak method: 'put' itd
 
 const route = useRoute();
+const param_slug = route.params.post_slug;
 
 const newTitle = ref("")
 const newAuthor = ref()
@@ -93,6 +94,12 @@ const getPosts = async function(link){
         posts.value = res.data.results;
         pages.value = res.data.context.page_links;
         postsExist.value = 1;
+        if(param_slug){
+            console.log(`param_slug:${param_slug}`);
+            const param_post = posts.value.filter((post)=>{return post.slug === param_slug})[0]
+            // console.log(`param_post:${JSON.stringify(param_post)}`);
+            selectPost(param_post);
+        }
     })
     .catch((err)=>
     {
@@ -171,6 +178,18 @@ const submitForm = function(method){
 getTags();
 getUsers();
 getPosts(`posts/`);
+
+// const if_param_slug = async function(){
+//     await getPosts(`posts/`);
+//     selectedPost.value = posts.value.filter((post)=>{post.slug === param_slug})[0]
+// }
+
+// if (param_slug){
+//     if_param_slug();    
+// }
+// else{
+//     getPosts('posts/');
+// }
 
 </script>
 

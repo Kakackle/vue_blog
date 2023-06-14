@@ -23,9 +23,10 @@ linki do stron z zaaplikowana filtracja
 
 import FilterSide from '../components/FilterSide.vue';
 import PreviewListLarge from '../components/PreviewListLarge.vue';
+import PostsPaginated from '../components/PostsPaginated.vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import { RouterLink, RouterView } from 'vue-router'
-import { ref, render } from 'vue';
+import { nextTick, ref, render } from 'vue';
 import axios from 'axios';
 
 //posts przechowywane jako backup wszystkich postow
@@ -33,6 +34,16 @@ const posts = ref([]);
 //renderPosts jako posty uzyskiwane poprzez API z filtracja z query
 const renderPosts = ref(posts);
 const pages = ref([]);
+
+const PAGE_SIZES = [5,10,15];
+const page_size = ref(PAGE_SIZES[0]);
+
+const set_page_size = async function(size){
+  page_size.value = size;
+  renderPosts.value=[];
+  await nextTick();
+  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
+}
 
 //list of checkboxes from side filter comp
 const checked = ref([]);
@@ -50,7 +61,7 @@ const selectedPage = ref(1);
  * @param {*} search 
  */
 
-const getPostsByFilters = async function(tags, page, search){
+const getPostsByFilters = async function(tags, page, search, page_size){
   //podstawowy query z ? oczekujacym na query
   let query_string='posts/?';
   //dla kazdego z wybranych checkboxow odpowiadajacych nazwom tagow
@@ -63,7 +74,10 @@ const getPostsByFilters = async function(tags, page, search){
   }
   //jesli query term po tytulach postow
   if(search){
-    query_string += `&title=${search}`
+    query_string += `&title=${search}`;
+  }
+  if(page_size){
+    query_string += `&page_size=${page_size}`;
   }
   console.log(`resulting query: ${query_string}`);
   axios.get(query_string)
@@ -82,23 +96,25 @@ const getPostsByFilters = async function(tags, page, search){
  * i wywoluje pobranie nowych danych
  * @param {} checkedTags 
  */
-const filterByBoxes = function(checkedTags){
+const filterByBoxes = async function(checkedTags){
   checked.value = checkedTags;
   renderPosts.value=[];
-  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value);
+  await nextTick();
+  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
 }
 
-const filterByTerm = function(query){
+const filterByTerm = async function(query){
   queryTerm.value = query;
   renderPosts.value=[];
-  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value);
+  await nextTick();
+  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
 }
 
-const getPostsByPage = async function(page_id){
-  renderPosts.value=[];
-  selectedPage.value = page_id;
-  getPostsByFilters(checked.value, page_id, queryTerm.value);
-}
+// const getPostsByPage = async function(page_id){
+//   renderPosts.value=[];
+//   selectedPage.value = page_id;
+//   getPostsByFilters(checked.value, page_id, queryTerm.value);
+// }
 
 //initial state, for backup
 const getPosts = async function(){
@@ -124,7 +140,7 @@ getPosts();
     <p class="blog-title">BLOG TITLE</p>
     <section class="blog-sect">
       <div class="posts-sect" v-if="renderPosts.length">
-        <div class="blog-list">
+        <!-- <div class="blog-list">
           <PreviewListLarge v-for="(post, post_id) in renderPosts" :post="post"></PreviewListLarge>
         </div>
 
@@ -132,8 +148,13 @@ getPosts();
               <p class="page" v-for="page in pages"
               @click="getPostsByPage(page[1])"
               :class="(selectedPage === page[1])? 'selected' : 'normal'">{{ page[1] }}</p>
-        </div>
+        </div> -->
+        <PostsPaginated :posts="renderPosts" :pages="pages" :type="'large'"
+          :page_sizes="PAGE_SIZES"
+          v-if="renderPosts.length"
+          @set_page_size="set_page_size"></PostsPaginated>
       </div>
+    
       <div class="side">
         <FilterSide @filterBox="filterByBoxes" @filterTerm="filterByTerm"></FilterSide>
       </div>
@@ -174,13 +195,18 @@ getPosts();
   align-items: center;
   justify-content: center;
 }
+
 .pages{
     display: flex;
     justify-content: center;
     font-size: 2.5rem;
     gap: 1rem;
+    color: #636e72;
 }
-
+.hover:hover{
+  cursor: pointer;
+  filter: brightness(0.7);
+}
 .page:hover{
     font-weight: 600;
     cursor: pointer;

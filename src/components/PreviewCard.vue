@@ -41,7 +41,7 @@ getAuthor();
             <p class="author hover" v-if="user.name"
                 @click="router.push({name: 'user', params:{user_slug: user.slug}})"
             >{{ user.name }}</p>
-            <p class="content">{{ post.content.slice(0,100) }}...</p>
+            <p class="content">{{ post.content.slice(0,50) }}...</p>
             <p class="date">{{ post.date_posted }}</p>
         </div>
 
@@ -54,13 +54,16 @@ getAuthor();
 
 <style scoped>
 .card-preview{
-    width: 30%;
+    width: clamp(24rem, 30%, 40rem);
     height: 100%;
     box-shadow: 0px 5px 12px rgba(0,0,0,0.15);
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     position: relative;
+    flex-shrink: 0;
+    flex-grow: 1;
+    /* flex: 1; */
 }
 .top, .card-img{
     width: 100%;
