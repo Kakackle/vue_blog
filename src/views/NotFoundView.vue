@@ -1,9 +1,12 @@
 <!-- 
     CATCHALL view, ale
-    TODO: cos nie zawsze dziala z przekazywaniem i odbieraniem tutaj parametrow
-    z route ktorego szukalismy ale przeszlo tutaj
-    TODO: also dodaj wiekszy przycisk go back intuicyjny
-    TODO: also troche ten view jest zbyteczny dla wiekszosci przypadkow
+    chuja, nie da rady tak chyba przekazywac, bo trafia tu tylko jesli
+    url byl zly kompletnie
+    kiedy matchuje poczatek np /posts i probujemy zredirectowac
+    to juz nie dziala, nie da sie przekazac nie istniejacych paramow
+    odrzuca je jako invalid
+
+    TODO: WAZNE: also troche ten view jest zbyteczny dla wiekszosci przypadkow
     jesli chcialbym poinformowac uzytnika o tym ze dany tag pod podanych slugiem
     nie istnieje czy cos, to moze lepiej gdyby bylo to na stronie tego tagu, usera
     czy cokolwiek, dodatkowo moze sugerujacego liste innych tagow/ w/e do wyboru
@@ -16,9 +19,9 @@ const route = useRoute();
 
 <template>
     <div class="main">
-        <GoBackButton></GoBackButton>
+        <GoBackButton class="big-button"></GoBackButton>
         <p class="title">404 Page Not Found</p>
-        <p class="msg">perhaps you entered in a wrong id</p>
+        <p class="msg">perhaps you entered in a wrong id or url</p>
         <p class="msg">supplied route params: {{ route.params }}</p>
     </div>
 </template>
@@ -37,5 +40,8 @@ const route = useRoute();
 }
 .msg{
     font-size: 2rem;
+}
+.big-button{
+    font-size: 4rem;
 }
 </style>

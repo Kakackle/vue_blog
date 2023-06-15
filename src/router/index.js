@@ -103,6 +103,7 @@ const router = createRouter({
     },
     {
       path: "/:pathMatch(.*)*",
+      // path: "/.*/?:wrong_param",
       name: "catchall",
       component: NotFoundView,
       meta: {

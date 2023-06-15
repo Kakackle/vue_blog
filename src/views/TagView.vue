@@ -1,5 +1,6 @@
 <!-- 
     TODO: cleanup
+    TODO: dodac co jesli wrong param w url do usera i postu
  -->
 <script setup>
 import { useRoute, useRouter} from 'vue-router';
@@ -16,7 +17,29 @@ const tag = ref();
 const tagExists = ref(0);
 const errorMsg = ref("");
 
-const getTagBySlug = function(){
+//if tag doesn't exist, get some tags to list them
+const tags = ref([]);
+const getTags = async function(){
+    axios.get(`tags/`)
+    .then((res)=>{
+        tags.value = res.data;
+        // console.log(`tags/: ${res}`);
+    })
+    .catch((err)=>{
+        console.log(`tags/: ${err}`);
+    })
+}
+getTags();
+
+//reset site by going to existing tag
+const resetSite = function(tag){
+    // tagExists.value = 1;
+    getTagBySlug(tag.slug);
+    // router.push({name: 'tag', params:{tag_slug: tag.slug}});
+
+}
+
+const getTagBySlug = async function(tag_slug){
     axios.get(`tags/${tag_slug}`)
     .then((response) => {
         tag.value = response.data;
@@ -31,7 +54,7 @@ const getTagBySlug = function(){
         tagExists.value = 0;
         errorMsg.value = error;
         console.log("Failure");
-        router.push({name: 'catchall', params: {tag_slug: tag_slug}});
+        // router.push({name: 'catchall', params: {wrong_param: tag_slug}});
         
     })
 }
@@ -46,7 +69,7 @@ const getPostsByTag = async function(link){
     })
 }
 
-getTagBySlug();
+getTagBySlug(tag_slug);
 
 const success = ref('');
 const error = ref('');
@@ -76,7 +99,7 @@ const submitEdit = async function(){
     .finally(()=>{
         newName.value = '';
         newDesc.value = '';
-        getTagBySlug();
+        getTagBySlug(tag_slug);
         beingEdited.value = 0;
     })
 }
@@ -92,29 +115,41 @@ const deleteTag = async function(){
 
 </script>
 
-
 <template>
 <div>
     <GoBackButton></GoBackButton>
     <div v-if="tagExists">
-    <section class="tag-view" v-if="!beingEdited">
-        <p class="tag-name">Name: {{tag.name}}</p>
-        <p class="tag-desc">Desc: {{tag.description}}</p>
-        <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
-        <p class="posts" v-if="posts"> Posts:</p>
-        <!-- <p v-if="posts.length">paginated posts should be showing...</p> -->
-        <PostsPaginated v-if="posts.length" :type="'small'" :posts="posts" :pages="pages"></PostsPaginated>
-        <p v-if="success" class="success">{{success}}</p>
-        <p v-if="error" class="error">{{error}}</p>
-    </section>
-    <section class="tag-view" v-if="beingEdited">
-        <label for="name" class="tag-name">Name:</label>
-        <input type="text" id="name" class="tag-name" v-model="newName">
-        <label for="desc" class="tag-name">Desc:</label>
-        <textarea class="tag-desc-input" v-model="newDesc"></textarea>
-        <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_id)">CONFIRM</button>
-        <button class="submit-button hover" @click="deleteTag">DELETE</button>
-    </section>
+        <section class="tag-view" v-if="!beingEdited">
+            <p class="tag-name">Name: {{tag.name}}</p>
+            <p class="tag-desc">Desc: {{tag.description}}</p>
+            <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
+            <p class="posts" v-if="posts"> Posts:</p>
+            <!-- <p v-if="posts.length">paginated posts should be showing...</p> -->
+            <PostsPaginated v-if="posts.length" :type="'small'" :posts="posts" :pages="pages"></PostsPaginated>
+            <p v-if="success" class="success">{{success}}</p>
+            <p v-if="error" class="error">{{error}}</p>
+        </section>
+        <section class="tag-view" v-if="beingEdited">
+            <label for="name" class="tag-name">Name:</label>
+            <input type="text" id="name" class="tag-name" v-model="newName">
+            <label for="desc" class="tag-name">Desc:</label>
+            <textarea class="tag-desc-input" v-model="newDesc"></textarea>
+            <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_id)">CONFIRM</button>
+            <button class="submit-button hover" @click="deleteTag">DELETE</button>
+        </section>
+    </div>
+    <div v-else class="else">
+        <p>Server response: {{ errorMsg }}</p>
+        <p>The tag "{{ route.params.tag_slug }}" doesn't exist!</p>
+        <div class="suggested" v-if="tags">
+            <p>Some suggested tags instead:</p>
+            <ul class="tag-links">
+                <li v-for="tag in tags.slice(0,5)"
+                    @click="resetSite(tag)"
+                    class="hover"
+                    >{{ tag.name }}</li>
+            </ul>
+        </div>
     </div>
 </div>
 </template>
@@ -156,5 +191,22 @@ const deleteTag = async function(){
 }
 .error{
     color: red;
+}
+.else{
+    display: flex;
+    flex-direction: column;
+    font-size: 2.5rem;
+}
+.suggested{
+
+}
+.suggested p{
+    font-size: 2rem;
+}
+.tag-links{
+    font-size: 2rem;
+}
+.hover:hover{
+    cursor: pointer;
 }
 </style>

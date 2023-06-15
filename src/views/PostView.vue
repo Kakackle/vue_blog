@@ -25,7 +25,7 @@ const getPost = async function(){
   if(!post){
     postExists.value = 0;
     console.log("post not found");
-    router.push({name: 'catchall', params: {post_slug: post_slug}});
+    router.push({name: 'catchall', params: {wrong_param: post_slug}});
   }
   postExists.value = 1;
   axios.patch(`http://127.0.0.1:8000/api/posts/${post_slug}`, {

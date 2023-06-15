@@ -79,7 +79,7 @@ const getUser = function(slug){
     .catch((error)=>{
         userExists.value = 0;
         errorMsg.value = error;
-        router.push({name: 'catchall', params:{user_slug: user_slug}});
+        router.push({name: 'catchall', params:{wrong_param: user_slug}});
     })
 }
 
