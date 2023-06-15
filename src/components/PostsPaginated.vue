@@ -4,6 +4,12 @@
     typu podkomponentu, wraz z dzialajaca paginacja otrzymywana w postaci linkow z API
     
     samo pobiera dane do wyswietlania z API
+    
+    TODO: obsluga zmiany page size jakos tak jak w BlogView z query stringiem
+    bo to dosyc integralna czesc komponentu paginacji i nie chcialbym musiec
+    dodawac obsluge tego w kazdym komponencie ktory uzywa postspaginated
+
+    wiec musialbym modyfikowac otrzymane z zewnatrz linki do stron?
  -->
 <script setup>
 import { nextTick, ref } from 'vue';
@@ -36,7 +42,7 @@ const set_page_size = async function(size){
     // console.log(`size_id etc: ${page_sizes.value[size_id]}`)
     // FIXME: kompletnie niezrozumialy bug , nie aktualizuje wyswietlania wybranej ilosci klasy
     //ale nie dziala tylko w BlogView, w reszcie dziala
-    //XDDDDDDDDDDDDDDDDDDDDDDDDD
+
     await nextTick(()=>{
         emit('set_page_size', selected_size.value);
     });
