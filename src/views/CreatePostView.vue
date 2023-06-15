@@ -4,9 +4,6 @@ import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import { getDataFromLink } from '../composables/axiosComposables';
-//TODO: przechodzenie do tej strony od strony z postem,
-//przekazywanie od ktorego sie przeszlo w route
-//i automatycznie wkladanie tego jako wybrany post
 
 //TODO: czy serio nie da sie lepiej tego wyboru metody? chyba wlasnie sie da!
 //poprzez zamiast robienie axios.put albo axios.patch przesylanie jakos w meta/obiekcie
@@ -48,6 +45,7 @@ const cleanInputs = async function(){
     selectedPost.value = undefined 
     getTags();
     getUsers();
+    getPosts(`posts/`);
 }
 
 const confirmDel = ()=>{
@@ -146,33 +144,54 @@ const submitForm = function(method){
 
     console.log(`data sent: ${JSON.stringify(newPost)}`)
     
-    if (method === "post"){
-    axios.post(`users/${newAuthor.value.id}/post`, 
-        newPost
-    )
-    .then((res)=>{
-        // console.log(`res:${res.status}`);
-        success.value += res.status + ' ' + res.statusText; 
-    })
-    .catch((err)=>{
-        // console.log(`err: ${err}`);
-        error.value += err;
-    })
-    .finally(cleanInputs)
+    let met_url = '';
+
+    if(method === "post"){
+        met_url = `users/${newAuthor.value.id}/post`;
+    }
+    else{
+        met_url = `posts/${selectedPost.value.id}`;
     }
 
-    if (method === "patch"){
-        axios.patch(`posts/${selectedPost.value.id}`, newPost)
-        .then((res)=>{
-        // console.log(`res:${res.status}`);
+    axios({
+        method: method,
+        url: met_url,
+        data: newPost
+    })
+    .then((res)=>{
         success.value += res.status + ' ' + res.statusText; 
     })
     .catch((err)=>{
-        // console.log(`err: ${err}`);
         error.value += err;
     })
     .finally(cleanInputs)
-    }
+    // if (method === "post"){
+    // axios.post(`users/${newAuthor.value.id}/post`, 
+    //     newPost
+    // )
+    // .then((res)=>{
+    //     // console.log(`res:${res.status}`);
+    //     success.value += res.status + ' ' + res.statusText; 
+    // })
+    // .catch((err)=>{
+    //     // console.log(`err: ${err}`);
+    //     error.value += err;
+    // })
+    // .finally(cleanInputs)
+    // }
+
+    // if (method === "patch"){
+    //     axios.patch(`posts/${selectedPost.value.id}`, newPost)
+    //     .then((res)=>{
+    //     // console.log(`res:${res.status}`);
+    //     success.value += res.status + ' ' + res.statusText; 
+    // })
+    // .catch((err)=>{
+    //     // console.log(`err: ${err}`);
+    //     error.value += err;
+    // })
+    // .finally(cleanInputs)
+    // }
 }
 
 getTags();

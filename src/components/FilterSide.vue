@@ -3,9 +3,7 @@
     postow po query lub wyborze checkboxow
     poki co glownie zajmuje sie wyswietlaniem ich oraz oblusga wpisywania,
 
-    TODO: dodac do filterside boxy do filtracji po autorach
-
-    TODO: a potem jakos sie zamieni to query na lepszy system filtracji/searchu,
+    TODO: potem jakos sie zamieni to query na lepszy system filtracji/searchu,
     bo na pewno są, aktualnie jest dosyc kaleki [Django]
  -->
 
@@ -23,6 +21,11 @@ const checkedTags = ref([]);
 const search = ref();
 //finalized query string
 const query_string = ref('');
+//wszyscy userzy
+const users = ref([]);
+//zaznaczeni userzy
+const checkedUsers = ref([]);
+
 /**
  * Funckja odbierajaca wszystkie tagi z API
  * do wyswietlenia checkboxow
@@ -33,11 +36,24 @@ const getTags = async function(){
         tags.value = res.data;
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`tags err: ${err}`);
     })
 }
 
 getTags();
+
+const getUsers = async function(){
+    axios.get('users/')
+    .then((res)=>{
+        users.value = res.data;
+    })
+    .catch((err)=>{
+        console.log(`users err: ${err}`);
+    })
+}
+
+getUsers();
+
 /**
  * Dokonuje filtracji poprzez wykonanie query do API
  * z wybranymi tagami, query term
@@ -45,12 +61,15 @@ getTags();
  * @param {*} tags 
  * @param {*} search 
  */
-const get_query_string = function(tags, search){
+const get_query_string = function(tags, users, search){
     //base
     let query_string ='posts/?';
     //dla kazdego z wybranych z checkboxow tagow
     tags.forEach((tag)=>{
         query_string += `&tag=${tag}`;
+    })
+    users.forEach((user)=>{
+        query_string += `&author=${user}`;
     })
     //jesli query term po tytulach postow
     if(search){
@@ -66,7 +85,7 @@ const get_query_string = function(tags, search){
 const emit = defineEmits(['filterQuery'])
 
 const emitQuery = async () =>{
-    query_string.value = get_query_string(checkedTags.value, search.value)
+    query_string.value = get_query_string(checkedTags.value, checkedUsers.value, search.value)
     await nextTick(()=>{
         emit('filterQuery', query_string.value);
     });
@@ -93,6 +112,15 @@ const emitQuery = async () =>{
         </div>
         <p class="boxes-title">FILTER BY DATE:</p>
         <p class="boxes-title">FILTER BY AUTHOR:</p>
+        <div class="boxes" v-if="tags.length">
+            <div v-for="(user, user_id) in users" class="box">    
+                <input type="checkbox" :id=user_id name="user-box"
+                    class="tag-box hover"
+                    :value=user.slug v-model="checkedUsers"
+                    @change="emitQuery">
+                <label :for=user_id>{{ user.name }}</label>
+            </div>         
+        </div>
         <p class="boxes-title">FILTER BY VIEWS or smth:</p>
     </div>
 
@@ -106,7 +134,7 @@ const emitQuery = async () =>{
     width: 95%;
     flex-direction: column;
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;

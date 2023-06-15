@@ -1,5 +1,8 @@
 <!--
-  TODO: ciasne jakies to filterside
+  View z glownym przegladem postow, tzn w postaci komponentow PreviewListLarge
+  wraz z bocznym elementem FilterSide do tworzenia query
+  do pobierania i wyswietlania stron w komponencie PostsPaginated
+  TODO: Dodaj cos moze jeszcze pod filtrami
 -->
 
 <script setup>
@@ -110,12 +113,14 @@ const filterByQuery = async function(query){
   margin-top: 2rem;
 }
 .side{
-  width: clamp(20rem, 25vw, 40rem);
-  height: 40rem;
+  width: clamp(25rem, 25vw, 45rem);
+  /* height: 40rem; */
+  height: 100%;
   /* background-color: #636e72; */
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 }
 
 .pages{

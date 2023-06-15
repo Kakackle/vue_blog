@@ -26,7 +26,7 @@ getAuthor();
 </script>
 
 <template>
-<div class="list-preview hover">
+<div class="list-preview">
     <div class="left">
         <img :src=post.img class="img">
     </div>
