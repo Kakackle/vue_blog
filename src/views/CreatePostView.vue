@@ -1,9 +1,20 @@
+<!-- 
+    View do tworzenia lub patchowania postow
+    wybierane z listy istniejacych
+    TODO: markdown itd
+    TODO: tosty dzialaja, przydaloby sie w wiecej miejscach
+    TODO: moze searchbar do wyboru postow z tej listy zamiast sama lista
+ -->
 <script setup>
 import { ref } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import { getDataFromLink } from '../composables/axiosComposables';
+
+import {useToast} from "vue-toastification";
+
+const toast = useToast();
 
 //TODO: czy serio nie da sie lepiej tego wyboru metody? chyba wlasnie sie da!
 //poprzez zamiast robienie axios.put albo axios.patch przesylanie jakos w meta/obiekcie
@@ -160,9 +171,11 @@ const submitForm = function(method){
     })
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText; 
+        toast.success(success.value);
     })
     .catch((err)=>{
         error.value += err;
+        toast.error(error.value);
     })
     .finally(cleanInputs)
     // if (method === "post"){
