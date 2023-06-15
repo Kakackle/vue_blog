@@ -1,22 +1,5 @@
 <!--
-TODO: dodac do filterside boxy do filtracji po autorach
-
-TODO: a potem jakos sie zamieni to query na lepszy system filtracji/searchu,
-  bo na pewno są, aktualnie jest dosyc kaleki
-
-TODO: czy w jakikolwiek sposob korzystam z rozroznienia miedzy render a zwyklymi
-      posts?
-
-TODO: kwestia jest ze PostsPaginated i FilterSide to osobne komponenty, polaczone
-      wlasnie poprzez BlogView, dzieki czemu filter wplywa na blog a blog na paginated
-      wiec trzeba bedzie chyba znowu zwrocic przesylanie posts i pages do paginated
-      bo to nie zawsze jest pelne, a przewaznie wlasnie przefiltrowane
-      co dziala, poniewaz przesylamy rowniez linki z query stringami zawartymi w nich
-      do celow paginacji
-
-TODO: tutaj wgl nie ma PostsPaginated! a przydaloby sie dodac jak w reszcie elementow
-- dlatego ze jest filtracja, ale to nie jest problem, jesli przekazujemy w paginated
-linki do stron z zaaplikowana filtracja
+  TODO: ciasne jakies to filterside
 -->
 
 <script setup>
@@ -36,101 +19,50 @@ const renderPosts = ref(posts);
 const pages = ref([]);
 
 const PAGE_SIZES = [5,10,15];
-const page_size = ref(PAGE_SIZES[0]);
 
-const set_page_size = async function(size){
-  page_size.value = size;
-  renderPosts.value=[];
-  await nextTick();
-  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
-}
+//from filterSide
+const query_string = ref('posts/?');
 
-//list of checkboxes from side filter comp
-const checked = ref([]);
-//query term for post title from side filter comp
-const queryTerm = ref('');
-
-const selectedPage = ref(1);
+const changed = ref(0);
 
 /**
  * Dokonuje filtracji poprzez wykonanie query do API
- * z wybranymi tagami, query term oraz stroną z paginacji
+ * z wybranymi tagami, query term
  * przeksztalcanymi w query_string dodawany do adresu endpointu
  * @param {*} tags 
- * @param {*} page 
  * @param {*} search 
  */
 
-const getPostsByFilters = async function(tags, page, search, page_size){
-  //podstawowy query z ? oczekujacym na query
-  let query_string='posts/?';
-  //dla kazdego z wybranych checkboxow odpowiadajacych nazwom tagow
-  tags.forEach((tag)=>{
-    query_string += `&tag=${tag}`;
-  })
-  //jesli wskazana strona paginacji
-  if (page){
-    query_string += `&page=${page}`;
-  }
-  //jesli query term po tytulach postow
-  if(search){
-    query_string += `&title=${search}`;
-  }
-  if(page_size){
-    query_string += `&page_size=${page_size}`;
-  }
-  console.log(`resulting query: ${query_string}`);
-  axios.get(query_string)
-  .then((res)=>{
-    renderPosts.value = res.data.results;
-    pages.value = res.data.context.page_links;
-  })
-  .catch((err)=>
-  {
-    console.log(err);
-  })
-}
-
 /**
- * aktualizuje zestaw wybranych tagow na podstawie otrzymanego emitu z FilterSide
- * i wywoluje pobranie nowych danych
- * @param {} checkedTags 
- */
-const filterByBoxes = async function(checkedTags){
-  checked.value = checkedTags;
-  renderPosts.value=[];
+* Na podstawie otrzymanego z emitu query
+  Wywoluje aktualizacje PostsPaginated poprzez zmiane wartosi changed,
+  co powoduje rerender komponentu z nową wartością query_string do filtracji postów
+  @param {String} query
+*/
+const filterByQuery = async function(query){
+  changed.value = 1;
+  query_string.value = query;
+  // renderPosts.value=[];
   await nextTick();
-  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
+  changed.value = 0;
+  // getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
 }
-
-const filterByTerm = async function(query){
-  queryTerm.value = query;
-  renderPosts.value=[];
-  await nextTick();
-  getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
-}
-
-// const getPostsByPage = async function(page_id){
-//   renderPosts.value=[];
-//   selectedPage.value = page_id;
-//   getPostsByFilters(checked.value, page_id, queryTerm.value);
-// }
 
 //initial state, for backup
-const getPosts = async function(){
-  axios.get('posts/')
-  .then((res)=>
-  {
-    posts.value = res.data.results;
-    renderPosts.value = res.data.results;
-    pages.value = res.data.context.page_links;
-  })
-  .catch((err)=>{
-    console.log(err);
-  })
-}
+// const getPosts = async function(){
+//   axios.get('posts/')
+//   .then((res)=>
+//   {
+//     posts.value = res.data.results;
+//     renderPosts.value = res.data.results;
+//     pages.value = res.data.context.page_links;
+//   })
+//   .catch((err)=>{
+//     console.log(err);
+//   })
+// }
 
-getPosts();
+// getPosts();
 
 </script>
 
@@ -139,24 +71,14 @@ getPosts();
     <GoBackButton></GoBackButton>
     <p class="blog-title">BLOG TITLE</p>
     <section class="blog-sect">
-      <div class="posts-sect" v-if="renderPosts.length">
-        <!-- <div class="blog-list">
-          <PreviewListLarge v-for="(post, post_id) in renderPosts" :post="post"></PreviewListLarge>
-        </div>
-
-        <div class="pages" v-if="pages">
-              <p class="page" v-for="page in pages"
-              @click="getPostsByPage(page[1])"
-              :class="(selectedPage === page[1])? 'selected' : 'normal'">{{ page[1] }}</p>
-        </div> -->
-        <PostsPaginated :posts="renderPosts" :pages="pages" :type="'large'"
+      <div class="posts-sect">
+        <PostsPaginated :type="'large'" :query_string="query_string" 
           :page_sizes="PAGE_SIZES"
-          v-if="renderPosts.length"
-          @set_page_size="set_page_size"></PostsPaginated>
-      </div>
+          v-if="changed === 0"></PostsPaginated>
+        </div>
     
       <div class="side">
-        <FilterSide @filterBox="filterByBoxes" @filterTerm="filterByTerm"></FilterSide>
+        <FilterSide @filterQuery="filterByQuery"></FilterSide>
       </div>
     </section>
   </main>

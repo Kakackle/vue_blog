@@ -2,10 +2,11 @@
     Komponent majacy pelnic funkcje umieszczalnego z boku strony dodajacy funkcje filtracji
     postow po query lub wyborze checkboxow
     poki co glownie zajmuje sie wyswietlaniem ich oraz oblusga wpisywania,
-    TODO: fajnie gdyby jednak zawieral tez funkcje filtracji i to on decydowal
-    jakie zestawy sa renderowane na stronie ktora go zawiera
-    pytanie jaki to ma sens, czy moze by trzeba sparowac z uzywanym razem zawsze z tym
-    komponentem jakims plikiem mixinow
+
+    TODO: dodac do filterside boxy do filtracji po autorach
+
+    TODO: a potem jakos sie zamieni to query na lepszy system filtracji/searchu,
+    bo na pewno są, aktualnie jest dosyc kaleki [Django]
  -->
 
 <script setup>
@@ -14,11 +15,17 @@ import { nextTick, onMounted } from 'vue';
 import { ref, reactive } from 'vue';
 import { getCurrentInstance } from 'vue';
 
-
+//wszystkie tagi
 const tags = ref([]);
-
+//zaznaczone tagi
+const checkedTags = ref([]);
+//post title query term
+const search = ref();
+//finalized query string
+const query_string = ref('');
 /**
  * Funckja odbierajaca wszystkie tagi z API
+ * do wyswietlenia checkboxow
  */
 const getTags = async function(){
     axios.get('tags/')
@@ -31,21 +38,37 @@ const getTags = async function(){
 }
 
 getTags();
-
-const checkedTags = ref([]);
-
-const emit = defineEmits(['filterBox', 'filterTerm'])
-const emitBoxes = async () =>{
-    await nextTick(()=>{
-        emit('filterBox', checkedTags.value);
-    });
+/**
+ * Dokonuje filtracji poprzez wykonanie query do API
+ * z wybranymi tagami, query term
+ * przeksztalcanymi w query_string dodawany do adresu endpointu
+ * @param {*} tags 
+ * @param {*} search 
+ */
+const get_query_string = function(tags, search){
+    //base
+    let query_string ='posts/?';
+    //dla kazdego z wybranych z checkboxow tagow
+    tags.forEach((tag)=>{
+        query_string += `&tag=${tag}`;
+    })
+    //jesli query term po tytulach postow
+    if(search){
+        query_string += `&title=${search}`;
+    }
+    console.log(`resulting query: ${query_string}`);
+    return query_string
 }
 
-const query = ref([]);
+// emity
 
-const emitQuery = async() => {
+// const emit = defineEmits(['filterBox', 'filterTerm'])
+const emit = defineEmits(['filterQuery'])
+
+const emitQuery = async () =>{
+    query_string.value = get_query_string(checkedTags.value, search.value)
     await nextTick(()=>{
-        emit('filterTerm', query.value);
+        emit('filterQuery', query_string.value);
     });
 }
 
@@ -56,7 +79,7 @@ const emitQuery = async() => {
         <p class="boxes-title">FILTER BY SEARCH</p>
 
         <input type="search" class="search" placeholder="post title"
-            v-model="query" @keyup.enter="emitQuery">
+            v-model="search" @keyup.enter="emitQuery">
 
         <p class="boxes-title">FILTER BY TAGS:</p>
         <div class="boxes" v-if="tags.length">
@@ -64,7 +87,7 @@ const emitQuery = async() => {
                 <input type="checkbox" :id=tag_id name="tag-box"
                     class="tag-box hover"
                     :value=tag.id v-model="checkedTags"
-                    @change="emitBoxes">
+                    @change="emitQuery">
                 <label :for=tag_id>{{ tag.name }}</label>
             </div>         
         </div>

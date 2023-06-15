@@ -20,32 +20,37 @@ import axios from 'axios';
 
 // const props = defineProps(['posts', 'pages', 'type', 'page_sizes']);
 const props = defineProps({
-    posts:{},
-    pages:{},
+    // posts:{},
+    // pages:{},
     type:{
         type: String,
         default: "small"
     },
     page_sizes:{
         default: [5, 10, 15]
+    },
+    query_string:{
+        type: String,
+        default: 'posts/?'
     }
 });
 
 const type = ref(props.type);
-const page_sizes = ref(props.page_sizes)
-const selected_size = ref(page_sizes.value[0])
+const page_sizes = ref(props.page_sizes);
+const selected_size = ref(page_sizes.value[0]);
+//otrzymany query string z filtrami
+const query_string = ref(props.query_string);
+//pelny query zawierajacy takze page oraz page_size
+const full_query = ref(query_string.value);
 
-const emit = defineEmits(['set_page_size'])
+// const emit = defineEmits(['set_page_size'])
 const set_page_size = async function(size){
     selected_size.value = size;
-    // console.log(`confirm: ${selected_size.value === page_sizes.value[size_id]}`)
-    // console.log(`size_id etc: ${page_sizes.value[size_id]}`)
-    // FIXME: kompletnie niezrozumialy bug , nie aktualizuje wyswietlania wybranej ilosci klasy
-    //ale nie dziala tylko w BlogView, w reszcie dziala
-
-    await nextTick(()=>{
-        emit('set_page_size', selected_size.value);
-    });
+    // query_string.value += `?page_size=${size}`;
+    let full_query = query_string.value + `&page_size=${size}`;
+    posts.value = [];
+    pages.value = [];
+    getPosts(full_query);
 }
 
 //posts oraz pages - moga byc pelne lub po filtracji z zewnetrznego view
@@ -72,11 +77,12 @@ const getPostsByPage = async function(link, page_id){
 }
 
 // getPostsByPage('posts/', selectedPage.value);
+getPosts(query_string.value);
 
 </script>
 
 <template>
-    <div class="post-list" v-if="posts.length">
+    <div class="post-list" v-if="posts">
         <div class="page_size">
           <p class="hover" v-for="(size, size_id) in page_sizes"
             @click="set_page_size(size, size_id)"
