@@ -2,7 +2,6 @@
     View do tworzenia lub patchowania postow
     wybierane z listy istniejacych
     TODO: markdown itd
-    TODO: tosty dzialaja, przydaloby sie w wiecej miejscach
     TODO: moze searchbar do wyboru postow z tej listy zamiast sama lista
  -->
 <script setup>

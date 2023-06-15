@@ -11,7 +11,6 @@
 import axios from 'axios';
 import { nextTick, onMounted } from 'vue';
 import { ref, reactive } from 'vue';
-import { getCurrentInstance } from 'vue';
 
 //wszystkie tagi
 const tags = ref([]);

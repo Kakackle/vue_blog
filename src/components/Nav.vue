@@ -4,12 +4,29 @@
 <script setup>
 import axios from 'axios';
 import {ref} from 'vue'
+import LoginDrop from "../components/LoginDrop.vue"
+import AccDrop from "../components/AccDrop.vue"
+import {useToast} from "vue-toastification";
+const toast = useToast();
+
 import {useRouter} from 'vue-router'
 const router = useRouter();
 
-// FIXME: gdzie przetrzymywac zalogowanego uzytkownika? ten nav jest dosyc globalny, nwm
+// TODO: pobieranie np. w Nav (bo jest globalny) usera z API wedlug wpisanego
+// np w dropie username / slug
+// na start moze byc przechowywane w Navie, potem localstorage
+// i na podstawie tego wyswietlanie zalogowanego w dropach
+// i potem mozna by na podstawie tej informacje wykonywac funkcjonalnosci typu
+// automatyczne ustawianie uzytkownika przy filtrowaniu,
+// umozliwianie edycji uzytkownika tylko jesli zgadza sie z zalogowanym itd..
+// czyli kluczowe operacje dla strony obslugujacej konta, a taka wlasnie strone chcemy
+// przy czym zwaz, ze to co robisz w ten sposob nachodzi na to co powinien robic
+// twoj backed, czyli obsluga authentication, persmissions itd
 
-const loggedUser = ref(0);
+// konkretnie:
+// TODO: odczytywanie wpisanej w polu login wartosic username i branie z API
+// TODO: stylizacja dropdowow bo nieczytelne
+
 const user = ref()
 const loggedIn = ref(0);
 const logInDrop = ref(0);
@@ -19,27 +36,36 @@ const getUser = function(user_slug){
     axios.get(`users/${user_slug}`)
     .then((res)=>{
         user.value = res.data;
+        // console.log(`logged user: ${user.value.slug}`)
     })
     .catch((err)=>{
+
+        toast.error('Incorrect username or password!',{
+            position: "top-center"
+        });
+        logout();
         console.log(err);
     })
 }
 
+// getUser('admin');
+
 /**
  * Funkcje oblugujace widocznosc dropdownow login/logout/register
- * TODO: konwersja ich na podkomponenty?
  */
 const register = ()=>{
     logInDrop.value = 0;
     router.push('/register')
 }
-const login = ()=>{
+const login = (username)=>{
     loggedIn.value = 1;
     logInDrop.value = 0;
+    getUser(username);
 }
 const logout =() =>{
     loggedIn.value = 0;
     accDrop.value = 0;
+    user.value = undefined;
 }
 </script>
 
@@ -56,7 +82,10 @@ const logout =() =>{
             <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">ACC <ion-icon name="heart"></ion-icon></span>   
             <span v-else class="acc hover" @click="logInDrop = !logInDrop">Log in</span>
         </div>
-        <div v-if="logInDrop" class="login-drop">
+        <LoginDrop v-if="logInDrop" :user="user"
+            @login="login"
+            @register="register"></LoginDrop>
+        <!-- <div v-if="logInDrop" class="login-drop">
             <span class="login-text">username:</span>
             <input type="text" placeholder="admin" class="login-input">
             <span class="login-text line-top">password:</span>
@@ -66,12 +95,14 @@ const logout =() =>{
                 <span class="or">OR</span>
                 <button class="login-button" @click="register">REGISTER &rarr;</button>
             </div>
-        </div>
-        <div v-if="accDrop" class="acc-drop">
+        </div> -->
+        <AccDrop v-if="accDrop" :user="user"
+            @logout="logout"></AccDrop>
+        <!-- <div v-if="accDrop" class="acc-drop">
             <p>{{ user.name }}</p>
             <img :src=user.avatar>
             <button @click="logout">LOG OUT</button>
-        </div>
+        </div> -->
     </div>
 </nav>
 </template>
