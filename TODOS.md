@@ -1,7 +1,8 @@
 
 # Nowe funkcjonalnosci
-1. TODO: daty i wgl
+1. TODO: Data inna niz now?
 2. Moze jakis drugi plik na completed todos
+3. Albo wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
 3. komponent side dla homeview z jakims najpop autorem itd
 4. count ile postow z tagiem, ile postow ma autor itd - moze w django
 5. **realizacja filtrow checkboxami tagow etc**
