@@ -11,6 +11,7 @@ import TagView from "../views/TagView.vue"
 import TagListView from "../views/TagListView.vue"
 import NotFoundView from "../views/NotFoundView.vue"
 import FilterView from "../views/FilterView.vue"
+import MarkdownView from '../views/MarkdownView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -100,6 +101,14 @@ const router = createRouter({
       meta: {
       desc: 'Test filtering/querying from db and in website',
       title: 'Filtering'}
+    },
+    {
+      path: "/markdown",
+      name: 'markdown',
+      component: MarkdownView,
+      meta: {
+        desc: 'Markdown',
+        title: 'Markdown'}
     },
     {
       path: "/:pathMatch(.*)*",

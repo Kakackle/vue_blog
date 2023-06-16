@@ -16,10 +16,6 @@ import {useToast} from "vue-toastification";
 
 const toast = useToast();
 
-//TODO: czy serio nie da sie lepiej tego wyboru metody? chyba wlasnie sie da!
-//poprzez zamiast robienie axios.put albo axios.patch przesylanie jakos w meta/obiekcie
-//rzeczy takich jak method: 'put' itd
-
 const route = useRoute();
 const param_slug = route.params.post_slug;
 
