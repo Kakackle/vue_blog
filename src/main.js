@@ -13,6 +13,9 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/api/"
 import Toast from "vue-toastification"
 import "vue-toastification/dist/index.css";
 
+import VCalendar from 'v-calendar'
+import 'v-calendar/style.css'
+
 //Toast options
 const options ={
 position: "top-right",
@@ -37,4 +40,5 @@ const app = createApp(App)
 app.use(router)
 app.use(createPinia())
 app.use(Toast, options)
+app.use(VCalendar, {})
 app.mount('#app')

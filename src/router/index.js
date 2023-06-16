@@ -12,6 +12,7 @@ import TagListView from "../views/TagListView.vue"
 import NotFoundView from "../views/NotFoundView.vue"
 import FilterView from "../views/FilterView.vue"
 import MarkdownView from '../views/MarkdownView.vue'
+import DatePickerView from "../views/DatePickerView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -109,6 +110,14 @@ const router = createRouter({
       meta: {
         desc: 'Markdown',
         title: 'Markdown'}
+    },
+    {
+      path: '/datepicker',
+      name: 'datepicker',
+      component: DatePickerView,
+      meta: {
+        desc: 'date',
+        title: 'date'}
     },
     {
       path: "/:pathMatch(.*)*",

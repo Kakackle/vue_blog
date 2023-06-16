@@ -13,13 +13,19 @@ import { useRoute } from 'vue-router'
 import { getDataFromLink } from '../composables/axiosComposables';
 
 import {useToast} from "vue-toastification";
+const toast = useToast();
 
 import {marked} from 'marked';
 
-const toast = useToast();
-
 const route = useRoute();
 const param_slug = route.params.post_slug;
+
+const masks = ref({
+    modelValue: 'YYYY-MM-DD',
+});
+
+const newDate = ref('');
+const openDate = ref(0);
 
 const newTitle = ref("")
 const newAuthor = ref()
@@ -148,7 +154,8 @@ const submitForm = function(method){
         tags: newTags.value,
         content: newContent.value,
         img: newImg.value,
-        author: parseInt(newAuthor.value.id)
+        author: parseInt(newAuthor.value.id),
+        date_posted: newDate.value
     }
 
     console.log(`data sent: ${JSON.stringify(newPost)}`)
@@ -267,6 +274,10 @@ const compiledMarkdown = computed(()=>{
                     <label for="img">img:</label>
                     <input type="text" class="text-input" id="img" v-model="newImg">
                 </div>
+                <button class="submit-button hover" @click="openDate=1">CHOOSE DATE</button>
+                <VDatePicker v-model.string="newDate" :masks="masks" @click="openDate=0"
+                    v-if="openDate"/>
+                    <p class="date">Date: {{ newDate }}</p>
             </div>
         </div>
         <div class="buttons">
