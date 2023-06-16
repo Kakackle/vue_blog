@@ -1,43 +1,29 @@
-
 # Nowe funkcjonalnosci
-1. TODO: Data inna niz now?
-2. Moze jakis drugi plik na completed todos
-3. Albo wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
-3. komponent side dla homeview z jakims najpop autorem itd
-4. count ile postow z tagiem, ile postow ma autor itd - moze w django
-5. **realizacja filtrow checkboxami tagow etc**
-6. realizacja wielu filtrow od strony frontentu? w sensie i search i tagi?
-7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen
-8. **sortowanie po views, likes**
+1. TODO: Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
+3. TODO: komponent side dla homeview z jakims najpop autorem itd - do tego autorzy musieliby miec count postow etc, najpewniej w django
+7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
+8. TODO: **sortowanie po views, likes**
 9. footer costam
-10. ~~przerzucenie kodu accdrop i logindrop w wlasne komponenty ~~ - jebac?
-11. lepsza forma dodawnia postow z markdownem? **i ogolnie markdown**
-12. **TOSTY NA SUKCES/ERROR ODBIORU**
 13. **CLEANUP I JSDOC NA WZOR POPRZEDNICH PROJEKTOW**
+14. TODO: Pod tworzeniem postu z markdown dodaj jakis cheatsheet komend, jak wklejac obrazek itd
 
 # Duze rzeczy
 1. custom user / profile i logowanie
     - potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
     - komentarze - sposob powiazania w django i odpowiadania i forma na tworzenie
-2. 
+2. Obrazki nie z url ale uploadowane
+    - i potem moze moznaby na podstawie uploadu do markdowna wkladac link lokalny tam gdzie uzytnik przestal pisac i zaczal uploadowac obrazek
+    albo pozwolic mu zuploadowac kilka i potem dac mu do wklejenia gdzie chce linki
 
 # Uzupelnienie funkcjonalnosci
-1. paginacja - poniewaz dodalem paginacje, wszedzie teraz rezultaty nie sa dawane bezposrednio tylko wpakowane sa w results . , przy czym tam gdzie lista, pojedyncze rezultaty dzialaja nadal gites
-2. zwiazane z filtrowaniem: mam juz przyklad, teraz przydaloby sie dodac to na innych stronach
-3. **linki do stron kategorii, uzytkownikow** wszedzie
+2. dodac filtracje z searchem na stronie tworzenia postow albo wyszukiwanie tagow albo inne
 
 4. ## 09.06.2023
-    2. ~~Mozliwosc edycji tagow~~ / ~~strona tagow~~ - przydaloby sie dodac paginacje, moze komponentem, moze zmienic PostsPaginated na obsluge slotow? ale kwestia ze kompletnie rozne dane, ktore chce pobierac tez wewnatrz wiec chyba nie, idk
-    3. Mozliwosc dodawania ~~tagow~~ i userow [POST] (chodzi o czy beda problemy ze slug)
-    4. Routowanie w vue po slugach do postow i uzytkownikow - ale duzo bedzie naprawiania
-    5. ~~Usuwanie tagow~~, uzytnikow
+    5. TODO: ~~Usuwanie tagow~~, uzytnikow,
+    ale co wtedy z postami ktore je zawieraja? kwestia ustawienia zachowania w django, CASCADE nie zawwsze chcemy, jak mozna to zmienic
     6. Jakies tam laczenie tego wszystkiego
 
-5. ## WAZNE: refactor sekcji script wiekszosci componentow
-    tzn tak by wykorzystac zalete composition api i script setup, czyli mozliwosc grupowania funkcjonalnosci w jednym miejscu, bo teraz troche porozrzucane sa, trzeba skakac przegladajac
-
-6. ## dodaj title do wszystkich podstron
-    i moze jakis sposob by zrobic tytul w postaci Blog | podstrona , gdzie podstrona to tytul podstrony ofc
+5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk
 
 # Fixes
 1. TODO: lepsze composables z srodkowym zwracaniem stanow itd ale to by wymagalo **zrozumienia promises etc**
