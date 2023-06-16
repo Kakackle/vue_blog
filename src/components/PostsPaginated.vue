@@ -5,11 +5,14 @@
     
     samo pobiera dane do wyswietlania z API
     
-    TODO: obsluga zmiany page size jakos tak jak w BlogView z query stringiem
-    bo to dosyc integralna czesc komponentu paginacji i nie chcialbym musiec
-    dodawac obsluge tego w kazdym komponencie ktory uzywa postspaginated
+    wszystkie props opcjonalne:
 
-    wiec musialbym modyfikowac otrzymane z zewnatrz linki do stron?
+    - query_string: <String> zaczynajacy sie od 'posts/?', ex. 'posts/?author=admin'
+
+    w przeciwnym wypadku bedzie wyswietlac wszystkie posty
+
+    - page_sizes: <Array[Int]> ex. [5, 10, 15] rozmairow page size do wyboru
+
  -->
 <script setup>
 import { nextTick, ref } from 'vue';

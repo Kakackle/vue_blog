@@ -4,6 +4,7 @@
     TODO: markdown itd
     TODO: moze searchbar do wyboru postow z tej listy zamiast sama lista
  -->
+
 <script setup>
 import { ref } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
@@ -177,33 +178,6 @@ const submitForm = function(method){
         toast.error(error.value);
     })
     .finally(cleanInputs)
-    // if (method === "post"){
-    // axios.post(`users/${newAuthor.value.id}/post`, 
-    //     newPost
-    // )
-    // .then((res)=>{
-    //     // console.log(`res:${res.status}`);
-    //     success.value += res.status + ' ' + res.statusText; 
-    // })
-    // .catch((err)=>{
-    //     // console.log(`err: ${err}`);
-    //     error.value += err;
-    // })
-    // .finally(cleanInputs)
-    // }
-
-    // if (method === "patch"){
-    //     axios.patch(`posts/${selectedPost.value.id}`, newPost)
-    //     .then((res)=>{
-    //     // console.log(`res:${res.status}`);
-    //     success.value += res.status + ' ' + res.statusText; 
-    // })
-    // .catch((err)=>{
-    //     // console.log(`err: ${err}`);
-    //     error.value += err;
-    // })
-    // .finally(cleanInputs)
-    // }
 }
 
 getTags();
@@ -228,94 +202,95 @@ getPosts(`posts/`);
     <div class="main">
     <GoBackButton></GoBackButton>
     <div class="columns">
-    <section class="select-sect">
-        <p class="title">SELECT A POST TO UPDATE:</p>
-        <!-- <select class="post-selection" v-if="postsExist">
-            <option v-for="post in posts" :value="post.id">{{ post.title }}</option>
-        </select> -->
-        <div class="post-selection" v-if="postsExist">
-            <p v-for="post in posts"
-            @click=selectPost(post)>{{ post.title }}</p>
-        </div>
-        <div class="pages">
-            <p class="page" v-for="(page, page_id) in pages" 
-            @click="getPostsByPage(page[0], page_id)"
-            :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
-        </div>
-        <p class="title">selected post:</p>
-        <p class="title" v-if="selectedPost">{{selectedPost.title}}</p>
-        <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
-        <div class="confirm-delete" v-if="confirmDelete">
-            <p class="title">ARE YOU SURE?</p>
-            <div class="buttons">
-                <button class="submit-button hover" @click="deletePost">YES</button>
-                <button class="submit-button hover" @click="cancelDel">NO</button>
+        <section class="select-sect">
+            <p class="title">SELECT A POST TO UPDATE:</p>
+            <!-- <select class="post-selection" v-if="postsExist">
+                <option v-for="post in posts" :value="post.id">{{ post.title }}</option>
+            </select> -->
+            <div class="post-selection" v-if="postsExist">
+                <p v-for="post in posts"
+                @click=selectPost(post)>{{ post.title }}</p>
             </div>
-        </div>
-    </section>
+            <div class="pages">
+                <p class="page" v-for="(page, page_id) in pages" 
+                @click="getPostsByPage(page[0], page_id)"
+                :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
+            </div>
+            <p class="title">selected post:</p>
+            <p class="title" v-if="selectedPost">{{selectedPost.title}}</p>
+            <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
+            <div class="confirm-delete" v-if="confirmDelete">
+                <p class="title">ARE YOU SURE?</p>
+                <div class="buttons">
+                    <button class="submit-button hover" @click="deletePost">YES</button>
+                    <button class="submit-button hover" @click="cancelDel">NO</button>
+                </div>
+            </div>
+        </section>
 
-    <section class="post-sect">
-    <span class="title">CREATE A NEW POST:</span>
-    <div class="input-form" v-if="tagsExist && usersExist">
-        <div class="form-inputs">
-            <div class="form-label">
-                <label for="title">title:</label>
-                <input type="text" class="text-input" id="title" v-model="newTitle">
-            </div>
-            <div class="form-label">
-                <label for="author">author:</label>
-                <select class="text-input" id="author" v-model="newAuthor">
-                    <option v-for="user in users" :value=user>{{ user.name }}</option>
-                </select>
-            </div>
+        <section class="post-sect">
+        <span class="title">CREATE A NEW POST:</span>
+        <div class="input-form" v-if="tagsExist && usersExist">
+            <div class="form-inputs">
+                <div class="form-label">
+                    <label for="title">title:</label>
+                    <input type="text" class="text-input" id="title" v-model="newTitle">
+                </div>
+                <div class="form-label">
+                    <label for="author">author:</label>
+                    <select class="text-input" id="author" v-model="newAuthor">
+                        <option v-for="user in users" :value=user>{{ user.name }}</option>
+                    </select>
+                </div>
 
-            <div class="form-label">
-                <label for="tags">tags:</label>
-                <select class="text-input" id="tags" v-model="newTags" multiple>
-                    <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
-                </select>
+                <div class="form-label">
+                    <label for="tags">tags:</label>
+                    <select class="text-input" id="tags" v-model="newTags" multiple>
+                        <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
+                    </select>
+                </div>
+                
+                <div class="form-label">
+                    <label for="new_tag">new tag:</label>
+                    <input type="text" id="new_tag" v-model="newTag">
+                    <ion-icon class="tag-icon hover" name="add-outline"
+                    @click="addToTags()"></ion-icon>
+                </div>
+                <p>tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
+                <div class="form-label">
+                    <label for="content">content:</label>
+                    <textarea id="content" class="text-input" v-model="newContent"></textarea>
+                </div>
+                <div class="form-label">
+                    <label for="img">img:</label>
+                    <input type="text" class="text-input" id="img" v-model="newImg">
+                </div>
             </div>
-            
-            <div class="form-label">
-                <label for="new_tag">new tag:</label>
-                <input type="text" id="new_tag" v-model="newTag">
-                <ion-icon class="tag-icon hover" name="add-outline"
-                @click="addToTags()"></ion-icon>
-            </div>
-            <p>tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
-            <div class="form-label">
-                <label for="content">content:</label>
-                <textarea id="content" class="text-input" v-model="newContent"></textarea>
-            </div>
-            <div class="form-label">
-                <label for="img">img:</label>
-                <input type="text" class="text-input" id="img" v-model="newImg">
-            </div>
+        </div>
+        <div class="buttons">
+            <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
+            <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+        </div>
+        <p v-if="success" class="success">{{success}}</p>
+        <p v-if="error" class="error">{{error}}</p>
+
+        </section>
+        <div class="useful">
+            <p>USEFUL LINKS:</p>
+            <a href="https://unsplash.com/"> IMAGES</a>
+            <a href="https://getlorem.com/">LOREM</a>
         </div>
     </div>
-    <div class="buttons">
-        <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
-        <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
-    </div>
-    <p v-if="success" class="success">{{success}}</p>
-    <p v-if="error" class="error">{{error}}</p>
-
-    </section>
-    <div class="useful">
-        <p>USEFUL LINKS:</p>
-        <a href="https://unsplash.com/"> IMAGES</a>
-        <a href="https://getlorem.com/">LOREM</a>
-    </div>
-</div>
 </div>
 </template>
 
 <style scoped>
 .columns{
-    display: flex;
+    /* display: flex; */
     gap: 2rem;
-    /* align-items: center; */
-    justify-content: center;
+    /* justify-content: center; */
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
     padding: 2rem;
 }
 .post-sect, .select-sect{
@@ -358,9 +333,14 @@ getPosts(`posts/`);
     width: 20rem;
     height: 2rem;
 }
-.form-label select, .form-label textarea{
+.form-label select{
     height: 6rem;
     width: 20rem;
+}
+.form-label textarea{
+    /* width: 100%; */
+    width: 40rem;
+    height: 20rem;
 }
 .submit-button{
     font-size: 2rem;

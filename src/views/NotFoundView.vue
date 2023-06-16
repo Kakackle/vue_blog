@@ -5,11 +5,6 @@
     kiedy matchuje poczatek np /posts i probujemy zredirectowac
     to juz nie dziala, nie da sie przekazac nie istniejacych paramow
     odrzuca je jako invalid
-
-    TODO: WAZNE: also troche ten view jest zbyteczny dla wiekszosci przypadkow
-    jesli chcialbym poinformowac uzytnika o tym ze dany tag pod podanych slugiem
-    nie istnieje czy cos, to moze lepiej gdyby bylo to na stronie tego tagu, usera
-    czy cokolwiek, dodatkowo moze sugerujacego liste innych tagow/ w/e do wyboru
  -->
 <script setup>
 import { useRoute } from 'vue-router';

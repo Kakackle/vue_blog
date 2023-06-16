@@ -1,5 +1,4 @@
 <!-- 
-    TODO: cleanup
     TODO: dodac co jesli wrong param w url do usera i postu
  -->
 <script setup>
@@ -23,7 +22,6 @@ const getTags = async function(){
     axios.get(`tags/`)
     .then((res)=>{
         tags.value = res.data;
-        // console.log(`tags/: ${res}`);
     })
     .catch((err)=>{
         console.log(`tags/: ${err}`);
@@ -31,9 +29,8 @@ const getTags = async function(){
 }
 getTags();
 
-//reset site by going to existing tag
+//reset site by going to existing tag - on wrong query tag name
 const resetSite = function(tag){
-    // tagExists.value = 1;
     getTagBySlug(tag.slug);
     // router.push({name: 'tag', params:{tag_slug: tag.slug}});
 
@@ -54,8 +51,6 @@ const getTagBySlug = async function(tag_slug){
         tagExists.value = 0;
         errorMsg.value = error;
         console.log("Failure");
-        // router.push({name: 'catchall', params: {wrong_param: tag_slug}});
-        
     })
 }
 const posts = ref([]);
@@ -118,17 +113,19 @@ const deleteTag = async function(){
 <template>
 <div>
     <GoBackButton></GoBackButton>
+    <!-- jesli poprawny response z API -->
     <div v-if="tagExists">
+        <!-- domyslny podglad -->
         <section class="tag-view" v-if="!beingEdited">
             <p class="tag-name">Name: {{tag.name}}</p>
             <p class="tag-desc">Desc: {{tag.description}}</p>
             <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
             <p class="posts" v-if="posts"> Posts:</p>
-            <!-- <p v-if="posts.length">paginated posts should be showing...</p> -->
             <PostsPaginated v-if="posts.length" :type="'small'" :posts="posts" :pages="pages"></PostsPaginated>
             <p v-if="success" class="success">{{success}}</p>
             <p v-if="error" class="error">{{error}}</p>
         </section>
+        <!-- jesli tag jest edytowany -->
         <section class="tag-view" v-if="beingEdited">
             <label for="name" class="tag-name">Name:</label>
             <input type="text" id="name" class="tag-name" v-model="newName">
@@ -138,6 +135,7 @@ const deleteTag = async function(){
             <button class="submit-button hover" @click="deleteTag">DELETE</button>
         </section>
     </div>
+    <!-- bad request etc -->
     <div v-else class="else">
         <p>Server response: {{ errorMsg }}</p>
         <p>The tag "{{ route.params.tag_slug }}" doesn't exist!</p>

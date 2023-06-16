@@ -1,5 +1,6 @@
 <!-- 
-    TODO: Cleanup
+    User view reached by supplying [user_slug] in params
+    allows for viewing and editing/patching
  -->
 <script setup>
 import { useRouter, useRoute, routerKey } from 'vue-router';
@@ -9,17 +10,20 @@ import { ref } from 'vue';
 import PostsPaginated from '../components/PostsPaginated.vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
-import { getDataFromLink } from "../composables/axiosComposables";
 
 const route = useRoute();
 const router = useRouter();
 const user_slug = route.params.user_slug;
+const query_string = `posts/?author=${user_slug}`;
 
 const user = ref();
 const userExists = ref(0);
 const errorMsg = ref();
-const posts = ref([]);
-const pages = ref([]);
+// const posts = ref([]);
+// const pages = ref([]);
+
+//for pagination
+const PAGE_SIZES = [5, 10, 15];
 
 //TODO: nowy img itd..
 const newName = ref('');
@@ -69,13 +73,9 @@ const getUser = function(slug){
         user.value = res.data;
         userExists.value = 1;
     })
-    .then(()=>{
-        // user.value.posts.forEach(post =>{
-        //     getPostByHyperlink(post);
-        // })
-        // console.log(`path sent: posts/?author=${user_id}`)
-        getPosts(`posts/?author=${user_slug}`);
-    })
+    // .then(()=>{
+    //     getPosts(`posts/?author=${user_slug}`);
+    // })
     .catch((error)=>{
         userExists.value = 0;
         errorMsg.value = error;
@@ -83,18 +83,17 @@ const getUser = function(slug){
     })
 }
 
-const getPosts = async function(link){
-    posts.value = [];
-    // const data = (await getDataFromLink(link)).value;
-    axios.get(link)
-    .then((res)=>{
-        posts.value = res.data.results;
-        pages.value = res.data.context.page_links;
-    })
-    .catch((err)=>{
-        console.log(err);
-    })
-}
+// const getPosts = async function(link){
+//     posts.value = [];
+//     axios.get(link)
+//     .then((res)=>{
+//         posts.value = res.data.results;
+//         pages.value = res.data.context.page_links;
+//     })
+//     .catch((err)=>{
+//         console.log(err);
+//     })
+// }
 
 getUser(user_slug);
 
@@ -103,6 +102,7 @@ getUser(user_slug);
 <template>
     <div class="main" v-if="userExists">
         <GoBackButton></GoBackButton>
+        <!-- basic view -->
         <div class="user-info" v-if="!beingEdited">
             <img :src=user.avatar>
             <p class="name">{{ user.name }}</p>
@@ -110,7 +110,7 @@ getUser(user_slug);
             <p class="mail">{{ user.mail }}</p>
             <p class="bio">{{ user.bio }}</p>
         </div>
-        
+        <!-- turn display into inputs for editing -->
         <div v-if="beingEdited" class="user-info">
             <img :src=user.avatar>
             <div class="label-div">
@@ -121,7 +121,6 @@ getUser(user_slug);
                 <label for="username" class="username">username:</label>
                 <input type="text" id="username" class="username" v-model="newUsername">
             </div>
-            <!-- TODO: validatory dla maili etc -->
             <div class="label-div">
                 <label for="mail" class="mail">mail:</label>
                 <input type="email" id="mail" class="mail" v-model="newMail">
@@ -136,11 +135,8 @@ getUser(user_slug);
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>
         <p class="user-info"> {{ user.name }}'s posts:</p>
-        <!-- <div class="user-posts" v-if="posts">
-            <PreviewList v-for="(post, post_id) in posts" :post="post"></PreviewList>
-        </div> -->
-        <!-- <p v-if="posts">paginated should be displayed...</p> -->
-        <PostsPaginated v-if="posts" :posts="posts" :pages="pages" :type="'small'"></PostsPaginated>
+        <PostsPaginated :type="'small'" :page_sizes="PAGE_SIZES"
+            :query_string="query_string"></PostsPaginated>
 
     </div>
 </template>

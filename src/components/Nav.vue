@@ -24,8 +24,7 @@ const router = useRouter();
 // twoj backed, czyli obsluga authentication, persmissions itd
 
 // konkretnie:
-// TODO: odczytywanie wpisanej w polu login wartosic username i branie z API
-// TODO: stylizacja dropdowow bo nieczytelne
+// TODO: jakos przekazywanie z Nava do komponentow zalogowanego uzytkownika
 
 const user = ref()
 const loggedIn = ref(0);
@@ -36,7 +35,6 @@ const getUser = function(user_slug){
     axios.get(`users/${user_slug}`)
     .then((res)=>{
         user.value = res.data;
-        // console.log(`logged user: ${user.value.slug}`)
     })
     .catch((err)=>{
 
@@ -47,8 +45,6 @@ const getUser = function(user_slug){
         console.log(err);
     })
 }
-
-// getUser('admin');
 
 /**
  * Funkcje oblugujace widocznosc dropdownow login/logout/register
