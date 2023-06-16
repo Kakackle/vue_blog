@@ -7,9 +7,6 @@
         font-size: 62.5%;
     }
     albo dodatkowy plik importowany w kazdym z nich poza tym z markdown, na to samo wychodzi
-
-    a potem
-    TODO: markdown w post view
  -->
 <script setup>
 import {marked} from 'marked';
@@ -65,9 +62,10 @@ const compiledMarkdown = computed(()=>{
 
 <!-- <style scoped> -->
 <style lang="css" scoped>
-  /* *, *::before, *::after {
-    font-size: 100%;
-  } */
+  *, *::before, *::after {
+    font-size: unset !important;
+    /* font-size: 2rem; */
+  }
 .main{
     display: flex;
     flex-direction: column;

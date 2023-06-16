@@ -6,7 +6,7 @@
 <script setup>
 import { onMounted } from "vue";
 import {useRouter, useRoute, routerKey} from "vue-router"
-import {ref} from "vue"
+import {ref, computed} from "vue"
 import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposables";
 import GoBackButton from "../components/GoBackButton.vue"
 import axios from "axios";
@@ -34,6 +34,14 @@ const getPost = async function(){
 }
 
 getPost();
+
+import {marked} from 'marked';
+const compiledMarkdown = computed(()=>{
+  return marked.parse(post.value.content, {
+        "mangle": false,
+        "headerIds": false,
+    })
+})
 
 </script>
 
@@ -64,7 +72,8 @@ getPost();
           </div>
           
           <img :src="post.img" class="post-img">
-          <div class="post-content">{{ post.content }}</div>
+          <!-- <div class="post-content">{{ post.content }}</div> -->
+          <div class="post-content" v-html="compiledMarkdown"></div>
         </div>
       <div class="post-side">
       </div>
@@ -151,5 +160,10 @@ getPost();
   width: 10rem;
   font-size: 1.5rem;
   padding: 0.2rem;
+}
+
+.post-content{
+  font-size: unset !important;
+  /* font-size: 2rem; */
 }
 </style>

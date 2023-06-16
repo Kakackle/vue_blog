@@ -6,13 +6,15 @@
  -->
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import { getDataFromLink } from '../composables/axiosComposables';
 
 import {useToast} from "vue-toastification";
+
+import {marked} from 'marked';
 
 const toast = useToast();
 
@@ -192,17 +194,21 @@ getPosts(`posts/`);
 //     getPosts('posts/');
 // }
 
+const compiledMarkdown = computed(()=>{
+    return marked.parse(newContent.value, {
+        "mangle": false,
+        "headerIds": false,
+    })
+})
 </script>
 
 <template>
     <div class="main">
     <GoBackButton></GoBackButton>
     <div class="columns">
+        <!-- Select post -->
         <section class="select-sect">
             <p class="title">SELECT A POST TO UPDATE:</p>
-            <!-- <select class="post-selection" v-if="postsExist">
-                <option v-for="post in posts" :value="post.id">{{ post.title }}</option>
-            </select> -->
             <div class="post-selection" v-if="postsExist">
                 <p v-for="post in posts"
                 @click=selectPost(post)>{{ post.title }}</p>
@@ -212,8 +218,8 @@ getPosts(`posts/`);
                 @click="getPostsByPage(page[0], page_id)"
                 :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
             </div>
-            <p class="title">selected post:</p>
-            <p class="title" v-if="selectedPost">{{selectedPost.title}}</p>
+            <p class="sub-title">selected post:</p>
+            <p class="sub-title" v-if="selectedPost">{{selectedPost.title}}</p>
             <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
             <div class="confirm-delete" v-if="confirmDelete">
                 <p class="title">ARE YOU SURE?</p>
@@ -223,7 +229,7 @@ getPosts(`posts/`);
                 </div>
             </div>
         </section>
-
+        <!-- Create /edit post -->
         <section class="post-sect">
         <span class="title">CREATE A NEW POST:</span>
         <div class="input-form" v-if="tagsExist && usersExist">
@@ -252,7 +258,7 @@ getPosts(`posts/`);
                     <ion-icon class="tag-icon hover" name="add-outline"
                     @click="addToTags()"></ion-icon>
                 </div>
-                <p>tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
+                <p class="form-label">tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
                 <div class="form-label">
                     <label for="content">content:</label>
                     <textarea id="content" class="text-input" v-model="newContent"></textarea>
@@ -269,24 +275,29 @@ getPosts(`posts/`);
         </div>
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>
-
         </section>
-        <div class="useful">
+        <!-- Post preview -->
+        <section class="post-preview" v-html="compiledMarkdown" v-if="newContent">
+        </section>
+
+
+    </div>
+    <!-- Under columns: useful links -->
+    <div class="useful">
             <p>USEFUL LINKS:</p>
             <a href="https://unsplash.com/"> IMAGES</a>
             <a href="https://getlorem.com/">LOREM</a>
         </div>
-    </div>
 </div>
 </template>
 
 <style scoped>
 .columns{
     /* display: flex; */
-    gap: 2rem;
+    gap: 1rem;
     /* justify-content: center; */
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 3fr 3fr;
     padding: 2rem;
 }
 .post-sect, .select-sect{
@@ -305,7 +316,10 @@ getPosts(`posts/`);
     gap: 1rem;
 }
 .title{
-    font-size: 2.5rem;
+    font-size: 2rem;
+}
+.sub-title{
+    font-size: 1.5rem;
 }
 .form-inputs{
     display: flex;
@@ -317,9 +331,9 @@ getPosts(`posts/`);
     padding: 0;
 }
 .form-label{
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     min-height: 2rem;
 }
 .form-label label{
@@ -362,7 +376,7 @@ getPosts(`posts/`);
 }
 
 .post-selection{
-    font-size: 2rem;
+    font-size: 1.2rem;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -377,7 +391,7 @@ getPosts(`posts/`);
 }
 .pages{
     display: flex;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     gap: 1rem;
 }
 
