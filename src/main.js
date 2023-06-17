@@ -16,6 +16,14 @@ import "vue-toastification/dist/index.css";
 import VCalendar from 'v-calendar'
 import 'v-calendar/style.css'
 
+
+import PrimeVue from 'primevue/config';
+//theme
+import "primevue/resources/themes/lara-light-indigo/theme.css";     
+    
+//core
+import "primevue/resources/primevue.min.css";
+
 //Toast options
 const options ={
 position: "top-right",
@@ -41,4 +49,5 @@ app.use(router)
 app.use(createPinia())
 app.use(Toast, options)
 app.use(VCalendar, {})
+app.use(PrimeVue)
 app.mount('#app')

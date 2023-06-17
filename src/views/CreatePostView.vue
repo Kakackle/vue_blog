@@ -207,24 +207,79 @@ const compiledMarkdown = computed(()=>{
         "headerIds": false,
     })
 })
+
+// FIXME: jak to ma niby dzialac????
+// import autoComplete from "@tarekraafat/autocomplete.js";
+// const autoCompleteJS = new autoComplete({
+//     selector: "#autoComplete",
+//     placeHolder: "search posts",
+//     data:{
+//         src: posts.value,
+//         keys: ['title']
+//     },
+//     resultItem: {
+//         highlight: true
+//     }
+//  });
+
+import AutoComplete from 'primevue/autocomplete';
+
+//FIXME: troche chujowe takie pobieranie all postow
+//gdyby bylo ich bardzo duzo to duzy hit dla performance moze byc
+//ale jak inaczej to zrobic? bo chcialbym szukajac miec dostep do wszystkiego
+//zeby moglo wszystko sugerowac
+const filteredPosts = ref();
+const allPosts = ref();
+const getAllPosts = async function(){
+    axios.get(`posts/all/`)
+    .then((res)=>
+    {
+        allPosts.value = res.data;
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+}
+getAllPosts();
+
+const search = (event) => {
+    setTimeout(() => {
+        if (!event.query.trim().length) {
+            filteredPosts.value = [...allPosts.value];
+        } else {
+            filteredPosts.value = allPosts.value.filter((post) => {
+                return post.title.toLowerCase().startsWith(event.query.toLowerCase());
+            });
+        }
+    }, 250);
+}
 </script>
 
 <template>
     <div class="main">
     <GoBackButton></GoBackButton>
     <div class="columns">
-        <!-- Select post -->
+        <!-- Select post from existing-->
         <section class="select-sect">
             <p class="title">SELECT A POST TO UPDATE:</p>
+            <!-- PrimeVue -->
+            <AutoComplete v-model="selectedPost" optionLabel="title"
+                :suggestions="filteredPosts" v-if="allPosts" @complete="search"
+                @item-select="selectPost(selectedPost)"
+                />
+                <!-- @complete="selectPost(selectPost)"-->
+            <!-- reczna lista postow -->
             <div class="post-selection" v-if="postsExist">
                 <p v-for="post in posts"
                 @click=selectPost(post)>{{ post.title }}</p>
             </div>
+            <!-- paginacja listy postow -->
             <div class="pages">
                 <p class="page" v-for="(page, page_id) in pages" 
                 @click="getPostsByPage(page[0], page_id)"
                 :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
             </div>
+            <!-- przyciski potwierdzajace -->
             <p class="sub-title">selected post:</p>
             <p class="sub-title" v-if="selectedPost">{{selectedPost.title}}</p>
             <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
@@ -251,14 +306,14 @@ const compiledMarkdown = computed(()=>{
                         <option v-for="user in users" :value=user>{{ user.name }}</option>
                     </select>
                 </div>
-
+                <!-- tags select -->
                 <div class="form-label">
                     <label for="tags">tags:</label>
                     <select class="text-input" id="tags" v-model="newTags" multiple>
                         <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
                     </select>
                 </div>
-                
+                <!-- add new tag -->
                 <div class="form-label">
                     <label for="new_tag">new tag:</label>
                     <input type="text" id="new_tag" v-model="newTag">
@@ -298,7 +353,7 @@ const compiledMarkdown = computed(()=>{
             <p>USEFUL LINKS:</p>
             <a href="https://unsplash.com/"> IMAGES</a>
             <a href="https://getlorem.com/">LOREM</a>
-        </div>
+    </div>
 </div>
 </template>
 

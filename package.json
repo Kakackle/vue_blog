@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@tarekraafat/autocomplete.js": "^10.2.7",
     "axios": "^1.4.0",
     "marked": "^5.1.0",
     "pinia": "^2.0.36",
+    "primevue": "^3.29.2",
     "v-calendar": "^3.0.3",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0",
