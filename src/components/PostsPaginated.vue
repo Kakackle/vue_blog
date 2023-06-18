@@ -40,7 +40,11 @@ const props = defineProps({
 
 const type = ref(props.type);
 const page_sizes = ref(props.page_sizes);
+//wybrany w komonencie rozmiar strony
 const selected_size = ref(page_sizes.value[0]);
+const page_orders = ["date_posted", "title"];
+//wybrany w komponencie sposob sortowania
+const selected_order = ref('date_posted');
 //otrzymany query string z filtrami
 const query_string = ref(props.query_string);
 //pelny query zawierajacy takze page oraz page_size
@@ -51,6 +55,15 @@ const set_page_size = async function(size){
     selected_size.value = size;
     // query_string.value += `?page_size=${size}`;
     let full_query = query_string.value + `&page_size=${size}`;
+    posts.value = [];
+    pages.value = [];
+    getPosts(full_query);
+}
+
+const set_order = async function(order){
+    selected_order.value = order;
+    // query_string.value += `?page_size=${size}`;
+    let full_query = query_string.value + `&ordering=${order}`;
     posts.value = [];
     pages.value = [];
     getPosts(full_query);
@@ -86,15 +99,24 @@ getPosts(query_string.value);
 
 <template>
     <div class="post-list" v-if="posts">
-        <div class="page_size">
-          <p class="hover" v-for="(size, size_id) in page_sizes"
-            @click="set_page_size(size, size_id)"
-            :class="(selected_size === page_sizes[size_id])? 'selected' : 'normal'"
-          >{{size}}
-          <!-- <p>selected: {{ selected_size }}</p>
-          <p>size_id: {{ page_sizes[size_id] }}</p> -->
-        </p>
-          
+        <div class="controls">
+            <div class="page_size">
+            <p class="hover" v-for="(size, size_id) in page_sizes"
+                @click="set_page_size(size)"
+                :class="(selected_size === page_sizes[size_id])? 'selected' : 'normal'"
+            >{{size}}</p>
+            <!-- <p>selected: {{ selected_size }}</p>
+            <p>size_id: {{ page_sizes[size_id] }}</p> --> 
+            </div>
+            
+            <div class="page_size order">
+            <p class="hover" v-for="(order, order_id) in page_orders"
+                @click="set_order(order)"
+                :class="(selected_order === page_orders[order_id])? 'selected' : 'normal'"
+            >{{order}}</p>
+            <!-- <p>selected: {{ selected_size }}</p>
+            <p>size_id: {{ page_sizes[size_id] }}</p> -->
+            </div>
         </div>
         <PreviewList v-for="(post, post_id) in posts" :post="post"
             v-if="type === 'small'"></PreviewList>
@@ -110,13 +132,22 @@ getPosts(query_string.value);
 </template>
 
 <style scoped>
+.controls{
+    display: flex;
+    gap: 2rem;
+    align-self: end;
+    transform: translateX(-4rem);
+}
 .page_size{
   display: flex;
   gap: 1rem;
   font-size: 1.5rem;
-  right: 1rem;
+  /* right: 1rem; */
   align-self: end;
   transform: translateX(-4rem);
+}
+.order{
+    right: 4rem;
 }
 .hover:hover{
   cursor: pointer;
