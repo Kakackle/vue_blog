@@ -9,6 +9,9 @@ import AccDrop from "../components/AccDrop.vue"
 import {useToast} from "vue-toastification";
 const toast = useToast();
 
+import {useUserStore} from "../stores/user.js"
+const userStore = useUserStore();
+
 import {useRouter} from 'vue-router'
 const router = useRouter();
 
@@ -26,7 +29,7 @@ const router = useRouter();
 // konkretnie:
 // TODO: jakos przekazywanie z Nava do komponentow zalogowanego uzytkownika
 
-const user = ref()
+// const user = ref()
 const loggedIn = ref(0);
 const logInDrop = ref(0);
 const accDrop = ref(0);
@@ -34,7 +37,8 @@ const accDrop = ref(0);
 const getUser = function(user_slug){
     axios.get(`users/${user_slug}`)
     .then((res)=>{
-        user.value = res.data;
+        // user.value = res.data;
+        userStore.setUser(res.data);
     })
     .catch((err)=>{
 
@@ -61,7 +65,8 @@ const login = (username)=>{
 const logout =() =>{
     loggedIn.value = 0;
     accDrop.value = 0;
-    user.value = undefined;
+    userStore.setUser(undefined);
+    // user.value = undefined;
 }
 </script>
 
@@ -78,7 +83,7 @@ const logout =() =>{
             <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">ACC <ion-icon name="heart"></ion-icon></span>   
             <span v-else class="acc hover" @click="logInDrop = !logInDrop">Log in</span>
         </div>
-        <LoginDrop v-if="logInDrop" :user="user"
+        <LoginDrop v-if="logInDrop" :user="userStore.getUser()"
             @login="login"
             @register="register"></LoginDrop>
         <!-- <div v-if="logInDrop" class="login-drop">
@@ -92,7 +97,7 @@ const logout =() =>{
                 <button class="login-button" @click="register">REGISTER &rarr;</button>
             </div>
         </div> -->
-        <AccDrop v-if="accDrop" :user="user"
+        <AccDrop v-if="accDrop" :user="userStore.getUser()"
             @logout="logout"></AccDrop>
         <!-- <div v-if="accDrop" class="acc-drop">
             <p>{{ user.name }}</p>

@@ -42,7 +42,7 @@ const type = ref(props.type);
 const page_sizes = ref(props.page_sizes);
 //wybrany w komonencie rozmiar strony
 const selected_size = ref(page_sizes.value[0]);
-const page_orders = ["date_posted", "title"];
+const page_orders = ["date_posted", "title", "views", "likes"];
 //wybrany w komponencie sposob sortowania
 const selected_order = ref('date_posted');
 //otrzymany query string z filtrami

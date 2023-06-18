@@ -35,3 +35,8 @@ co nam da specyficzne pobranie, zamiast calego i nastepnie filtrowania po uzytko
 .. co byc moze mozna rozwiazac takze poprzez queries! w sensie wystarczy jeden view ale zawierajacy wiele queries
 hmm
 
+
+4. ## Sotowanie
+TODO: Sortowanie po views, likes etc - w taki sposob (ordered) najlepiej gdyby byly zwracane z store/db, to juz moze zostawie na integracje z django rest, bo tam latwo sie orderuje, tylko kwestia jak taki queryset wywolywac poprzez endpoint? moze parametr ?sorted_by=views&order=asc czy cos
+
+8. TODO: **sortowanie po views, likes**

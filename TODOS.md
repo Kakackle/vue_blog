@@ -2,10 +2,13 @@
 1. TODO: Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
 3. TODO: komponent side dla homeview z jakims najpop autorem itd - do tego autorzy musieliby miec count postow etc, najpewniej w django
 7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
-8. TODO: **sortowanie po views, likes**
+8. TODO: **funkcjonalnosc likes** - tylko ze, to nie takie proste, bo chcialbym by kazdy uzytnik mogl polubic dany post tylko raz, do czego potrzebne jest odczytywanie informacji jaki uzytkownik teraz zalogowany i przy klikaniu like zapisywanie tej informacji w jakos tablicy typu "liked_by"
 9. footer costam
 14. TODO: Pod tworzeniem postu z markdown dodaj jakis cheatsheet komend, jak wklejac obrazek itd
 albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
+15. TODO: dodaj filtracje po miesiacu, roku itd, bo powinno byc latwo __month, __year itd
+
+16. TODO: Slug nie zmienia sie przy patchowaniu postow, szczegolnie chodzi o zmiane tytulu, a to bardzo wazne
 
 # Duze rzeczy
 1. custom user / profile i logowanie
