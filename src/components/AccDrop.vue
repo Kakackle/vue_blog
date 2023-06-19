@@ -5,21 +5,31 @@
  -->
 <script setup>
 import {ref} from "vue";
+import { useRouter } from "vue-router";
 const props = defineProps(['user']);
 const user = ref(props.user);
+const router = useRouter();
 
 const emit = defineEmits(['logout']);
 
 const emitLogout = () =>{
     emit('logout');
 }
+
+const goToProfile = () =>{
+    // console.log(`You're in goToProfile!`);
+    router.push({name: 'user', params:{user_slug: user.value.slug}});
+
+}
+
 </script>
 
 <template>
     <div class="acc-drop">
         <p>{{ user.name }}</p>
         <p>slug: {{ user.slug }}</p>
-        <img :src=user.avatar>
+        <img class="av-img" :src=user.avatar>
+        <button @click="goToProfile">GO TO PROFILE</button>
         <button @click="emitLogout">LOG OUT</button>
     </div>
 </template>
@@ -38,5 +48,12 @@ const emitLogout = () =>{
 
     font-size: 2rem;
     color: white;
+}
+.acc-drop button{
+    font-size: 1rem;
+}
+.av-img{
+    height: 10rem;
+    width: 10rem;
 }
 </style>

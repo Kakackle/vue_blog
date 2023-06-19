@@ -1,8 +1,6 @@
 <!-- 
     View do tworzenia lub patchowania postow
     wybierane z listy istniejacych
-    TODO: markdown itd
-    TODO: moze searchbar do wyboru postow z tej listy zamiast sama lista
  -->
 
 <script setup>
@@ -16,6 +14,10 @@ import {useToast} from "vue-toastification";
 const toast = useToast();
 
 import {marked} from 'marked';
+
+import { useUserStore } from '../stores/user';
+const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore);
 
 const route = useRoute();
 const param_slug = route.params.post_slug;
@@ -223,6 +225,7 @@ const compiledMarkdown = computed(()=>{
 //  });
 
 import AutoComplete from 'primevue/autocomplete';
+import { storeToRefs } from 'pinia';
 
 //FIXME: troche chujowe takie pobieranie all postow
 //gdyby bylo ich bardzo duzo to duzy hit dla performance moze byc
@@ -335,9 +338,11 @@ const search = (event) => {
                     <p class="date">Date: {{ newDate }}</p>
             </div>
         </div>
-        <div class="buttons">
+        <div v-if="newAuthor && loggedUser">
+        <div class="buttons" v-if="loggedUser.slug === newAuthor.slug">
             <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
             <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+        </div>
         </div>
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>

@@ -1,6 +1,5 @@
 # Idk, zobaczymy czy okaze sie przydatne takie zapisywanie
-
-## Moze jakies kategorie, typy
+## TODO: upieknic, Moze jakies kategorie, typy
 
 1. Mozliwosc dodawania ~~tagow~~ i userow [POST] (chodzi o czy beda problemy ze slug)
 4. Routowanie w vue po slugach do postow i uzytkownikow - ale duzo bedzie naprawiania
@@ -37,6 +36,10 @@ hmm
 
 
 4. ## Sotowanie
-TODO: Sortowanie po views, likes etc - w taki sposob (ordered) najlepiej gdyby byly zwracane z store/db, to juz moze zostawie na integracje z django rest, bo tam latwo sie orderuje, tylko kwestia jak taki queryset wywolywac poprzez endpoint? moze parametr ?sorted_by=views&order=asc czy cos
+ Sortowanie po views, likes etc - w taki sposob (ordered) najlepiej gdyby byly zwracane z store/db, to juz moze zostawie na integracje z django rest, bo tam latwo sie orderuje, tylko kwestia jak taki queryset wywolywac poprzez endpoint? moze parametr ?sorted_by=views&order=asc czy cos
 
-8. TODO: **sortowanie po views, likes**
+8.  **sortowanie po views, likes**
+
+8.  **funkcjonalnosc likes** - tylko ze, to nie takie proste, bo chcialbym by kazdy uzytnik mogl polubic dany post tylko raz, do czego potrzebne jest odczytywanie informacji jaki uzytkownik teraz zalogowany i przy klikaniu like zapisywanie tej informacji w jakos tablicy typu "liked_by"
+
+1. Poki co zalogowany uzytnik przechowywany jest w Nav, bo dosyc globalny, ale ciezko potem wyciagac w innych komponentach, wiec zamiast tego stworz nowy store na uzytkownika, moze na tokeny tez potem itd

@@ -1,14 +1,13 @@
 # Nowe funkcjonalnosci
-1. TODO: Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
 3. TODO: komponent side dla homeview z jakims najpop autorem itd - do tego autorzy musieliby miec count postow etc, najpewniej w django
 7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
-8. TODO: **funkcjonalnosc likes** - tylko ze, to nie takie proste, bo chcialbym by kazdy uzytnik mogl polubic dany post tylko raz, do czego potrzebne jest odczytywanie informacji jaki uzytkownik teraz zalogowany i przy klikaniu like zapisywanie tej informacji w jakos tablicy typu "liked_by"
+
 9. footer costam
 14. TODO: Pod tworzeniem postu z markdown dodaj jakis cheatsheet komend, jak wklejac obrazek itd
 albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
 15. TODO: dodaj filtracje po miesiacu, roku itd, bo powinno byc latwo __month, __year itd
 
-16. TODO: Slug nie zmienia sie przy patchowaniu postow, szczegolnie chodzi o zmiane tytulu, a to bardzo wazne
+16. TODO: Slug nie zmienia sie przy patchowaniu postow, szczegolnie chodzi o zmiane tytulu, a to bardzo wazne, ale za chuja nie moglem znalezc signalu ktory by na to reagowal, wiec trzeba by dodac to tak jak tworzenie postow customowe w view w django... ktory po prostu bedzie przy patchu ustawial nowy slug zalezny od nowego tytulu i zapisywal serializator
 
 # Duze rzeczy
 1. custom user / profile i logowanie
@@ -20,7 +19,7 @@ albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
     ogolnie TODO: Django uploading images, jak to przesylac przez rest, jak to serwowac?
 
 # Uzupelnienie funkcjonalnosci
-1. TODO: Poki co zalogowany uzytnik przechowywany jest w Nav, bo dosyc globalny, ale ciezko potem wyciagac w innych komponentach, wiec zamiast tego stworz nowy store na uzytkownika, moze na tokeny tez potem itd
+
 
 4. ## 09.06.2023
     5. TODO: ~~Usuwanie tagow~~, uzytnikow,

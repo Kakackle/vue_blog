@@ -4,12 +4,16 @@
  -->
 <script setup>
 import { useRouter, useRoute, routerKey } from 'vue-router';
-
+import { useUserStore } from '../stores/user';
 import { ref } from 'vue';
 // import PreviewList from '../components/PreviewList.vue'; 
 import PostsPaginated from '../components/PostsPaginated.vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
+import { storeToRefs } from 'pinia';
+
+const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore);
 
 const route = useRoute();
 const router = useRouter();
@@ -130,7 +134,11 @@ getUser(user_slug);
                 <textarea id="bio" class="bio-input" v-model="newBio"></textarea>
             </div>
         </div>
-        <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT USER</button>
+        <div v-if="user && loggedUser">
+        <div v-if="loggedUser.slug === user.slug">
+            <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT USER</button>
+        </div>
+        </div>
         <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_slug)">CONFIRM</button>
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>

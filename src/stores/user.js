@@ -3,12 +3,12 @@ import {defineStore} from "pinia"
 import {ref} from 'vue'
 
 export const useUserStore = defineStore('user',()=>{
-    const user = ref()
+    const loggedUser = ref()
     const setUser = (newUser)=>{
-        user.value = newUser;
+        loggedUser.value = newUser;
     }
     const getUser = ()=>{
-        return user.value;
+        return loggedUser.value;
     }
-    return {user, setUser, getUser}
+    return {loggedUser, setUser, getUser}
 })

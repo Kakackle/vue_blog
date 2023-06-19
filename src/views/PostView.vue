@@ -1,7 +1,7 @@
 <!-- 
     Whole post view
     TODO: Upieknienie
-    TODO: Markdown ale to zacznie sie od tworzenia contentu w takiej formie
+    TODO: moze jesli jestes zalogowny to umozliw klikniecie "edytuj" in place, idk
 -->
 <script setup>
 import { onMounted } from "vue";

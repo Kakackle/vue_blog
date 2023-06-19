@@ -1,3 +1,5 @@
+TODO: [TUTAJ] Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
+
 # Porzucone elementy
 1. JSDOC
 
@@ -16,4 +18,10 @@
     
     do tworzenia tooltipow funkcji
 
-2. aaa
+# Problemy rozwiazane
+
+1. Kwestia reakcji na zmiany w store - Pinia ma do tego specjalna metode
+tzw StoreToRefs, link:
+https://stackoverflow.com/questions/71676111/vue-component-doesnt-update-after-state-changes-in-pinia-store
+
+https://pinia.vuejs.org/core-concepts/
