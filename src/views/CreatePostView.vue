@@ -26,8 +26,14 @@ const masks = ref({
     modelValue: 'YYYY-MM-DD',
 });
 
-const newDate = ref('');
+const newDate = ref('2023-06-19');
 const openDate = ref(0);
+
+const getToday = () =>{
+    const today = new Date();
+    newDate.value = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`
+}
+getToday();
 
 const newTitle = ref("")
 const newAuthor = ref()
