@@ -15,6 +15,24 @@ const userStore = useUserStore();
 import {useRouter} from 'vue-router'
 const router = useRouter();
 
+import Dropdown from 'primevue/dropdown';
+
+const dropdown_list_routes = [
+    {
+        name: 'Users list',
+        path: 'userlist'
+    },
+    {
+        name: 'Tags list',
+        path: 'tags'
+    },
+    {
+        name: 'Posts list',
+        path: 'postlist'
+    }
+]
+const selected_list = ref();
+
 // TODO: pobieranie np. w Nav (bo jest globalny) usera z API wedlug wpisanego
 // np w dropie username / slug
 // na start moze byc przechowywane w Navie, potem localstorage
@@ -68,6 +86,11 @@ const logout =() =>{
     userStore.setUser(undefined);
     // user.value = undefined;
 }
+
+const dropdownClick = ()=>{
+    console.log("clickedddd")
+}
+
 </script>
 
 <template>
@@ -78,6 +101,11 @@ const logout =() =>{
             <router-link class="hover" to="/">Home</router-link>
             <RouterLink class="hover" to="/about">About</RouterLink>
             <RouterLink class="hover" to="/blog">Blog</RouterLink>
+            <Dropdown v-model="selected_list" :options="dropdown_list_routes" optionLabel="name" placeholder="LISTS" @change="router.push({name: selected_list.path})">
+                <!-- <template #optiongroup="slotProps" @click="router.push({name: slotProps.option.path})">
+                    <RouterLink class="hover" :to="{name: slotProps.option.path}">{{ slotProps.option.name }}</RouterLink>
+                </template> -->
+            </Dropdown>
         </div>
         <div>   
             <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">ACC <ion-icon name="heart"></ion-icon></span>   
