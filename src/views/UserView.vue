@@ -87,6 +87,16 @@ const getUser = function(slug){
     })
 }
 
+const deleteUser = async function(){
+    axios.delete(`users/${user_slug}`)
+    .then((res)=>{
+        success.value += res.status + ' ' + res.statusText; 
+    })
+    .catch((err)=>{
+        error.value += err.status + ' ' + res.statusText;
+    })
+}
+
 // const getPosts = async function(link){
 //     posts.value = [];
 //     axios.get(link)
@@ -135,8 +145,9 @@ getUser(user_slug);
             </div>
         </div>
         <div v-if="user && loggedUser">
-        <div v-if="loggedUser.slug === user.slug">
+        <div v-if="loggedUser.slug === user.slug" class="controls">
             <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT USER</button>
+            <button class="submit-button hover" @click="deleteUser">DELETE</button>
         </div>
         </div>
         <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_slug)">CONFIRM</button>
@@ -172,6 +183,10 @@ getUser(user_slug);
 .bio-input{
     width: 24rem;
     height: 8rem;
+}
+.controls{
+    display: flex;
+    gap: 1rem;
 }
 .submit-button{
     width: 12rem;

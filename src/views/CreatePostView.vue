@@ -4,7 +4,7 @@
  -->
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
@@ -20,12 +20,15 @@ const userStore = useUserStore();
 const {loggedUser} = storeToRefs(userStore);
 
 const route = useRoute();
+// slug przychodzacy z route, tzn jesli przekierowany do tej strony od postu
 const param_slug = route.params.post_slug;
 
+//maska do formatu daty z date pickera
 const masks = ref({
     modelValue: 'YYYY-MM-DD',
 });
 
+//poczatkowa wartosc do date pickera
 const newDate = ref('2023-06-19');
 const openDate = ref(0);
 
@@ -35,6 +38,7 @@ const getToday = () =>{
 }
 getToday();
 
+// nowe wartosci z inputow do przeslania
 const newTitle = ref("")
 const newAuthor = ref()
 const newTags = ref([])
@@ -42,22 +46,58 @@ const newTag = ref('')
 const newContent = ref("")
 const newImg = ref("")
 
+//dane pobierane do selectow
 const tags = ref([]);
 const users = ref([]);
 const posts = ref([]);
 const pages = ref([]);
+//potwierdzenia
 const tagsExist = ref(0);
 const usersExist = ref(0);
 const postsExist = ref([]);
 
+//status msg
 const success = ref('');
 const error = ref('');
 
+//wybrany z listy lub route post
 const selectedPost = ref();
+//wybrana strona elementu paginacji
 const selectedPage = ref(0);
 
-const confirmDelete = ref(0)
+//czy na pewno chcesz usunac
+const confirmDelete = ref(0);
 
+//query string generalny do filtrowania listy po autorze, lub innych
+const query_string = ref('posts/');
+//czy chcesz pokazywac tylko posty uzytkownika
+const ifLoggedIn = ref(0);
+if (ifLoggedIn.value){
+    if (loggedUser) query_string.value=`posts/?author=${loggedUser.value.slug}`;
+    else query_string.value = `posts/`;
+
+    console.log(`query_string: ${query_string.value}`);
+}
+
+//jesli zmieni sie zalogowany uzytkownik
+watch(loggedUser, ()=>{
+    query_string.value=`posts/?author=${loggedUser.value.slug}`;
+    console.log(`query_string: ${query_string.value}`);
+})
+
+//jesli ustawione ze filtruj po uzytkowniku zalogowanym
+watch(ifLoggedIn, ()=>{
+    if(ifLoggedIn.value){
+        if(loggedUser) getPosts(query_string.value);
+    }
+    else{
+        query_string.value = `posts/`;
+        getPosts(query_string.value);
+    }
+    console.log(`query_string: ${query_string.value}`);
+})
+
+//czysci inputy i odswieza listy, z nowymi danymi (wywolywane po post lbu patch)
 const cleanInputs = async function(){
     newTitle.value = undefined
     newAuthor.value = undefined
@@ -68,7 +108,7 @@ const cleanInputs = async function(){
     selectedPost.value = undefined 
     getTags();
     getUsers();
-    getPosts(`posts/`);
+    getPosts(query_string.value);
 }
 
 const confirmDel = ()=>{
@@ -81,7 +121,8 @@ const cancelDel = ()=>{
 const deletePost = async function(){
     axios.delete(`posts/${selectedPost.value.id}`)
     .then((res)=>{
-        success.value += res.status + ' ' + res.statusText; 
+        success.value += res.status + ' ' + res.statusText;
+        router.push({name: 'postlist'});
     })
     .catch((err)=>{
         error.value += err;
@@ -89,7 +130,7 @@ const deletePost = async function(){
     .finally(()=>{
         cleanInputs();
         confirmDelete.value = 0;
-        getPosts(`posts/`);
+        getPosts(query_string.value);
     })
 }
 
@@ -115,6 +156,8 @@ const getPosts = async function(link){
         posts.value = res.data.results;
         pages.value = res.data.context.page_links;
         postsExist.value = 1;
+        //jesli przyszlismy z route od konkretnego postu, wybieraj od razu po uzyskaniu postow
+        //konkretny post
         if(param_slug){
             console.log(`param_slug:${param_slug}`);
             const param_post = posts.value.filter((post)=>{return post.slug === param_slug})[0]
@@ -195,19 +238,7 @@ const submitForm = function(method){
 
 getTags();
 getUsers();
-getPosts(`posts/`);
-
-// const if_param_slug = async function(){
-//     await getPosts(`posts/`);
-//     selectedPost.value = posts.value.filter((post)=>{post.slug === param_slug})[0]
-// }
-
-// if (param_slug){
-//     if_param_slug();    
-// }
-// else{
-//     getPosts('posts/');
-// }
+getPosts(query_string.value);
 
 const compiledMarkdown = computed(()=>{
     return marked.parse(newContent.value, {
@@ -216,22 +247,9 @@ const compiledMarkdown = computed(()=>{
     })
 })
 
-// FIXME: jak to ma niby dzialac????
-// import autoComplete from "@tarekraafat/autocomplete.js";
-// const autoCompleteJS = new autoComplete({
-//     selector: "#autoComplete",
-//     placeHolder: "search posts",
-//     data:{
-//         src: posts.value,
-//         keys: ['title']
-//     },
-//     resultItem: {
-//         highlight: true
-//     }
-//  });
-
 import AutoComplete from 'primevue/autocomplete';
 import { storeToRefs } from 'pinia';
+import router from '../router';
 
 //FIXME: troche chujowe takie pobieranie all postow
 //gdyby bylo ich bardzo duzo to duzy hit dla performance moze byc
@@ -276,6 +294,8 @@ const search = (event) => {
                 :suggestions="filteredPosts" v-if="allPosts" @complete="search"
                 @item-select="selectPost(selectedPost)"
                 />
+            <label for="ifLogged">IF LOGGED: </label>
+            <input type="checkbox" id="ifLogged" v-model="ifLoggedIn">
                 <!-- @complete="selectPost(selectPost)"-->
             <!-- reczna lista postow -->
             <div class="post-selection" v-if="postsExist">
@@ -365,6 +385,10 @@ const search = (event) => {
             <a href="https://unsplash.com/"> IMAGES</a>
             <a href="https://getlorem.com/">LOREM</a>
     </div>
+    <div class="cheatsheet">
+        <p>SHORT MARKDOWN CHEATSHEET:</p>
+        <img src="../assets/images/markdown_cheatsheet.jpg">
+    </div>
 </div>
 </template>
 
@@ -442,6 +466,11 @@ const search = (event) => {
     flex-direction: column;
     /* right: 2rem; */
     font-size: 2rem;
+}
+.cheatsheet{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .success, .error{
     font-size: 2rem;

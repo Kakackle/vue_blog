@@ -43,3 +43,8 @@ hmm
 8.  **funkcjonalnosc likes** - tylko ze, to nie takie proste, bo chcialbym by kazdy uzytnik mogl polubic dany post tylko raz, do czego potrzebne jest odczytywanie informacji jaki uzytkownik teraz zalogowany i przy klikaniu like zapisywanie tej informacji w jakos tablicy typu "liked_by"
 
 1. Poki co zalogowany uzytnik przechowywany jest w Nav, bo dosyc globalny, ale ciezko potem wyciagac w innych komponentach, wiec zamiast tego stworz nowy store na uzytkownika, moze na tokeny tez potem itd
+
+14. Pod tworzeniem postu z markdown dodaj jakis cheatsheet komend, jak wklejac obrazek itd
+albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
+
+16. Slug nie zmienia sie przy patchowaniu postow, szczegolnie chodzi o zmiane tytulu, a to bardzo wazne, ale za chuja nie moglem znalezc signalu ktory by na to reagowal, wiec trzeba by dodac to tak jak tworzenie postow customowe w view w django... ktory po prostu bedzie przy patchu ustawial nowy slug zalezny od nowego tytulu i zapisywal serializator

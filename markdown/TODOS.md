@@ -3,11 +3,6 @@
 7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
 
 9. footer costam
-14. TODO: Pod tworzeniem postu z markdown dodaj jakis cheatsheet komend, jak wklejac obrazek itd
-albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
-15. TODO: dodaj filtracje po miesiacu, roku itd, bo powinno byc latwo __month, __year itd
-
-16. TODO: Slug nie zmienia sie przy patchowaniu postow, szczegolnie chodzi o zmiane tytulu, a to bardzo wazne, ale za chuja nie moglem znalezc signalu ktory by na to reagowal, wiec trzeba by dodac to tak jak tworzenie postow customowe w view w django... ktory po prostu bedzie przy patchu ustawial nowy slug zalezny od nowego tytulu i zapisywal serializator
 
 # Duze rzeczy
 1. custom user / profile i logowanie

@@ -43,6 +43,7 @@ const routesSorted = routes.sort(function(a,b) {
         <ul class="route-list">
           <li class="route">/admin - admin</li>
           <li class="route">/api/posts - all posts retrieve paginated [params: ?page_size= , ?page= , ?page=last]</li>
+          <li class="route">/api/posts/all/ - all posts no pagination [last slash important]</li>
           <li class="route">/api/posts/int:pk - single post get/put/delete</li>
           <li class="route">/api/tags - all tags retrieve</li>
           <li class="route">/api/tag/int:pk - tag by id</li>
