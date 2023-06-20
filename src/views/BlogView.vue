@@ -15,6 +15,17 @@ import { RouterLink, RouterView } from 'vue-router'
 import { nextTick, ref, render } from 'vue';
 import axios from 'axios';
 
+import { useRoute } from 'vue-router';
+import {useRouteStore} from '../stores/routeHistory'
+import { storeToRefs } from 'pinia';
+
+const routeStore = useRouteStore();
+const {routeHistory} = storeToRefs(routeStore); 
+const route = useRoute();
+routeHistory.value.push(route.path); 
+// console.log(`params: ${JSON.stringify(route)}`);
+console.log(routeHistory.value);
+
 //posts przechowywane jako backup wszystkich postow
 const posts = ref([]);
 //renderPosts jako posty uzyskiwane poprzez API z filtracja z query

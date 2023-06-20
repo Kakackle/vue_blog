@@ -5,11 +5,22 @@
  -->
 <script setup>
 import GoBackButton from '../components/GoBackButton.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import {useRouteStore} from '../stores/routeHistory'
+import { storeToRefs } from 'pinia';
+// TODO: okej, dziala takie sledzenie w ramach store i wchodzenia do stron
+// to teraz trzeba by dodac to do wiekszej ilosci elementow
+// i jakos to wyswietlac
+const routeStore = useRouteStore();
+const {routeHistory} = storeToRefs(routeStore); 
 
+const route = useRoute();
 const router = useRouter();
 const routes = router.getRoutes();
 
+routeHistory.value.push(route.path); 
+// console.log(`params: ${JSON.stringify(route)}`);
+console.log(routeHistory.value);
 /**
  * sort routes from vue router alphabetically, return in array form
  */
