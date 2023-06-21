@@ -48,3 +48,5 @@ hmm
 albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
 
 16. Slug nie zmienia sie przy patchowaniu postow, szczegolnie chodzi o zmiane tytulu, a to bardzo wazne, ale za chuja nie moglem znalezc signalu ktory by na to reagowal, wiec trzeba by dodac to tak jak tworzenie postow customowe w view w django... ktory po prostu bedzie przy patchu ustawial nowy slug zalezny od nowego tytulu i zapisywal serializator
+
+10. TODO: vueprime dropdown dla wiekszej ilosci linkow w navie, moze drop typu "Lists" i tam wszystkie listy itp

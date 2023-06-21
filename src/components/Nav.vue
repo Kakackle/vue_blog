@@ -3,7 +3,7 @@
  -->
 <script setup>
 import axios from 'axios';
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 import LoginDrop from "../components/LoginDrop.vue"
 import AccDrop from "../components/AccDrop.vue"
 import {useToast} from "vue-toastification";
@@ -32,6 +32,25 @@ const dropdown_list_routes = [
     }
 ]
 const selected_list = ref();
+
+import {useRouteStore} from '../stores/routeHistory'
+import { storeToRefs } from 'pinia';
+import Breadcrumb from 'primevue/breadcrumb'
+
+const routeStore = useRouteStore();
+const {routeHistory, breadcrumbList} = storeToRefs(routeStore);
+// const breadcrumbList = ref(routeHistory.value)
+
+// FIXME: this watch never happens, what the fuck
+// watch(routeHistory, ()=>{
+//     console.log(routeHistory.value.length);
+//     if(routeHistory.value.length < 10)
+//         breadcrumbList.value = routeHistory.value;
+//     else
+//         breadcrumbList.value = routeHistory.value.slice(-10);
+//     console.log(`bread: ${breadcrumbList.value}`);
+// });
+
 
 // TODO: pobieranie np. w Nav (bo jest globalny) usera z API wedlug wpisanego
 // np w dropie username / slug
@@ -87,13 +106,10 @@ const logout =() =>{
     // user.value = undefined;
 }
 
-const dropdownClick = ()=>{
-    console.log("clickedddd")
-}
-
 </script>
 
 <template>
+<div class="nav-main">
 <nav class="navbar">
     <span class="logo">LOGO</span>
     <div class="nav-right">
@@ -114,26 +130,18 @@ const dropdownClick = ()=>{
         <LoginDrop v-if="logInDrop" :user="userStore.getUser()"
             @login="login"
             @register="register"></LoginDrop>
-        <!-- <div v-if="logInDrop" class="login-drop">
-            <span class="login-text">username:</span>
-            <input type="text" placeholder="admin" class="login-input">
-            <span class="login-text line-top">password:</span>
-            <input type="password" placeholder="adminadmin" class="login-input">
-            <div class="login-buttons">
-                <button class="login-button" @click="login">LOG IN</button>
-                <span class="or">OR</span>
-                <button class="login-button" @click="register">REGISTER &rarr;</button>
-            </div>
-        </div> -->
         <AccDrop v-if="accDrop" :user="userStore.getUser()"
             @logout="logout"></AccDrop>
-        <!-- <div v-if="accDrop" class="acc-drop">
-            <p>{{ user.name }}</p>
-            <img :src=user.avatar>
-            <button @click="logout">LOG OUT</button>
-        </div> -->
     </div>
 </nav>
+
+<div class="bread-disappear">
+        <div class="bread">
+            <Breadcrumb :model="routeHistory" class="bread"/>
+        </div>
+</div>
+
+</div>
 </template>
 
 <style scoped>
@@ -217,4 +225,23 @@ const dropdownClick = ()=>{
     font-size: 2rem;
 }
 /* #636e72 */
+.bread{
+    display: flex;
+    flex-direction: row-reverse;
+    overflow-x: auto;
+    /* justify-content: center; */
+    /* justify-self: start; */
+    /* transform: translate(-50%); */
+}
+.nav-main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.bread-disappear{
+    width: 100%;
+    /* transform: translate(-50%); */
+    display: flex;
+    justify-content: start;
+}
 </style>

@@ -11,9 +11,16 @@ import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposa
 import GoBackButton from "../components/GoBackButton.vue"
 import axios from "axios";
 
+import {useRouteStore} from '../stores/routeHistory'
+import { storeToRefs } from 'pinia';
+const routeStore = useRouteStore();
+const {routeHistory} = storeToRefs(routeStore); 
+
 const route = useRoute()
 const router = useRouter()
 const post_slug = route.params.post_slug;
+
+routeStore.pushRoute(route);
 
 const post = ref()
 const postExists = ref(0);

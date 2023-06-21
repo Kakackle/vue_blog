@@ -22,9 +22,7 @@ import { storeToRefs } from 'pinia';
 const routeStore = useRouteStore();
 const {routeHistory} = storeToRefs(routeStore); 
 const route = useRoute();
-routeHistory.value.push(route.path); 
-// console.log(`params: ${JSON.stringify(route)}`);
-console.log(routeHistory.value);
+routeStore.pushRoute(route);
 
 //posts przechowywane jako backup wszystkich postow
 const posts = ref([]);

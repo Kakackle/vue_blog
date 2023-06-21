@@ -25,3 +25,31 @@ tzw StoreToRefs, link:
 https://stackoverflow.com/questions/71676111/vue-component-doesnt-update-after-state-changes-in-pinia-store
 
 https://pinia.vuejs.org/core-concepts/
+
+
+# Problemy porzucone
+
+1. Kwestia przypisywania czegos do elementu wyswietlajacego po keys z refa
+W tym wypadku byl to komponent breadcrumb z biblioteki UI PrimeVue,
+ktory poslugiwal sie tablica obiektow przesylana w ref
+
+Problem wystapil gdy chcialem kompletnie zmienic strukture tej tablicy, szczegolnie jesli w jej obrebie powtarzaly sie obiekty, totez powtarzaly sie klucze
+wiec potem przesuwajac albo nadpisujac rzeczy, klucze sie nie zgadzaly i wszystko sie pierdolilo, bo nie wiedzialo gdzie sie zaczyna itd
+
+```
+    // if (routeHistory.value.length < 10) breadcrumbList.value = routeHistory.value;
+    // else {
+    //     // breadcrumbList.value.length = 0;
+    //     // breadcrumbList.value = routeHistory.value.slice(-5);
+    //     // console.log(routeHistory.value.slice(-10));
+    //     breadcrumbList.value.shift();
+    //     breadcrumbList.value.push(newRoute);
+    // }
+    
+    // if (routeHistory.value.length > 10){
+    //     routeHistory.value.shift();
+    //     routeHistory.value.push(newRoute);
+    // }
+```
+
+rozwiazanie: nie wiem w tym przypadku konkretnym, w nowym trzeba by tworzyc kompletnie nowy obiekt i go zwracac i powodowac rerender obiektu z kluczami czy cos

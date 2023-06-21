@@ -3,7 +3,6 @@
 7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
 
 9. footer costam
-10. TODO: vueprime dropdown dla wiekszej ilosci linkow w navie, moze drop typu "Lists" i tam wszystkie listy itp
 # Duze rzeczy
 1. custom user / profile i logowanie
     - potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
