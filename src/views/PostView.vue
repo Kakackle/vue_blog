@@ -54,26 +54,50 @@ const compiledMarkdown = computed(()=>{
 // test komentow
 const comments = ref(
   [
-  {
-  title: 'Parent',
-  replies:[
-  {
-    title: 'Child 1',
-    replies: [],
-  },
-  {
-    title: 'Child 2',
-    replies: [
+    {
+    author: 'admin',
+    date: '22/06/2023',
+    likes: 1,
+    content: 'Parent 1 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
+    replies:[
       {
-        title: 'Child of Child 2',
-        replies: []
+        author: 'rajj',
+        date: '22/06/2023',
+        likes: 0,
+        content: 'Child 1 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
+        replies: [],
+      },
+      {
+        author: 'admin',
+        date: '22/06/2023',
+        likes: 2,
+        content: 'Child 2 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
+        replies: [
+          {
+            author: 'test',
+            date: '22/06/2023',
+            likes: 3,
+            content: 'Child 2 of Child 2 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
+            replies: []
+          }
+        ]
       }
-    ]
-  }]},
-  {
-    title: 'Parent 2',
-    replies: []
-  }
+    ]},
+    {
+      author: 'test',
+      date: '22/06/2023',
+      likes: 0,
+      content: 'Parent 2 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
+      replies: [
+      {
+            author: 'test',
+            date: '22/06/2023',
+            likes: 3,
+            content: 'Parent 2 child Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
+            replies: []
+          }
+      ]
+    }
   ]
 )
 
@@ -112,7 +136,11 @@ const comments = ref(
           <!-- comments -->
           <p class="title">COMMENTS ON POST:</p>
           <section class="comments">
-            <Comment v-for="(comm, comm_id) in comments" :comment="comm"></Comment>
+            <div class="comment" v-for="(comm, comm_id) in comments">
+              <p>{{ comm.date }}</p>
+              <Comment :comment="comm"></Comment>
+            </div>
+            <!-- <Comment v-for="(comm, comm_id) in comments" :comment="comm"></Comment> -->
           </section>
         </div>
     </section> 
@@ -182,6 +210,11 @@ const comments = ref(
   width: clamp(20rem, 25vw, 40rem);
 }
 .comments{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.comment{
   display: flex;
   flex-direction: column;
 }
