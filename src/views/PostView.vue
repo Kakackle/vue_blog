@@ -9,6 +9,7 @@ import {useRouter, useRoute, routerKey} from "vue-router"
 import {ref, computed} from "vue"
 import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposables";
 import GoBackButton from "../components/GoBackButton.vue"
+import Comment from "../components/Comment.vue";
 import axios from "axios";
 
 import {useRouteStore} from '../stores/routeHistory'
@@ -50,6 +51,32 @@ const compiledMarkdown = computed(()=>{
     })
 })
 
+// test komentow
+const comments = ref(
+  [
+  {
+  title: 'Parent',
+  replies:[
+  {
+    title: 'Child 1',
+    replies: [],
+  },
+  {
+    title: 'Child 2',
+    replies: [
+      {
+        title: 'Child of Child 2',
+        replies: []
+      }
+    ]
+  }]},
+  {
+    title: 'Parent 2',
+    replies: []
+  }
+  ]
+)
+
 </script>
 
 <template>
@@ -81,15 +108,15 @@ const compiledMarkdown = computed(()=>{
           <img :src="post.img" class="post-img">
           <!-- <div class="post-content">{{ post.content }}</div> -->
           <div class="post-content" v-html="compiledMarkdown"></div>
-        </div>
-      <div class="post-side">
-      </div>
-      <section class="comments">
-        <div class="comment">
           
+          <!-- comments -->
+          <p class="title">COMMENTS ON POST:</p>
+          <section class="comments">
+            <Comment v-for="(comm, comm_id) in comments" :comment="comm"></Comment>
+          </section>
         </div>
-      </section>
-    </section>
+    </section> 
+    <!-- end post-main -->
     <section class="post-main" v-else>
       Else
     </section>
@@ -155,7 +182,8 @@ const compiledMarkdown = computed(()=>{
   width: clamp(20rem, 25vw, 40rem);
 }
 .comments{
-
+  display: flex;
+  flex-direction: column;
 }
 .hover:hover{
   cursor: pointer;

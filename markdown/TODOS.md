@@ -16,7 +16,7 @@
 
 
 4. ## 09.06.2023
-    5. TODO: ~~Usuwanie tagow~~, uzytnikow,
+
 
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk
 
