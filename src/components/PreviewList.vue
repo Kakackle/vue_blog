@@ -35,6 +35,11 @@ const getAuthor = async function(){
 
 getAuthor();
 
+// funkcja bierze z postu property "liked_by"
+// i jesli uzytkownik jest zalogowany to pozwala mu przechodzic dalej
+// i jesli zalogowany uzytnik nie jest w "liked_by"
+// to dodaje do tablicy i patchuje post z ta nowa tablica uzytkownikow
+// oraz z dlugoscia odpowiadajaca countowi lajkow
 const updateLiked = async function(){
     success.value='';
     error.value='';

@@ -9,7 +9,8 @@ import {useRouter, useRoute, routerKey} from "vue-router"
 import {ref, computed} from "vue"
 import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposables";
 import GoBackButton from "../components/GoBackButton.vue"
-import Comment from "../components/Comment.vue";
+// import Comment from "../components/Comment.vue";
+import CommentsPaginated from "../components/CommentsPaginated.vue";
 import axios from "axios";
 
 import {useRouteStore} from '../stores/routeHistory'
@@ -51,55 +52,21 @@ const compiledMarkdown = computed(()=>{
     })
 })
 
-// test komentow
-const comments = ref(
-  [
-    {
-    author: 'admin',
-    date: '22/06/2023',
-    likes: 1,
-    content: 'Parent 1 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
-    replies:[
-      {
-        author: 'rajj',
-        date: '22/06/2023',
-        likes: 0,
-        content: 'Child 1 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
-        replies: [],
-      },
-      {
-        author: 'admin',
-        date: '22/06/2023',
-        likes: 2,
-        content: 'Child 2 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
-        replies: [
-          {
-            author: 'test',
-            date: '22/06/2023',
-            likes: 3,
-            content: 'Child 2 of Child 2 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
-            replies: []
-          }
-        ]
-      }
-    ]},
-    {
-      author: 'test',
-      date: '22/06/2023',
-      likes: 0,
-      content: 'Parent 2 Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
-      replies: [
-      {
-            author: 'test',
-            date: '22/06/2023',
-            likes: 3,
-            content: 'Parent 2 child Lorem ipsum dolor sit amet consectetur adipiscing elit ligula pharetra eros semper penatibus, libero turpis suspendisse nec purus tempor aenean potenti ullamcorper neque montes.',
-            replies: []
-          }
-      ]
-    }
-  ]
-)
+// const comments = ref();
+// const pages = ref();
+// const getCommentsByPost = async function(post){
+//     axios.get(`comments/?post=${post}`)
+//     .then((res)=>{
+//         comments.value = res.data.results;
+//         pages.value = res.data.context.page_links;
+//         console.log(res);
+//     })
+//     .catch((err)=>{
+//         console.log(err);
+//     })
+// }
+
+// getCommentsByPost(post_slug);
 
 </script>
 
@@ -135,13 +102,7 @@ const comments = ref(
           
           <!-- comments -->
           <p class="title">COMMENTS ON POST:</p>
-          <section class="comments">
-            <div class="comment" v-for="(comm, comm_id) in comments">
-              <p>{{ comm.date }}</p>
-              <Comment :comment="comm"></Comment>
-            </div>
-            <!-- <Comment v-for="(comm, comm_id) in comments" :comment="comm"></Comment> -->
-          </section>
+          <CommentsPaginated :post_slug="post_slug"></CommentsPaginated>
         </div>
     </section> 
     <!-- end post-main -->
