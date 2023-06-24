@@ -44,7 +44,8 @@ const newAuthor = ref()
 const newTags = ref([])
 const newTag = ref('')
 const newContent = ref("")
-const newImg = ref("")
+const newImg = ref()
+const previewImage = ref()
 
 //dane pobierane do selectow
 const tags = ref([]);
@@ -72,7 +73,7 @@ const confirmDelete = ref(0);
 const query_string = ref('posts/');
 //czy chcesz pokazywac tylko posty uzytkownika
 const ifLoggedIn = ref(0);
-if (ifLoggedIn.value){
+if (ifLoggedIn.value === 1){
     if (loggedUser) query_string.value=`posts/?author=${loggedUser.value.slug}`;
     else query_string.value = `posts/`;
 
@@ -81,8 +82,13 @@ if (ifLoggedIn.value){
 
 //jesli zmieni sie zalogowany uzytkownik
 watch(loggedUser, ()=>{
+    if(ifLoggedIn.value === 1){
     query_string.value=`posts/?author=${loggedUser.value.slug}`;
     console.log(`query_string: ${query_string.value}`);
+    }
+    else{
+        query_string.value = `posts/`;
+    }
 })
 
 //jesli ustawione ze filtruj po uzytkowniku zalogowanym
@@ -105,7 +111,8 @@ const cleanInputs = async function(){
     // newTags.value = undefined
     newContent.value = undefined
     newImg.value = undefined
-    selectedPost.value = undefined 
+    selectedPost.value = undefined
+    previewImage.value = undefined
     getTags();
     getUsers();
     getPosts(query_string.value);
@@ -132,6 +139,16 @@ const deletePost = async function(){
         confirmDelete.value = 0;
         getPosts(query_string.value);
     })
+}
+
+const uploadImage = function(e){
+    newImg.value = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(newImg.value);
+    reader.onload = e =>{
+                    previewImage.value = e.target.result;
+                    // console.log(`img: ${previewImage.value}`);
+                };
 }
 
 const addToTags = function(){
@@ -192,14 +209,64 @@ const selectPost = function(post){
     newTags.value = selectedTags;
     // newTags.value = undefined
     newContent.value = selectedPost.value.content
-    newImg.value = selectedPost.value.img
+    // console.log(`img: ${selectedPost.value.img}`)
+    // newImg.value = selectedPost.value.img
+    // newImg.value = getFileFromUrl(selectedPost.value.img, selectedPost.value.slug)
+    // getFileFromUrl()
+    previewImage.value = selectedPost.value.img;
+}
+
+async function getFileFromUrl(url, defaultType = 'image/jpg') {
+    // FIXME: poki co sie poddaje
+    // trzeba jakos odebrac albo link albo z endpointu img (przy edycji postu)
+    // i jakos to przeksztalcic na pelnoprawny img
+    // i potem wyslac
+    // ale nie mam pojecia jak
+
+//   const response = await fetch(url)
+//   const data = await response.blob() 
+//   return new File([data], name, {
+//     type: data.type || defaultType,
+//   })
+//   axios.get(url)
+//   .then((res)=>{
+//     data = res.data.blob()
+//     newImg.value = new File([data], name, {
+//     type: data.type || defaultType,
+//     })
+//     console.log(`data: ${data}`)
+//   })
+//   .catch((err)=>{
+//     console.log(err);
+//   })
+//   axios.get(`image/${selectedPost.value.slug}`)
+//   .then((res)=>{
+//     // console.log(res.data);
+//     newImg.value = res.data;
+//   })
+//   .catch((err)=>{
+//     console.log(err);
+//   })
+
+// fetch(`image/${selectedPost.value.slug}`)
+// .then(res => res.blob())
+// .then(blob=>{
+//     var reader = new FileReader();
+//     reader.readAsDataURL(blob); 
+//     reader.onloadend = function() {
+//     var base64data = reader.result;
+//     newImg.value = base64data;                
+//     console.log(base64data);
+//     }
+// })
+
 }
 
 const submitForm = function(method){
     success.value = '';
     error.value = '';
     
-    const newPost = {
+    let newPost = {
         csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
         title: newTitle.value,
         tags: newTags.value,
@@ -223,7 +290,10 @@ const submitForm = function(method){
     axios({
         method: method,
         url: met_url,
-        data: newPost
+        data: newPost,
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
     })
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText; 
@@ -354,9 +424,18 @@ const search = (event) => {
                     <label for="content">content:</label>
                     <textarea id="content" class="text-input" v-model="newContent"></textarea>
                 </div>
+                <!-- img -->
+                <p class="warn">WARNING: during editing you have to pick a value if you want it to have an image attached,
+                    below is the previous image</p>
                 <div class="form-label">
                     <label for="img">img:</label>
-                    <input type="text" class="text-input" id="img" v-model="newImg">
+                    <input type="file" accept="image/jpeg, image/jpg,
+                    image/png, image/gif" @change=uploadImage>
+                    <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+                </div>
+                <div class="label-format">
+                    <p>IMAGE PREVIEW:</p>
+                    <img :src="previewImage" class="preview-img"/>
                 </div>
                 <button class="submit-button hover" @click="openDate=1">CHOOSE DATE</button>
                 <VDatePicker v-model.string="newDate" :masks="masks" @click="openDate=0"
@@ -365,11 +444,13 @@ const search = (event) => {
             </div>
         </div>
         <div v-if="newAuthor && loggedUser">
-        <div class="buttons" v-if="loggedUser.slug === newAuthor.slug">
-            <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
-            <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+            <div class="buttons" v-if="loggedUser.slug === newAuthor.slug">
+                <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
+                <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+            </div>
+            <p v-else>You must be the post's author to send a POST/PATCH request with the post's values</p>
         </div>
-        </div>
+        <p v-else>You must first log in to be able to send POST/PATCH requests</p>
         <p v-if="success" class="success">{{success}}</p>
         <p v-if="error" class="error">{{error}}</p>
         </section>
@@ -516,5 +597,9 @@ const search = (event) => {
 .confirm-delete{
     display: flex;
     flex-direction: column;
+}
+.warn{
+    font-size: 1rem;
+    color: #636e72;
 }
 </style>

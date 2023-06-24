@@ -12,12 +12,27 @@ const newName = ref("")
 const newPassword = ref("")
 const newMail = ref("")
 const newBio = ref("")
-const newAvatar = ref("")
+const newAvatar = ref()
+const previewImage = ref()
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
 // import router from '../router';
 import { useRouter } from 'vue-router';
 const router = useRouter()
+
+// funkcja do odczytania obrazka z inputu
+// oraz przekonwertowania go na URL w celu wyswietlenia preview dla uzytkownika
+// jaki obrazek zamierza wyslac
+const uploadImage = function(e){
+    newAvatar.value = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(newAvatar.value);
+    reader.onload = e =>{
+                    previewImage.value = e.target.result;
+                    console.log(`img: ${previewImage.value}`);
+                };
+
+}
 
 const submitForm = function(){
     const newUserObj = {
@@ -31,7 +46,11 @@ const submitForm = function(){
     }
     console.log(`data sent: ${JSON.stringify(newUserObj)}`)
 
-    axios.post(`users/`, newUserObj)
+    axios.post(`users/`, newUserObj, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    })
     .then((res)=>{
         toast.success(`${res.status} ${res.statusText}`);
         cleanInputs();
@@ -50,6 +69,7 @@ const cleanInputs = async function(){
     newMail.value = undefined
     newBio.value = undefined
     newAvatar.value = undefined
+    previewImage.value = undefined
 }
 
 </script>
@@ -82,7 +102,13 @@ const cleanInputs = async function(){
             </div>
             <div class="label-format">
                 <label for="avatar">avatar:</label>
-                <input type="text" class="text-input" id="avatar" v-model="newAvatar">
+                <input type="file" accept="image/jpeg, image/jpg,
+                image/png, image/gif" @change=uploadImage>
+                <!-- <input type="text" class="text-input" id="avatar" v-model="newAvatar"> -->
+            </div>
+            <div class="label-format">
+                <p>IMAGE PREVIEW:</p>
+                <img :src="previewImage" class="preview-img"/>
             </div>
         </div>
     </div>

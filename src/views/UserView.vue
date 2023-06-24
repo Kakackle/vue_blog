@@ -118,7 +118,7 @@ getUser(user_slug);
         <GoBackButton></GoBackButton>
         <!-- basic view -->
         <div class="user-info" v-if="!beingEdited">
-            <img :src=user.avatar>
+            <img :src=user.avatar class="av-img">
             <p class="name">{{ user.name }}</p>
             <p class="username">{{ user.username }}</p>
             <p class="mail">{{ user.mail }}</p>
@@ -174,6 +174,10 @@ getUser(user_slug);
     gap: 1rem;
     flex-direction: column;
     font-size: 2rem;
+}
+.av-img{
+    height: 200px;
+    width: 200px;
 }
 .label-div{
     display: flex;
