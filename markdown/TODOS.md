@@ -1,7 +1,7 @@
 # Nowe funkcjonalnosci
 3. TODO: komponent side dla homeview z jakims najpop autorem itd - do tego autorzy musieliby miec count postow etc, najpewniej w django
 7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
-
+4. [ Django ] TODO: jakies resizowanie obrazkow przy uploadzie i zapisywanie w roznych rozmiarach typu thumbnail
 9. footer costam
 # Duze rzeczy
 1. custom user / profile i logowanie

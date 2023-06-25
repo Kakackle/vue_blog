@@ -350,6 +350,43 @@ const search = (event) => {
         }
     }, 250);
 }
+
+// posty uploadowane do postu i mozliwe do dodania do markdown
+const newPostImg = ref();
+const newPostImgName = ref('');
+const newPostImgUrl = ref();
+// TODO:, moze na change zmiana wartosci newpostimg
+// a potem na przycisku dopiero sending
+// a poza tym te bugi z karteczki
+const uploadPostImage = async function(e){
+    newPostImg.value = e.target.files[0];
+    axios.post(`posts/${selectedPost.value.slug}/images`,{
+        csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
+        image: newPostImg.value,
+        name: newPostImgName.value,
+        post: selectedPost.value.slug
+    },
+    {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    })
+    .then((res)=>{
+        console.log('posting img successful')
+        return axios.get(`posts/${selectedPost.value.slug}/images/${newPostImgName.value}`)
+    })
+    .then((res)=>{
+        console.log(`retrieving img succesfull: ${res}`);
+        newPostImgUrl.value = res.data.image;
+        console.log(`newPostImgUrl: ${newPostImgUrl.value}`);
+    })
+    .catch((err)=>{
+        console.log(`fail ${err}`);
+    })
+
+}
+
+
 </script>
 
 <template>
@@ -460,6 +497,25 @@ const search = (event) => {
 
 
     </div>
+    <!-- image upload section -->
+    <div class="upload-sect">
+        <div class="img-name">
+            <div class="form-label">
+                <label for="up-img">img:</label>
+                <input type="file" name="up-img" accept="image/jpeg, image/jpg,
+                image/png, image/gif" @change=uploadPostImage>
+                <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+            </div>
+            <div class="form-label">
+                <label for="up-name">name:</label>
+                <input type="text" name="up-name"
+                 placeholder="name for img" v-model="newPostImgName">
+            </div>
+        </div>
+        <p>IMG LINK: {{ newPostImgUrl }}</p>
+        <img :src="newPostImgUrl" class="upload-preview" v-if="newPostImgUrl">
+    </div>
+
     <!-- Under columns: useful links -->
     <div class="useful">
             <p>USEFUL LINKS:</p>
@@ -601,5 +657,17 @@ const search = (event) => {
 .warn{
     font-size: 1rem;
     color: #636e72;
+}
+.upload-sect{
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+}
+.up-img{
+    height: 50px;
+    width: 80px;
+}
+.img-name{
+    display: flex;
+    flex-direction: column;
 }
 </style>
