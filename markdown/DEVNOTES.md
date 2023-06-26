@@ -27,6 +27,22 @@ https://stackoverflow.com/questions/71676111/vue-component-doesnt-update-after-s
 https://pinia.vuejs.org/core-concepts/
 
 
+2. Kwestia przesylania przez DRF danych zarowno w postaci JSON i jaki file / multipart
+
+- teoretycznie w views zawarte sa parsery dla obu typow danych (multipart dla obrazkow i form dla json), ale w praktyce przesylajac tylko dane tekstowe/numeryczne, domyslnie konwertuje na JSON i z jakiegos powodu odrzuca w drf
+
+ale poki co nie mialem absolutnie zadnego problemu z dodawaniem headeru:
+,
+  {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+  }
+
+który sprawia, że dane przesyłane są w postaci multipart, i niezaleznie czy to int czy string czy co, to dziala
+
+widzialem ze komus kiedys to manglowalo dane, ale moze nie mial obu parserow albo mi dopiero zacznie, ale poki co
+
 # Problemy porzucone
 
 1. Kwestia przypisywania czegos do elementu wyswietlajacego po keys z refa

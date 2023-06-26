@@ -30,13 +30,14 @@ const getAuthor = async function(){
         user.value = res.data;
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`get author err: ${err}`);
     })
 }
 
 getAuthor();
 
 const updateLiked = async function(){
+    console.log(`old liked_by: ${post.liked_by}`);
     success.value='';
     error.value='';
     if(!loggedUser.slug){
@@ -51,13 +52,19 @@ const updateLiked = async function(){
         console.log(`logged user not in liked_by`);
 
         post.liked_by.push(new_liked_by.value.slug);
+        console.log(`new liked_by: ${post.liked_by}`);
         
         axios.patch(`posts/${post.slug}`, {
             liked_by: post.liked_by,
             likes: post.liked_by.length
+        },
+        {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
         })
         .then((res)=>{
-            
+            // console.log(`data sent: ${post.liked_by}`)
             success.value = `added to likes, ${res.status}, ${res.statusText}`;
             toast.success(success.value);
             new_liked_by.value=undefined;
@@ -66,7 +73,7 @@ const updateLiked = async function(){
         .catch((err)=>{
             error.value = `${err.status}, ${err.statusText}`;
             toast.error(error.value);
-            console.log(err);
+            console.log(`update like err: ${err}`);
         })
     }
     else{

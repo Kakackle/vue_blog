@@ -39,6 +39,11 @@ const getPost = async function(){
   postExists.value = 1;
   axios.patch(`http://127.0.0.1:8000/api/posts/${post_slug}`, {
     views: post.value.views+1
+  },
+  {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
   });
 }
 

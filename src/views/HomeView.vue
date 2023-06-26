@@ -24,7 +24,7 @@ const getPosts = async function(){
     pages.value = res.data.context.page_links;
   })
   .catch((err)=>{
-    console.log(err);
+    console.log(`home get posts err: ${err}`);
   })
 }
 getPosts();

@@ -29,7 +29,7 @@ const getAuthor = async function(){
         user.value = res.data;
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`get author err: ${err}`);
     })
 }
 
@@ -51,26 +51,22 @@ const updateLiked = async function(){
         toast.error(`log in first before trying to like`);
         return
     }
-    // console.log(`new liked by: ${new_liked_by.value.slug}`);
-    // console.log(`post liked_by: ${post.liked_by}`);
-    // console.log(`post: ${JSON.stringify(post.liked_by)}`)
-    // console.log(post.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}))
     if(post.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
         console.log(`logged user not in liked_by`);
-
         // liked_by.value.push(post.liked_by);
-        // console.log(`liked_by value: ${liked_by.value}`);
-
         // liked_by.value.push(new_liked_by.value.slug);
-        // console.log(`liked_by to be sent: ${JSON.stringify(liked_by.value)}`);
         post.liked_by.push(new_liked_by.value.slug);
-        // console.log(`post liked by to be sent: ${post.liked_by}`)
+
         axios.patch(`posts/${post.slug}`, {
             liked_by: post.liked_by,
             likes: post.liked_by.length
+        },
+        {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
         })
         .then((res)=>{
-            // console.log(`added_liked: ${res.statusText}`);
             success.value = `added to likes, ${res.status}, ${res.statusText}`;
             toast.success(success.value);
             new_liked_by.value=undefined;
@@ -79,7 +75,7 @@ const updateLiked = async function(){
         .catch((err)=>{
             error.value = `${err.status}, ${err.statusText}`;
             toast.error(error.value);
-            console.log(err);
+            console.log(`previewlist update like error: ${err}`);
         })
     }
     else{

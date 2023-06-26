@@ -24,7 +24,7 @@ const getTags = async function(){
         tags.value = res.data;
     })
     .catch((err)=>{
-        console.log(`tags/: ${err}`);
+        console.log(` get tags/ err: ${err}`);
     })
 }
 getTags();
@@ -41,7 +41,7 @@ const getTagBySlug = async function(tag_slug){
     .then((response) => {
         tag.value = response.data;
         tagExists.value = 1;
-        console.log("Success");
+        console.log("tag by slug Success");
     })
     .then(() => {
         posts.value = [];
@@ -50,7 +50,7 @@ const getTagBySlug = async function(tag_slug){
     .catch((error) =>{
         tagExists.value = 0;
         errorMsg.value = error;
-        console.log("Failure");
+        console.log("tag by slug Failure");
     })
 }
 const posts = ref([]);
@@ -102,10 +102,10 @@ const submitEdit = async function(){
 const deleteTag = async function(){
     axios.delete(`tags/${tag.value.slug}`)
     .then((res)=>{
-        console.log(res);
+        console.log(`delete tag succes: ${res}`);
         router.push({name: 'tags'});
     })
-    .catch((err)=>{console.log(err)})
+    .catch((err)=>{console.log(`delete tag err ${err}`)})
 }
 
 </script>

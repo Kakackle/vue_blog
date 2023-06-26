@@ -7,7 +7,6 @@ export async function getDataFromLink(link){
     .then(
         (response)=>{
             data.value = response.data;
-            // console.log(`response.data: ${JSON.stringify(response.data)}`)
         }
     )
     .catch((error)=>{

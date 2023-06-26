@@ -7,10 +7,10 @@ const getAllUsers = async function(){
     axios.get('users')
     .then((res)=>{
         users.value = res.data;
-        console.log(res.statusText);
+        console.log(`all users get: ${res.statusText}`);
     })
     .catch((err)=>{
-        console.log(err.statusText);
+        console.log(`all users get error: ${err.statusText}`);
     })
 }
 

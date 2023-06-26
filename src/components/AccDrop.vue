@@ -17,9 +17,7 @@ const emitLogout = () =>{
 }
 
 const goToProfile = () =>{
-    // console.log(`You're in goToProfile!`);
     router.push({name: 'user', params:{user_slug: user.value.slug}});
-
 }
 
 </script>

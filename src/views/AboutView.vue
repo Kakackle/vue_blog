@@ -19,8 +19,7 @@ const router = useRouter();
 const routes = router.getRoutes();
 
 // routeHistory.value.push(route.path); 
-// console.log(`params: ${JSON.stringify(route)}`);
-// console.log(routeHistory.value);
+
 routeStore.pushRoute(route);
 /**
  * sort routes from vue router alphabetically, return in array form

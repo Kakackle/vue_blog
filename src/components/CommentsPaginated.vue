@@ -12,16 +12,16 @@ const selected_page = ref(0);
 
 const query_string = `comments/?post=${post_slug}`;
 
-// TODO: posty sortowane w zly psosob
+// TODO: posty sortowane w zly psosob?
 const getComments = async function(link){
     axios.get(link)
     .then((res)=>{
         comments.value = res.data.results;
         pages.value = res.data.context.page_links;
-        console.log(res);
+        console.log(`get comments success: ${res}`);
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`get comments error: ${err}`);
     })
 }
 
@@ -35,7 +35,10 @@ const getCommentsByPage = async function(link, page_id){
 
 getComments(query_string);
 
-const refresh = async function(){
+// FIXME: this shit never gets called??? why???
+// i ogolnie refreshowanei jest giga inconsistent, nie wiem...
+const refresh = function(){
+    console.log(`refresh got called`);
     comments.value=[];
     pages.value=[];
     getComments(query_string);
@@ -62,14 +65,14 @@ const addNewComment = async function(){
     }
     axios.post('http://127.0.0.1:8000/api/create_comment', newComm)
     .then((res)=>{
-        console.log(`POST: ${res.status}, ${res.statusText}`);
+        console.log(`add comment POST success: ${res.status}, ${res.statusText}`);
         newContent.value = '';
         displayReply.value = 0;
         displayReply.value = 0;
         refresh();
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`add comment error: ${err}`);
     })
 }
 

@@ -59,11 +59,9 @@ export const usePostsStore = defineStore('posts', () => {
     return a_posts;
   }
   const filterByTags = function(tags){
-    console.log(`tag in filter: ${tags}`)
     let f_posts = [];
     if (tags.length === 0){
       f_posts = posts.value;
-      console.log(`len: ${tags.length}`)
       return f_posts;
     }
     tags.forEach(tag=>{

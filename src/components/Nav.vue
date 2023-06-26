@@ -83,7 +83,7 @@ const getUser = function(user_slug){
             position: "top-center"
         });
         logout();
-        console.log(err);
+        console.log(`get user error: ${err}`);
     })
 }
 

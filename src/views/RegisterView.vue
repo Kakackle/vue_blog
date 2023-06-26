@@ -29,7 +29,6 @@ const uploadImage = function(e){
     reader.readAsDataURL(newAvatar.value);
     reader.onload = e =>{
                     previewImage.value = e.target.result;
-                    console.log(`img: ${previewImage.value}`);
                 };
 
 }

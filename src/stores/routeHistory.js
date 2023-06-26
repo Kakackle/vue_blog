@@ -14,12 +14,8 @@ export const useRouteStore = defineStore('route', ()=>{
     ])
     const breadcrumbList = ref([])
     const pushRoute = function(route){
-        // console.log(JSON.stringify(route));
-        // console.log(route.path);
         const newRoute = {label: route.path, to: route.path};
         routeHistory.value.push(newRoute);
-        // console.log(JSON.stringify(routeHistory.value));
-        console.log(routeHistory.value.length)
     }
     return {routeHistory, breadcrumbList, pushRoute}
 })

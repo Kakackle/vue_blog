@@ -17,7 +17,7 @@ const getAuthor = async function(){
         user.value = res.data;
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`get author error: ${err}`);
     })
 }
 

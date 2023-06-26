@@ -6,9 +6,7 @@ import { storeToRefs } from 'pinia';
 const userStore = useUserStore();
 const {loggedUser} = storeToRefs(userStore);
 const props = defineProps(['comment']);
-// console.log(`props: ${JSON.stringify(props)}`)
 const comment = ref(props.comment);
-// console.log(`comment: ${comment.value}`)
 const displayReply = ref(0);
 const displayEdit = ref(0);
 
@@ -21,7 +19,6 @@ const emit = defineEmits(['refresh']);
 const newContent = ref('');
 
 const addNewComment = async function(){
-    // console.log(JSON.stringify(comment));
     if (!loggedUser.value) {
         console.log('log in to add a comment');
         return;
@@ -35,13 +32,13 @@ const addNewComment = async function(){
     }
     axios.post('http://127.0.0.1:8000/api/create_comment', newComm)
     .then((res)=>{
-        console.log(`POST: ${res.status}, ${res.statusText}`);
+        console.log(`Add new comment POST: ${res.status}, ${res.statusText}`);
         newContent.value = '';
         displayReply.value = 0;
         emit('refresh');
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`Add new comment POST Error :${err}`);
     })
 }
 
@@ -71,13 +68,13 @@ const editComment = async function(){
     }
     axios.patch(`comments/${comment.value.id}`, newComm)
     .then((res)=>{
-        console.log(`PATCH: ${res.status}, ${res.statusText}`);
+        console.log(`edit comment PATCH: ${res.status}, ${res.statusText}`);
         newContent.value = '';
         displayEdit.value = 0;
         emit('refresh');
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`edit comment error ${err}`);
     })
 }
 
@@ -101,7 +98,6 @@ const updateLiked = async function(){
         toast.error(`log in first before trying to like`);
         return
     }
-    console.log(`comment: ${JSON.stringify(comment.value)}`)
     if(comment.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
         console.log(`logged user not in liked_by`);
 
@@ -121,7 +117,7 @@ const updateLiked = async function(){
         .catch((err)=>{
             error.value = `${err.status}, ${err.statusText}`;
             toast.error(error.value);
-            console.log(err);
+            console.log(`updating comment likes error: ${err}`);
         })
     }
     else{
@@ -132,9 +128,9 @@ const updateLiked = async function(){
 
 const deleteComment = async function(){
     axios.delete(`comments/${comment.value.id}`)
-    .then((res)=>{console.log(res);
+    .then((res)=>{console.log(`delete comment success: ${res}`);
     emit('refresh')})
-    .catch((err)=>{console.log(err)})
+    .catch((err)=>{console.log(`delete comment error: ${err}`)})
 }
 
 </script>

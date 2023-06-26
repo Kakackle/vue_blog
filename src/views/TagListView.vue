@@ -18,7 +18,7 @@ const getTags = async function(){
     })
     .catch((err)=>
     {
-        console.log(err);
+        console.log(`get tags err: ${err}`);
     })
 }
 
@@ -43,10 +43,10 @@ const submitTag = async function(){
     }
     axios.post(`tags/`, newTag)
     .then((res)=>{
-        console.log(res);
+        console.log(`post new tag: ${res}`);
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`post new tag err: ${err}`);
     })
     .finally(()=>{
         newName.value='';

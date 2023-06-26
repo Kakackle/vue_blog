@@ -35,7 +35,7 @@ const getTags = async function(){
         tags.value = res.data;
     })
     .catch((err)=>{
-        console.log(`tags err: ${err}`);
+        console.log(`get tags err: ${err}`);
     })
 }
 
@@ -47,7 +47,7 @@ const getUsers = async function(){
         users.value = res.data;
     })
     .catch((err)=>{
-        console.log(`users err: ${err}`);
+        console.log(`get users err: ${err}`);
     })
 }
 
@@ -74,7 +74,7 @@ const get_query_string = function(tags, users, search){
     if(search){
         query_string += `&title=${search}`;
     }
-    console.log(`resulting query: ${query_string}`);
+    console.log(`resulting filter query: ${query_string}`);
     return query_string
 }
 

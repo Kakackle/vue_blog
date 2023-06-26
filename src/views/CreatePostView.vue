@@ -76,15 +76,12 @@ const ifLoggedIn = ref(0);
 if (ifLoggedIn.value === 1){
     if (loggedUser) query_string.value=`posts/?author=${loggedUser.value.slug}`;
     else query_string.value = `posts/`;
-
-    console.log(`query_string: ${query_string.value}`);
 }
 
 //jesli zmieni sie zalogowany uzytkownik
 watch(loggedUser, ()=>{
     if(ifLoggedIn.value === 1){
     query_string.value=`posts/?author=${loggedUser.value.slug}`;
-    console.log(`query_string: ${query_string.value}`);
     }
     else{
         query_string.value = `posts/`;
@@ -100,7 +97,6 @@ watch(ifLoggedIn, ()=>{
         query_string.value = `posts/`;
         getPosts(query_string.value);
     }
-    console.log(`query_string: ${query_string.value}`);
 })
 
 //czysci inputy i odswieza listy, z nowymi danymi (wywolywane po post lbu patch)
@@ -147,7 +143,6 @@ const uploadImage = function(e){
     reader.readAsDataURL(newImg.value);
     reader.onload = e =>{
                     previewImage.value = e.target.result;
-                    // console.log(`img: ${previewImage.value}`);
                 };
 }
 
@@ -176,16 +171,14 @@ const getPosts = async function(link){
         //jesli przyszlismy z route od konkretnego postu, wybieraj od razu po uzyskaniu postow
         //konkretny post
         if(param_slug){
-            console.log(`param_slug:${param_slug}`);
             const param_post = posts.value.filter((post)=>{return post.slug === param_slug})[0]
-            // console.log(`param_post:${JSON.stringify(param_post)}`);
             selectPost(param_post);
         }
     })
     .catch((err)=>
     {
         postsExist.value = 0;
-        console.log(err);
+        console.log(`get posts err: ${err}`);
     })
 }
 const getPostsByPage = async function(link, page_id){
@@ -199,21 +192,18 @@ const selectPost = function(post){
     newAuthor.value = users.value.filter(user => selectedPost.value.author === user.username)[0];
     let selectedTags = [];
     selectedPost.value.tags.forEach((tag)=>{
-        // console.log(`tag: ${tag}`);
         const stag = tags.value.filter((ttag)=>{
-            // console.log(`ttag.id: ${ttag.id}`)
             return ttag.name === tag})
-        // console.log(`stag: ${JSON.stringify(stag)}`)
         selectedTags.push(stag[0].name);
     })
     newTags.value = selectedTags;
     // newTags.value = undefined
     newContent.value = selectedPost.value.content
-    // console.log(`img: ${selectedPost.value.img}`)
     // newImg.value = selectedPost.value.img
     // newImg.value = getFileFromUrl(selectedPost.value.img, selectedPost.value.slug)
     // getFileFromUrl()
     previewImage.value = selectedPost.value.img;
+    getUploadedImages();
 }
 
 async function getFileFromUrl(url, defaultType = 'image/jpg') {
@@ -284,7 +274,7 @@ const submitForm = function(method){
         met_url = `users/${newAuthor.value.id}/post`;
     }
     else{
-        met_url = `posts/${selectedPost.value.id}`;
+        met_url = `posts/${selectedPost.value.slug}`;
     }
 
     axios({
@@ -334,7 +324,7 @@ const getAllPosts = async function(){
         allPosts.value = res.data;
     })
     .catch((err)=>{
-        console.log(err);
+        console.log(`get all posts err: ${err}`);
     })
 }
 getAllPosts();
@@ -351,15 +341,16 @@ const search = (event) => {
     }, 250);
 }
 
-// posty uploadowane do postu i mozliwe do dodania do markdown
+//obrazki uploadowane do postu i mozliwe do dodania do markdown
 const newPostImg = ref();
 const newPostImgName = ref('');
 const newPostImgUrl = ref();
-// TODO:, moze na change zmiana wartosci newpostimg
-// a potem na przycisku dopiero sending
-// a poza tym te bugi z karteczki
-const uploadPostImage = async function(e){
+
+const changePostImage = async function(e){
     newPostImg.value = e.target.files[0];
+}
+
+const uploadPostImage = async function(){
     axios.post(`posts/${selectedPost.value.slug}/images`,{
         csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
         image: newPostImg.value,
@@ -372,13 +363,10 @@ const uploadPostImage = async function(e){
         },
     })
     .then((res)=>{
-        console.log('posting img successful')
         return axios.get(`posts/${selectedPost.value.slug}/images/${newPostImgName.value}`)
     })
     .then((res)=>{
-        console.log(`retrieving img succesfull: ${res}`);
         newPostImgUrl.value = res.data.image;
-        console.log(`newPostImgUrl: ${newPostImgUrl.value}`);
     })
     .catch((err)=>{
         console.log(`fail ${err}`);
@@ -386,6 +374,27 @@ const uploadPostImage = async function(e){
 
 }
 
+// lista obrazkow zuploadowanych do postu, wyswietlana by uzytkownik mial poglad
+
+const uploadedImages = ref();
+
+const getUploadedImages = async function(){
+    console.log(`query: posts/${selectedPost.value.slug}/images`);
+    axios.get(`posts/${selectedPost.value.slug}/images`)
+    .then((res)=>{
+        uploadedImages.value = res.data;
+        console.log(`GET uploaded images success ${res.status}`)
+    })
+    .catch((err)=>{
+        console.log(`GET uploaded images failure ${err}`)
+    })
+}
+
+const copyToClipboard = function(link, name){
+    navigator.clipboard.writeText(link);
+    let md_str = `  ![${name}](${link} "${name}")`
+    newContent.value += md_str;
+}
 
 </script>
 
@@ -500,22 +509,38 @@ const uploadPostImage = async function(e){
     <!-- image upload section -->
     <div class="upload-sect">
         <div class="img-name">
-            <div class="form-label">
-                <label for="up-img">img:</label>
-                <input type="file" name="up-img" accept="image/jpeg, image/jpg,
-                image/png, image/gif" @change=uploadPostImage>
-                <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+            <div class="img-name-left">
+                <div class="form-label">
+                    <label for="up-img">img:</label>
+                    <input type="file" name="up-img" accept="image/jpeg, image/jpg,
+                    image/png, image/gif" @change=changePostImage required>
+                    <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+                </div>
+                <div class="form-label">
+                    <label for="up-name">name:</label>
+                    <input type="text" name="up-name"
+                    placeholder="name for img" v-model="newPostImgName" required>
+                </div>
             </div>
-            <div class="form-label">
-                <label for="up-name">name:</label>
-                <input type="text" name="up-name"
-                 placeholder="name for img" v-model="newPostImgName">
+            <div class="img-name-right">
+                <button class="submit-button" @click="uploadPostImage">SUBMIT</button>
             </div>
         </div>
         <p>IMG LINK: {{ newPostImgUrl }}</p>
         <img :src="newPostImgUrl" class="upload-preview" v-if="newPostImgUrl">
     </div>
 
+    <!-- choose from uploaded images -->
+    <section class="uploaded-images" v-if="uploadedImages">
+        <p>IMAGES UPLOADED TO POST:</p>
+        <div class="uploaded-list">
+            <div class="uploaded-list-item" v-for="(img, img_id) in uploadedImages">
+                <p>{{ img.name }}</p>
+                <p class="hover" @click="copyToClipboard(img.image, img.name)">ADD TO MD: {{ img.image }}</p>
+                <img :src="img.image" class="upload-preview"/>
+            </div>
+        </div>
+    </section>
     <!-- Under columns: useful links -->
     <div class="useful">
             <p>USEFUL LINKS:</p>
@@ -661,13 +686,48 @@ const uploadPostImage = async function(e){
 .upload-sect{
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
+    justify-items: center;
+    align-items: center;
 }
-.up-img{
-    height: 50px;
-    width: 80px;
+.upload-preview{
+    height: 200px;
+    width: 320px;
 }
 .img-name{
     display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 2rem;
+}
+.img-name-left{
+    display: flex;
     flex-direction: column;
+}
+.img-name-right{
+ 
+}
+.uploaded-images{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px dashed rgba(0,0,0,0.5);
+    padding: 1rem;
+}
+.uploaded-list{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    
+}
+.uploaded-list-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.5);
+}
+.uploaded-list-item:nth-of-type(2n){
+    background-color: rgba(0,0,0,0.1);
 }
 </style>
