@@ -393,7 +393,13 @@ const getUploadedImages = async function(){
 const copyToClipboard = function(link, name){
     navigator.clipboard.writeText(link);
     let md_str = `  ![${name}](${link} "${name}")`
-    newContent.value += md_str;
+    newContent.value += `  ${md_str}`;
+}
+
+// markdown editor controls
+
+const addToMarkdown = function(add){
+    newContent.value += add;
 }
 
 </script>
@@ -469,6 +475,11 @@ const copyToClipboard = function(link, name){
                 <div class="form-label">
                     <label for="content">content:</label>
                     <textarea id="content" class="text-input" v-model="newContent"></textarea>
+                </div>
+                <div class="md-controls">
+                    <button class="md-button" @click="addToMarkdown(`#`)">H1</button>
+                    <button class="md-button" @click="addToMarkdown(`##`)">H2</button>
+                    <button class="md-button" @click="addToMarkdown(`###`)">H3</button>
                 </div>
                 <!-- img -->
                 <p class="warn">WARNING: during editing you have to pick a value if you want it to have an image attached,
