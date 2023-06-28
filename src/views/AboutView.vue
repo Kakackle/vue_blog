@@ -68,12 +68,6 @@ const routesSorted = routes.sort(function (a, b) {
         </ul>
       </div>
     </div>
-    <!-- tailwind testing -->
-    <div
-      class="inset-0 order-1 grow basis-4 flex-row gap-2 bg-slate-300 p-10 text-base text-cyan-50"
-    >
-      <h1 class="text-3xl font-bold underline">Hello world!</h1>
-    </div>
   </main>
 </template>
 

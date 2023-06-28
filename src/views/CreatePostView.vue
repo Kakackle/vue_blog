@@ -512,7 +512,7 @@ const addToMarkdown = function(add){
         <p v-if="error" class="error">{{error}}</p>
         </section>
         <!-- Post preview -->
-        <section class="post-preview" v-html="compiledMarkdown" v-if="newContent">
+        <section class="post-preview prose" v-html="compiledMarkdown" v-if="newContent">
         </section>
 
 
