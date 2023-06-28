@@ -4,33 +4,33 @@
     TODO: te dodatkowe informacje, nad site mapa np
  -->
 <script setup>
-import GoBackButton from '../components/GoBackButton.vue';
-import { useRouter, useRoute } from 'vue-router';
-import {useRouteStore} from '../stores/routeHistory'
-import { storeToRefs } from 'pinia';
+import GoBackButton from "../components/GoBackButton.vue";
+import { useRouter, useRoute } from "vue-router";
+import { useRouteStore } from "../stores/routeHistory";
+import { storeToRefs } from "pinia";
 
 const routeStore = useRouteStore();
-const {routeHistory} = storeToRefs(routeStore); 
+const { routeHistory } = storeToRefs(routeStore);
 
 const route = useRoute();
 const router = useRouter();
 const routes = router.getRoutes();
 
-// routeHistory.value.push(route.path); 
+// routeHistory.value.push(route.path);
 
 routeStore.pushRoute(route);
 /**
  * sort routes from vue router alphabetically, return in array form
  */
-const routesSorted = routes.sort(function(a,b) {
-  if(a.name < b.name){
+const routesSorted = routes.sort(function (a, b) {
+  if (a.name < b.name) {
     return -1;
   }
-  if(a.name > b.name){
+  if (a.name > b.name) {
     return 1;
   }
   return 0;
-})
+});
 </script>
 
 <template>
@@ -38,20 +38,23 @@ const routesSorted = routes.sort(function(a,b) {
     <GoBackButton></GoBackButton>
     <p class="title">Something about the site idk, anyway here are all the available routes:</p>
     <div class="lists">
-      
       <div class="left">
         <p class="title">VUE ROUTES:</p>
         <ul class="route-list">
           <li class="route" v-for="route in routesSorted" :key="route.path">
-            <RouterLink :to="route.path">{{ route.name }}</RouterLink> - {{ route.path }} - {{ route.meta.desc }}</li>
+            <RouterLink :to="route.path">{{ route.name }}</RouterLink> - {{ route.path }} -
+            {{ route.meta.desc }}
+          </li>
         </ul>
       </div>
 
-      <div class=right>
+      <div class="right">
         <p class="title">DRF ROUTES: [base: http://127.0.0.1:8000]</p>
         <ul class="route-list">
           <li class="route">/admin - admin</li>
-          <li class="route">/api/posts - all posts retrieve paginated [params: ?page_size= , ?page= , ?page=last]</li>
+          <li class="route">
+            /api/posts - all posts retrieve paginated [params: ?page_size= , ?page= , ?page=last]
+          </li>
           <li class="route">/api/posts/all/ - all posts no pagination [last slash important]</li>
           <li class="route">/api/posts/int:pk - single post get/put/delete</li>
           <li class="route">/api/tags - all tags retrieve</li>
@@ -64,40 +67,46 @@ const routesSorted = routes.sort(function(a,b) {
           <li class="route">/api/comments/int:pk</li>
         </ul>
       </div>
-  </div>
+    </div>
+    <!-- tailwind testing -->
+    <div
+      class="inset-0 order-1 grow basis-4 flex-row gap-2 bg-slate-300 p-10 text-base text-cyan-50"
+    >
+      <h1 class="text-3xl font-bold underline">Hello world!</h1>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.main{
+.main {
   display: flex;
   flex-direction: column;
   /* align-items: center; */
   gap: 2rem;
 }
-.title{
+.title {
   font-size: 2.5rem;
   /* border-bottom: 1px solid black; */
 }
-.lists{
+.lists {
   display: flex;
 }
-.right{
+.right {
   border-left: 1px dashed black;
   padding-left: 1rem;
 }
-.route-list{
+.route-list {
   /* font-size: 2rem; */
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.route{
-  font-size: 2rem;;
+.route {
+  font-size: 2rem;
 }
 
-.route a{
+.route a {
   font-size: 2rem;
 }
 </style>
