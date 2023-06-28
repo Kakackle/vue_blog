@@ -1,5 +1,6 @@
 # Nowe funkcjonalnosci
 3. TODO: komponent side dla homeview z jakims najpop autorem itd - do tego autorzy musieliby miec count postow etc, najpewniej w django
+4. wtedy TODO: zliczanie ilosci postow autora, postow z tagiem etc, to bardziej moze czesc Django
 7. ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie)
 4. [ Django ] TODO: jakies resizowanie obrazkow przy uploadzie i zapisywanie w roznych rozmiarach typu thumbnail
 9. footer costam
@@ -7,15 +8,8 @@
 1. custom user / profile i logowanie
     - potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
     - komentarze - sposob powiazania w django i odpowiadania i forma na tworzenie
-2. Obrazki nie z url ale uploadowane
-    - i potem moze moznaby na podstawie uploadu do markdowna wkladac link lokalny tam gdzie uzytnik przestal pisac i zaczal uploadowac obrazek
-    albo pozwolic mu zuploadowac kilka i potem dac mu do wklejenia gdzie chce linki
-    ogolnie TODO: Django uploading images, jak to przesylac przez rest, jak to serwowac?
 
 # Uzupelnienie funkcjonalnosci
-
-
-4. ## 09.06.2023
 
 
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk

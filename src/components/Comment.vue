@@ -42,7 +42,6 @@ const addNewComment = async function(){
     })
 }
 
-// TODO: usuwanie
 // TODO: sprawdzenie roznych warunkow typu:
 // - uzytkownik nie moze lajkowac swojego komenta
 // - uzytkownik moze edytowac tylko wlasne komenty

@@ -52,17 +52,6 @@ const {routeHistory, breadcrumbList} = storeToRefs(routeStore);
 // });
 
 
-// TODO: pobieranie np. w Nav (bo jest globalny) usera z API wedlug wpisanego
-// np w dropie username / slug
-// na start moze byc przechowywane w Navie, potem localstorage
-// i na podstawie tego wyswietlanie zalogowanego w dropach
-// i potem mozna by na podstawie tej informacje wykonywac funkcjonalnosci typu
-// automatyczne ustawianie uzytkownika przy filtrowaniu,
-// umozliwianie edycji uzytkownika tylko jesli zgadza sie z zalogowanym itd..
-// czyli kluczowe operacje dla strony obslugujacej konta, a taka wlasnie strone chcemy
-// przy czym zwaz, ze to co robisz w ten sposob nachodzi na to co powinien robic
-// twoj backed, czyli obsluga authentication, persmissions itd
-
 // konkretnie:
 // TODO: jakos przekazywanie z Nava do komponentow zalogowanego uzytkownika
 

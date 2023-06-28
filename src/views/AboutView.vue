@@ -8,9 +8,7 @@ import GoBackButton from '../components/GoBackButton.vue';
 import { useRouter, useRoute } from 'vue-router';
 import {useRouteStore} from '../stores/routeHistory'
 import { storeToRefs } from 'pinia';
-// TODO: okej, dziala takie sledzenie w ramach store i wchodzenia do stron
-// to teraz trzeba by dodac to do wiekszej ilosci elementow
-// i jakos to wyswietlac
+
 const routeStore = useRouteStore();
 const {routeHistory} = storeToRefs(routeStore); 
 

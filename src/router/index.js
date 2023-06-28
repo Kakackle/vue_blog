@@ -1,5 +1,4 @@
 // TODO: Lazy loading? Moze jesli initial load strony stanie sie dlugi
-// TODO: zgrupuj w pliki
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BlogView from '../views/BlogView.vue'
