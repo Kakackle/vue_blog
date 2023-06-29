@@ -7,6 +7,7 @@ import AboutViewTailwind from "../views/AboutViewTailwind.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import MarkdownView from "../views/MarkdownView.vue";
 import DatePickerView from "../views/DatePickerView.vue";
+import TestView from "../views/TestView.vue";
 
 import userRoutes from "./userRoutes";
 import postRoutes from "./postRoutes";
@@ -54,6 +55,15 @@ const router = createRouter({
     ...userRoutes,
     ...postRoutes,
     ...tagRoutes,
+    {
+      path: "/test",
+      name: "test",
+      component: TestView,
+      meta: {
+        desc: "Test view",
+        title: "Test",
+      },
+    },
     {
       path: "/markdown",
       name: "markdown",
