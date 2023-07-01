@@ -1,6 +1,7 @@
 
 import PostView from '../views/PostView.vue'
 import CreatePostView from '../views/CreatePostView.vue'
+import CreatePostViewTail from '../views/CreatePostViewTail.vue'
 import FilterView from "../views/FilterView.vue"
 import PostListView from "../views/PostListView.vue"
 
@@ -20,6 +21,14 @@ export default [
         meta: {
         desc: 'View for creating a post instance (POST form)',
         title: 'Create post'}
+      },
+      {
+        path: '/createtail/:post_slug?',
+        name: 'createtail',
+        component: CreatePostViewTail,
+        meta: {
+        desc: 'View for creating a post instance (POST form)',
+        title: 'Create Tail'}
       },
       {
         path: '/posts/list',

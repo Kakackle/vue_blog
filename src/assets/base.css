@@ -9,4 +9,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .btn-basic {
+    @apply rounded-sm bg-slate-300 p-2 text-xl;
+  }
+  .form-text-input{
+    @apply border-2 rounded w-72;
+  }
+  .input-label-aligned{
+    @apply flex gap-24 text-xl;
+  }
+}
+
 /* https://flatuicolors.com/palette/us */
