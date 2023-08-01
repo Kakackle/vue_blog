@@ -78,7 +78,6 @@ export async function getFromAPI(url) {
     })
     .catch((err) => {
       console.log(err);
-      console.log("what the fuck");
       console.log(`GET error: ${url}`);
       const error = err.status + " " + err.statusText;
       toast.error(`GET ${url}: ${error}`);
