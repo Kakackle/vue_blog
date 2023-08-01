@@ -33,6 +33,9 @@ const goToProfile = () =>{
 </template>
 
 <style scoped>
+*{
+  font-size: 62.5%;
+}
 .acc-drop{
     position: absolute;
     top: 3rem;

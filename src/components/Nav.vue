@@ -98,7 +98,13 @@ const logout = () => {
 <template>
     <div class="nav-main">
         <nav class="navbar">
-            <span class="logo">LOGO</span>
+            <div class="nav-left">
+                <span class="logo">LOGO</span>
+                <svg width="36" height="36" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M28.9403 13.8359L12.9104 20.9129C12.0106 21.3254 12.3131 22.6892 13.3031 22.6892H20.9688C21.0599 22.6892 21.1474 22.7254 21.2118 22.7899C21.2763 22.8544 21.3125 22.9418 21.3125 23.033V30.6969C21.3125 31.6869 22.6875 31.9859 23.0983 31.0887L30.1641 15.0597C30.2432 14.8884 30.2678 14.697 30.2347 14.5113C30.2016 14.3256 30.1123 14.1545 29.9789 14.0211C29.8455 13.8877 29.6744 13.7984 29.4887 13.7653C29.303 13.7322 29.1116 13.7568 28.9403 13.8359Z" fill="#EEEEEE"/>
+                <path d="M38.5 22C38.5 12.8906 31.1094 5.5 22 5.5C12.8906 5.5 5.5 12.8906 5.5 22C5.5 31.1094 12.8906 38.5 22 38.5C31.1094 38.5 38.5 31.1094 38.5 22Z" stroke="#F1DD28" stroke-width="2.75" stroke-miterlimit="10"/>
+                </svg>
+            </div>
             <div class="nav-right">
                 <div class="links">
                     <router-link class="hover" to="/">Home</router-link>
@@ -132,33 +138,45 @@ const logout = () => {
             </div>
         </nav>
 
-        <div class="bread-disappear">
+        <!-- <div class="bread-disappear">
             <div class="bread">
                 <Breadcrumb :model="routeHistory" class="bread" />
             </div>
-        </div>
+        </div> -->
     </div>
     <p></p>
 </template>
 
 <style scoped>
+/* *{
+  font-size: 62.5% !important;
+}
+.nav-main{
+    font-size: 62.5% !important;
+} */
 .navbar {
     height: 4rem;
     width: 100%;
-    background-color: #636e72;
+    background-color: var(--dark-gray);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 4rem;
 }
+.nav-left{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
 .logo {
-    font-size: 4rem;
+    font-size: 2.5rem;
+    font-weight: 600;
     color: whitesmoke;
 }
 .links {
     list-style-type: none;
     display: flex;
-    gap: 2rem;
+    gap: 4rem;
 }
 .nav-right {
     display: flex;
@@ -206,7 +224,11 @@ const logout = () => {
 }
 
 .links a.router-link-active {
-    color: tomato;
+    color: var(--accent-yellow);
+    text-decoration: underline;
+    /* text-decoration-line: underline; */
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
 }
 
 .hover:hover {
@@ -215,12 +237,13 @@ const logout = () => {
 }
 
 .active {
-    color: tomato;
+    color: var(--accent-yellow);
 }
 
 .acc {
     color: whitesmoke;
     font-size: 2rem;
+    font-weight: 500;
 }
 /* #636e72 */
 .bread {

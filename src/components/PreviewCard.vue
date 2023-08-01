@@ -2,6 +2,7 @@
 import {ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import Tag from './Tag.vue';
 
 const router = useRouter();
 
@@ -34,9 +35,10 @@ getAuthor();
         <div class="bottom">
             <p class="title">{{ post.title }}</p>
             <div class="tags">
-                <p v-for="tag in post.tags" class="tag hover"
+                <Tag v-for="tag in post.tags" class="tag hover"
                     @click="router.push({name:tag, params:{tag_slug: tag}})"
-                >{{ tag }}</p>
+                    :tag="tag"
+                ></Tag>
             </div>
             <p class="author hover" v-if="user.name"
                 @click="router.push({name: 'user', params:{user_slug: user.slug}})"
@@ -54,20 +56,20 @@ getAuthor();
 
 <style scoped>
 .card-preview{
-    width: clamp(24rem, 30%, 40rem);
-    height: 100%;
-    box-shadow: 0px 5px 12px rgba(0,0,0,0.15);
-    border-radius: 0.5rem;
+    width: 360px;
+    /* height: 100%; */
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.10);
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     position: relative;
     flex-shrink: 0;
-    flex-grow: 1;
+    /* flex-grow: 1; */
     /* flex: 1; */
 }
 .top, .card-img{
     width: 100%;
-    aspect-ratio: 3/2;
+    aspect-ratio: 4/2;
 }
 
 .bottom{

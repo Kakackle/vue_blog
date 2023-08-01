@@ -19,12 +19,18 @@
 </template>
 
 <style scoped>
+/* *{
+  font-size: 62.5%;
+} */
 .banner{
     background-color: black;
     height: 2rem;
     padding: 0 4rem;
+    /* display: flex; */
+    /* align-items: center; */
 }
 .banner-items{
+    height: 100%;
     color: white;
     font-size: 1.5rem;
     display: flex;

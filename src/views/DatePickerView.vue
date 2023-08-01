@@ -18,6 +18,9 @@ const openDate = ref(0);
 </template>
 
 <style scoped>
+*{
+  font-size: 62.5%;
+}
 .date{
     font-size: 2rem;
 }

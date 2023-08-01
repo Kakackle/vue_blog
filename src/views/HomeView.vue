@@ -50,6 +50,9 @@ getPosts();
 </template>
 
 <style scoped>
+*{
+  font-size: 62.5%;
+}
 .main-section{
   display: flex;
 }

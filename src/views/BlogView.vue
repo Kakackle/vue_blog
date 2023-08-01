@@ -6,7 +6,9 @@
 -->
 
 <script setup>
-
+import Hero from '../components/Hero.vue';
+import Banner from '../components/Banner.vue';
+import Carousel from '../components/Carousel.vue';
 import FilterSide from '../components/FilterSide.vue';
 import PreviewListLarge from '../components/PreviewListLarge.vue';
 import PostsPaginated from '../components/PostsPaginated.vue';
@@ -80,7 +82,10 @@ const filterByQuery = async function(query){
 
 <template>
   <main>
-    <GoBackButton></GoBackButton>
+    <!-- <GoBackButton></GoBackButton> -->
+    <Banner></Banner>
+    <Hero></Hero>
+    <Carousel></Carousel>
     <p class="blog-title">BLOG TITLE</p>
     <section class="blog-sect">
       <div class="posts-sect">
@@ -97,6 +102,9 @@ const filterByQuery = async function(query){
 </template>
 
 <style scoped>
+*{
+  font-size: 62.5%;
+}
 .blog-title{
   font-size: 6rem;
   font-weight: 500;

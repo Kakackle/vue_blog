@@ -16,6 +16,8 @@
 
 # Fixes
 1. TODO: lepsze composables z srodkowym zwracaniem stanow itd
+2. TODO: Kompletnie zjebane wszedzie sa rozmiary czcionek w stylach przez to ograniczenie markdown ze font-size nie moze byc globalnie 62.5%
+ALE: zamiast kombinowac z zamienianiem wszedzie rozmiarow moze mozna dodac to w na view gdzie to ma sens, a ~~wylaczyc~~ NIE WLACZAC tylko na dwoch (czyli tworzenie postu i wyswietlanie) gdzie jest md - NAGLE MD DZIALA MIMO GLOBALNEGO 62.5%, OKEJ, SUPER
 
 # Pomysly
 
