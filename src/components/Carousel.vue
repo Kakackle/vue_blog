@@ -8,7 +8,7 @@
 
 <script setup>
 import PreviewCard from './PreviewCard.vue';
-import { ref} from 'vue';
+import {ref} from 'vue';
 import axios from 'axios';
 
 const posts = ref()
@@ -24,7 +24,7 @@ getPosts();
 
 <template>
     <section class="sect">
-        <div class="carousel">
+        <div class="carousel unified-shadow">
             <PreviewCard v-for="(post, post_id) in posts" :post="post"></PreviewCard>
         </div>
     </section>
@@ -32,20 +32,23 @@ getPosts();
 
 <style scoped>
 .sect{
+    /* width: 100vw; */
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    /* flex-grow: 0; */
+    /* flex-shrink: 1; */
+    /* padding: 2rem; */
 }
 .carousel{
-    width: 90%;
+    /* width: 90%; */
+    /* max-width: var(--max-page-width); */
+    margin: 0 auto;
+    max-width: var(--max-page-width);
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
-    padding: 2rem;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 10px;
     overflow-x: scroll;
+    /* flex-grow: 0; */
 }
 </style>

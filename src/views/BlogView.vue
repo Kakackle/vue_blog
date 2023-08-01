@@ -85,8 +85,7 @@ const filterByQuery = async function(query){
     <!-- <GoBackButton></GoBackButton> -->
     <Banner></Banner>
     <Hero></Hero>
-    <Carousel></Carousel>
-    <p class="blog-title">BLOG TITLE</p>
+    <!-- <p class="blog-title">BLOG TITLE</p> -->
     <section class="blog-sect">
       <div class="posts-sect">
         <PostsPaginated :type="'large'" :query_string="query_string" 
@@ -98,12 +97,17 @@ const filterByQuery = async function(query){
         <FilterSide @filterQuery="filterByQuery"></FilterSide>
       </div>
     </section>
+    <section class="carousel-sect">
+      <p class="title">CHECK OUT THESE TRENDING POSTS</p>
+      <Carousel></Carousel>
+    </section>
   </main>
 </template>
 
 <style scoped>
 *{
   font-size: 62.5%;
+  background-color: var(--almost-white);
 }
 .blog-title{
   font-size: 6rem;
@@ -111,33 +115,40 @@ const filterByQuery = async function(query){
   padding: 0 4rem;
 }
 .blog-sect{
-  width: 100%;
-  padding: 0 2rem;
-  display: flex
+  /* width: 100%; */
+  max-width: var(--max-page-width);
+  /* padding: 0 2rem; */
+  display: flex;
+  margin: var(--section-margin) auto;
+  flex-wrap: wrap;
 }
 .posts-sect{
-  display: flex;
+  max-width: 900px;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1rem; */
 }
-.blog-list{
+
+/* ------ unused ------ */
+/* .blog-list{
   width: clamp(40rem, 75vw, 100rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
   margin-top: 2rem;
-}
+} */
 .side{
-  width: clamp(25rem, 25vw, 45rem);
+  width: clamp(250px, 100%, 300px);
   /* height: 40rem; */
   height: 100%;
   /* background-color: #636e72; */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  /* padding: 1rem; */
+  margin-top: 2.5rem;
 }
 
 .pages{
@@ -157,5 +168,16 @@ const filterByQuery = async function(query){
 }
 .selected{
     font-weight: 700;
+}
+
+.carousel-sect{
+  max-width: var(--max-page-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.title{
+  font-size: 3rem;
 }
 </style>

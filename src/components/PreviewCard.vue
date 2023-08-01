@@ -27,7 +27,7 @@ getAuthor();
 </script>
 
 <template>
-    <div class="card-preview" >
+    <div class="card-preview unified-shadow" >
         <div class="top">
             <img class="card-img" :src=post.img>
         </div>
@@ -58,8 +58,8 @@ getAuthor();
 .card-preview{
     width: 360px;
     /* height: 100%; */
-    box-shadow: 0px 5px 12px rgba(0,0,0,0.10);
-    border-radius: 5px;
+    /* box-shadow: 0px 5px 12px rgba(0,0,0,0.10); */
+    /* border-radius: 5px; */
     display: flex;
     flex-direction: column;
     position: relative;
@@ -77,13 +77,12 @@ getAuthor();
     flex-direction: column;
     /* align-items: center; */
     font-size: 2rem;
-    color: #636e72;
     position: relative;
     padding: 1rem;
 }
 .tags{
     display: flex;
-    color: #636e72cc;
+    /* color: #636e72cc; */
     font-size: 1.2rem;
     gap: 1rem;
 }
@@ -93,14 +92,16 @@ getAuthor();
 }
 
 .title{
-    font-size: 2.4rem;
+    font-size: 2rem;
     /* width: 100%; */
 }
 .author{
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--mid-gray);
 }
 .content{
     font-size: 1.2rem;
+    color: var(--dark-gray);
 }
 .post_id{
     font-size: 1.5rem;
@@ -111,8 +112,8 @@ getAuthor();
 
 .date{
     position: absolute;
-    top: 1rem;
-    right: 1rem;
+    top: 5px;
+    right: 10px;
     filter: opacity(0.5);
 }
 .arr-icon{

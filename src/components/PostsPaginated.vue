@@ -136,12 +136,13 @@ getPosts(query_string.value);
     display: flex;
     gap: 2rem;
     align-self: end;
-    transform: translateX(-4rem);
+    /* transform: translateX(-4rem); */
+    /* font-size: 2rem; */
 }
 .page_size{
   display: flex;
   gap: 1rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
   /* right: 1rem; */
   align-self: end;
   transform: translateX(-4rem);

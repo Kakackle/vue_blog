@@ -90,10 +90,27 @@ const emitQuery = async () =>{
     });
 }
 
+// TODO: dynamiczne te daty z danych
+const dates = [
+    'Today',
+    'Last 3 days',
+    'Last week',
+    'Last month',
+    'Last year',
+    'Older than a year'
+];
+//specjalne tryby stale ale dodanie ich funkcjonalnosci
+const specials = [
+    'Only show posts by followed authors',
+    'Only show liked posts',
+    'Only show posts you commented on',
+    'Only show your own posts'
+]
+
 </script>
 
 <template>
-    <div class="side-div">
+    <div class="side-div unified-shadow">
         <p class="boxes-title">FILTER BY SEARCH</p>
 
         <input type="search" class="search" placeholder="post title"
@@ -110,6 +127,14 @@ const emitQuery = async () =>{
             </div>         
         </div>
         <p class="boxes-title">FILTER BY DATE:</p>
+        <div class="boxes" v-if="dates.length">
+            <div v-for="(date, date_id) in dates" class="box">    
+                <input type="checkbox" :id=date_id name="tag-box"
+                    class="tag-box hover"
+                    :value=date>
+                <label :for=date_id>{{ date }}</label>
+            </div>         
+        </div>
         <p class="boxes-title">FILTER BY AUTHOR:</p>
         <div class="boxes" v-if="tags.length">
             <div v-for="(user, user_id) in users" class="box">    
@@ -120,15 +145,22 @@ const emitQuery = async () =>{
                 <label :for=user_id>{{ user.name }}</label>
             </div>         
         </div>
-        <p class="boxes-title">FILTER BY VIEWS or smth:</p>
+        <div class="boxes boxes-special" v-if="specials.length">
+            <div v-for="(spec, spec_id) in specials" class="box">    
+                <input type="checkbox" :id=spec_id name="tag-box"
+                    class="tag-box hover"
+                    :value=spec>
+                <label :for=spec_id>{{ spec }}</label>
+            </div>         
+        </div>
     </div>
 
 </template>
 
 <style scoped>
 .side-div{
-    background-color: white;
-    box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+    background-color: var(--almost-white);
+    /* box-shadow: 0px 5px 10px rgba(0,0,0,0.15); */
     height: 95%;
     width: 95%;
     flex-direction: column;
@@ -136,19 +168,25 @@ const emitQuery = async () =>{
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 10px;
 }
 .search{
-    font-size: 1.5rem;
-    width: 15rem;   
+    font-size: 1.4rem;
+    padding: 2px 4px;
+    border: 2px solid var(--mid-gray);
+    border-radius: 5px;
+    width: 90%;   
 }
 .boxes{
     width: 90%;
-    box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
-    padding: 1rem;
+    /* box-shadow: 0px 5px 10px rgba(0,0,0,0.15); */
+    /* padding: 1rem; */
+    height: 120px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 5px;
 }
 .box{
     display: flex;
@@ -163,7 +201,9 @@ const emitQuery = async () =>{
 .boxes-title{
     font-size: 1.5rem;
 }
-.hover:hover{
-    cursor: pointer;
+
+.boxes-special{
+    padding-top: 10px;
+    border-top: 6px solid var(--accent-yellow);
 }
 </style>
