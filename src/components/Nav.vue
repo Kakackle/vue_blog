@@ -59,6 +59,17 @@ const loggedIn = ref(0);
 const logInDrop = ref(0);
 const accDrop = ref(0);
 
+// dropdowns
+const navDropOpen = ref(0); //is open?
+
+const openNavDrop = function(){
+  //flip the value on each click
+  navDropOpen.value? navDropOpen.value = 0 : navDropOpen.value=1;
+  console.log(`navDropOpen: ${navDropOpen.value}`);
+  //if closed, will add border class and open drop
+  //if open, will remove border class and close drop
+};
+
 const getUser = function (user_slug) {
     axios
         .get(`users/${user_slug}`)
@@ -106,7 +117,7 @@ const logout = () => {
                 </svg>
             </div>
             <div class="nav-right">
-                <div class="links">
+                <div class="links links-horizontal">
                     <router-link class="hover" to="/">Home</router-link>
                     <RouterLink class="hover" to="/about">About</RouterLink>
                     <RouterLink class="hover" to="/blog">Blog</RouterLink>
@@ -122,7 +133,28 @@ const logout = () => {
                 </template> -->
                     </Dropdown>
                 </div>
-                <div>
+                
+                <div class="nav-drop" :class="{'drop-open': navDropOpen}">
+                    <ion-icon class="hover nav-burger" @click="openNavDrop" name="menu-sharp"></ion-icon>
+                    <div v-if="navDropOpen" class="drop-links links">
+                        <RouterLink class="hover" to="/">Home</RouterLink>
+                        <RouterLink class="hover" to="/about">About</RouterLink>
+                        <RouterLink class="hover" to="/blog">Blog</RouterLink>
+                        <Dropdown
+                            v-model="selected_list"
+                            :options="dropdown_list_routes"
+                            optionLabel="name"
+                            placeholder="LISTS"
+                            @change="router.push({ name: selected_list.path })"
+                        >
+                        <!-- <template #optiongroup="slotProps" @click="router.push({name: slotProps.option.path})">
+                        <RouterLink class="hover" :to="{name: slotProps.option.path}">{{ slotProps.option.name }}</RouterLink>
+                        </template> -->
+                        </Dropdown>
+                    </div>
+                </div>
+                
+                <div class="nav-acc">
                     <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop"
                         >ACC <ion-icon name="heart"></ion-icon
                     ></span>
@@ -265,4 +297,54 @@ const logout = () => {
     display: flex;
     justify-content: flex-start;
 }
+
+.nav-drop{
+  display: none;
+  position: relative;
+  height: 4rem;
+}
+.nav-burger{
+  /* height: 4rem;
+  width: 4rem; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  color: var(--almost-white);
+}
+
+.drop-links{
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  width: 100px;
+  z-index: 2;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--dark-gray);
+  padding: 20px 10px;
+}
+
+.drop-links > * {
+    border-bottom: 2px solid var(--almost-white);
+}
+
+.drop-open{
+  border-radius: 5px;
+  border: 2px solid var(--almost-white);
+  /* color: var(--accent-yellow); */
+}
+
+@media (max-width: 768px){
+  .nav-drop{
+    display: flex;
+  }
+  .links-horizontal{
+    display: none;
+  }
+  .side{
+
+  }
+}
+
 </style>

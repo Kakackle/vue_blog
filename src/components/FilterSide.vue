@@ -161,11 +161,11 @@ const specials = [
 .side-div{
     background-color: var(--almost-white);
     /* box-shadow: 0px 5px 10px rgba(0,0,0,0.15); */
-    height: 95%;
-    width: 95%;
+    height: 100%;
+    width: 100%;
     flex-direction: column;
     border-radius: 0.5rem;
-    padding: 2rem;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;

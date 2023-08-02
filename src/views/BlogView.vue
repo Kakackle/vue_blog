@@ -2,7 +2,6 @@
   View z glownym przegladem postow, tzn w postaci komponentow PreviewListLarge
   wraz z bocznym elementem FilterSide do tworzenia query
   do pobierania i wyswietlania stron w komponencie PostsPaginated
-  TODO: Dodaj cos moze jeszcze pod filtrami
 -->
 
 <script setup>
@@ -13,6 +12,8 @@ import FilterSide from '../components/FilterSide.vue';
 import PreviewListLarge from '../components/PreviewListLarge.vue';
 import PostsPaginated from '../components/PostsPaginated.vue';
 import GoBackButton from '../components/GoBackButton.vue';
+import SubscribeForm from '../components/SubscribeForm.vue';
+import Footer from '../components/Footer.vue';
 import { RouterLink, RouterView } from 'vue-router'
 import { nextTick, ref, render } from 'vue';
 import axios from 'axios';
@@ -38,6 +39,21 @@ const PAGE_SIZES = [5,10,15];
 const query_string = ref('posts/?');
 
 const changed = ref(0);
+
+// dropdowns
+const sideDropOpen = ref(0); //is open?
+
+const openSideDrop = function(){
+  //flip the value on each click
+  sideDropOpen.value? sideDropOpen.value = 0 : sideDropOpen.value=1;
+  console.log(`sideDropOpen: ${sideDropOpen.value}`);
+  //if closed, will add border class and open drop
+  //if open, will remove border class and close drop
+};
+
+// const closeSideDrop = function(){
+//   sideDropOpen.value = 0;
+// }
 
 /**
  * Dokonuje filtracji poprzez wykonanie query do API
@@ -94,12 +110,26 @@ const filterByQuery = async function(query){
         </div>
     
       <div class="side">
-        <FilterSide @filterQuery="filterByQuery"></FilterSide>
+        <FilterSide @filterQuery="filterByQuery" class="filter-side"></FilterSide>
       </div>
+      <!-- dropdown for mobile devices -->
+      <div class="side-drop"
+        :class="{'drop-open': sideDropOpen}">
+        <ion-icon class="hover side-burger" @click="openSideDrop" name="menu-sharp"></ion-icon>
+        <div v-if="sideDropOpen" class="drop-filter-side">
+          <FilterSide @filterQuery="filterByQuery"></FilterSide></div>
+      </div>
+      <!-- <ion-icon name="close-sharp" class="side-drop hover" v-if="sideDropOpen"></ion-icon> -->
     </section>
     <section class="carousel-sect">
       <p class="title">CHECK OUT THESE TRENDING POSTS</p>
       <Carousel></Carousel>
+    </section>
+    <section class="subscribe-sect">
+      <SubscribeForm></SubscribeForm>
+    </section>
+    <section class="footer-sect">
+      <Footer></Footer>
     </section>
   </main>
 </template>
@@ -120,7 +150,9 @@ const filterByQuery = async function(query){
   /* padding: 0 2rem; */
   display: flex;
   margin: var(--section-margin) auto;
-  flex-wrap: wrap;
+  gap: 10px;
+  /* flex-wrap: wrap; */
+
 }
 .posts-sect{
   max-width: 900px;
@@ -140,7 +172,7 @@ const filterByQuery = async function(query){
   margin-top: 2rem;
 } */
 .side{
-  width: clamp(250px, 100%, 300px);
+  width: clamp(150px, 100%, 290px);
   /* height: 40rem; */
   height: 100%;
   /* background-color: #636e72; */
@@ -151,6 +183,52 @@ const filterByQuery = async function(query){
   margin-top: 2.5rem;
 }
 
+.side-drop{
+  display: none;
+  position: relative;
+  height: 4rem;
+}
+.side-burger{
+  /* height: 4rem;
+  width: 4rem; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  color: var(--dark-gray);
+}
+
+.drop-filter-side{
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  width: 200px;
+  z-index: 2;
+}
+
+.drop-open{
+  border-radius: 5px;
+  border: 2px solid var(--dark-gray);
+  /* color: var(--accent-yellow); */
+}
+
+
+@media (max-width: 768px){
+  .side-drop{
+    display: flex;
+  }
+  .side{
+    display: none;
+  }
+  .side{
+
+  }
+}
+
+/* .hidden{
+  display: none;
+} */
+
 .pages{
     display: flex;
     justify-content: center;
@@ -158,10 +236,10 @@ const filterByQuery = async function(query){
     gap: 1rem;
     color: #636e72;
 }
-.hover:hover{
+/* .hover:hover{
   cursor: pointer;
   filter: brightness(0.7);
-}
+} */
 .page:hover{
     font-weight: 600;
     cursor: pointer;
@@ -176,8 +254,21 @@ const filterByQuery = async function(query){
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: var(--section-margin);
 }
 .title{
   font-size: 3rem;
+}
+
+.subscribe-sect{
+  width: 100%;
+  margin: auto;
+  margin-bottom: var(--section-margin);
+}
+
+.footer-sect{
+  margin-top: auto;
+  width: 100vw;
+  /* margin-bottom: var(--section-margin); */
 }
 </style>

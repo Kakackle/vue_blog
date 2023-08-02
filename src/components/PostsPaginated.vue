@@ -118,15 +118,21 @@ getPosts(query_string.value);
             <p>size_id: {{ page_sizes[size_id] }}</p> -->
             </div>
         </div>
-        <PreviewList v-for="(post, post_id) in posts" :post="post"
-            v-if="type === 'small'"></PreviewList>
-        <PreviewListLarge v-for="(post, post_id) in posts" :post="post" 
-            v-if="type === 'large'"></PreviewListLarge>
-        <div class="pages" v-if="pages">
-            <p class="page" v-for="(page, page_id) in pages"
-                @click="getPostsByPage(page[0], page_id)"
-                :class="(selectedPage === page_id)? 'selected' : 'normal'"
-                >{{ page[1] }}</p>
+        <div clas="post-list" v-if="posts.length != 0">
+            <PreviewList v-for="(post, post_id) in posts" :post="post"
+                v-if="type === 'small'"></PreviewList>
+            <PreviewListLarge v-for="(post, post_id) in posts" :post="post" 
+                v-if="type === 'large'"></PreviewListLarge>
+            <div class="pages" v-if="pages">
+                <p class="page" v-for="(page, page_id) in pages"
+                    @click="getPostsByPage(page[0], page_id)"
+                    :class="(selectedPage === page_id)? 'selected' : 'normal'"
+                    >{{ page[1] }}</p>
+            </div>
+        </div>
+        <div v-else class="no-posts-message">
+            <p>NO POSTS TO DISPLAY WITH CURRENTLY APPLIED FILTERS, PLEASE TRY A DIFFERENT COMBINATION</p>
+            <p> THANKS ;]</p>
         </div>
     </div>
 </template>
@@ -172,5 +178,18 @@ getPosts(query_string.value);
 }
 .selected{
     font-weight: 700;
+}
+
+.no-posts-message{
+    width: clamp(400px, 100%, 800px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 2.5rem;
+    color: var(--dark-gray);
+    padding: 20px;
+    /* margin: 0 auto; */
 }
 </style>
