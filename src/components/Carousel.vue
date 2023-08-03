@@ -1,25 +1,29 @@
 <!-- 
     Carousel for displaying PreviewCard components for a quick moving display
     of either most recent, popular or belongng to user posts
-    TODO: overflow i dynamcizna ilosc mieszczacych sie cards
-    FIXME: overflow zjebany
     TODO: ruch, zmiana wyswietlanych?
+    TODO: zamiast pobierania postow powinno akceptowac posty jako prop, zeby mogly
+    byc rozne wyswietlane, czy to "trendujace" czy to inne posty autora w ladnej postaci
+    zamiast listy po prostu albo "inne popularne posty tego autora" etc
  -->
 
 <script setup>
 import PreviewCard from './PreviewCard.vue';
-import {ref} from 'vue';
+import {ref} from 'vue'; 
 import axios from 'axios';
 
-const posts = ref()
+const props = defineProps(['posts']);
+const posts = ref(props.posts);
 
-const getPosts = function(){
-  axios.get(`posts/`)
-  .then((res)=>{
-    posts.value = res.data.results;
-  })
-}
-getPosts();
+// const posts = ref()
+
+// const getPosts = function(){
+//   axios.get(`posts/`)
+//   .then((res)=>{
+//     posts.value = res.data.results;
+//   })
+// }
+// getPosts();
 </script>
 
 <template>

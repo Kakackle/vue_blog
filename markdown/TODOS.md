@@ -8,7 +8,7 @@
     - komentarze - sposob powiazania w django i odpowiadania i forma na tworzenie
 
 # Uzupelnienie funkcjonalnosci
-1. TODO: Chujowa ta stylizacja listy z Prime, zrobienie wlasnej jest dosyc latwe, serio, dropdown + kwestia by hover dobrze sie nakladal tylko na wskazana opcje
+1. TODO: Chujowa ta stylizacja listy z Prime, zrobienie wlasnej jest dosyc latwe, serio, dropdown + kwestia by hover dobrze sie nakladal tylko na wskazana opcje - moze nawet jako komponent, tylko wtedy kwestia czy dac jakos slot czy prop na funkcje czy co, zeby uzytkownik mogl jako prop podac teksty ale i czy to ma byc tylko tekst czy link, czy po kliknieciu ma wywolywac jakas funkcje itd
 
 
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk
@@ -17,6 +17,10 @@
 1. TODO: lepsze composables z srodkowym zwracaniem stanow itd
 2. TODO: Kompletnie zjebane wszedzie sa rozmiary czcionek w stylach przez to ograniczenie markdown ze font-size nie moze byc globalnie 62.5%
 ALE: zamiast kombinowac z zamienianiem wszedzie rozmiarow moze mozna dodac to w na view gdzie to ma sens, a ~~wylaczyc~~ NIE WLACZAC tylko na dwoch (czyli tworzenie postu i wyswietlanie) gdzie jest md - NAGLE MD DZIALA MIMO GLOBALNEGO 62.5%, OKEJ, SUPER
+
+3. TODO: obsluga md w list i card preview? bo widac kodowanie md i brzydko to wyglada typu ### i obrazki ... tylko kwestia zeby jesli obrazki to nie wyjebawalo wysokosci na zmieszczenie tylko zeby go usuwalo - to by bylo w sumie nawet spoko gdyby bylo widasc tylko poczatek obrazka a reszta ucina, przy czym jesli ucina to najlepiej z blurem itd itd
+
+4. TODO: W kazdym komponencie zmiana kolorkow na nowe
 
 # Pomysly
 

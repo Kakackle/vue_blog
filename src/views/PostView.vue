@@ -4,13 +4,16 @@
     TODO: moze jesli jestes zalogowny to umozliw klikniecie "edytuj" in place, idk
 -->
 <script setup>
-import { onMounted } from "vue";
+import { defineAsyncComponent, onMounted } from "vue";
 import { useRouter, useRoute, routerKey } from "vue-router";
 import { ref, computed } from "vue";
 import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposables";
 import GoBackButton from "../components/GoBackButton.vue";
 // import Comment from "../components/Comment.vue";
 import CommentsPaginated from "../components/CommentsPaginated.vue";
+import Tag from "../components/Tag.vue";
+import Footer from "../components/Footer.vue";
+import Carousel from "../components/Carousel.vue";
 import axios from "axios";
 
 import { useRouteStore } from "../stores/routeHistory";
@@ -36,6 +39,8 @@ const getPost = async function () {
     router.push({ name: "catchall", params: { wrong_param: post_slug } });
   }
   postExists.value = 1;
+  getPostsByAuthor(post.value.author);
+  // aktualizacja wyswietlen w database
   axios.patch(
     `http://127.0.0.1:8000/api/posts/${post_slug}`,
     {
@@ -74,6 +79,38 @@ const compiledMarkdown = computed(() => {
 // }
 
 // getCommentsByPost(post_slug);
+
+// FIXME: aktualnie robione
+const author_posts = ref([]);
+// posty uzytkownika do karuzeli
+const getPostsByAuthor = async function(author){
+  axios.get(`posts/?author=${author}`)
+  .then((res)=>{
+    author_posts.value = res.data.results;
+    console.log(`get posts by author success`);
+  })
+  .catch((err)=>{
+    console.log(`get posts by author failure: ${err}`);
+  })
+}
+
+// TODO: + pobieranie trendujacych tu tez, moze jakos w composables by to zawrzec potem
+
+const posts = ref([]);
+const getPosts = async function(){
+  axios.get(`posts/`)
+  .then((res)=>{
+    posts.value = res.data.results;
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
+getPosts();
+// + kwestia - getpostbyauthor moze byc tylko wywolywane w getpost
+// bo music post istniec czy daloby sie inaczej?
+// getPostsByAuthor(post.value.author);
+
 </script>
 
 <template>
@@ -104,22 +141,27 @@ const compiledMarkdown = computed(() => {
           </div>
 
           <div class="post-tags">
-            <p
+            <Tag
               class="tag hover"
               v-for="(tag, tag_id) in post.tags"
               @click="router.push({ name: 'tag', params: { tag_slug: tag } })"
-            >
-              {{ tag }}
-            </p>
+              :tag = tag
+              >
+          </Tag>
           </div>
 
           <img :src="post.img" class="post-img" />
           <!-- <div class="post-content">{{ post.content }}</div> -->
           <div class="post-content prose" v-html="compiledMarkdown"></div>
-
+          <p class="author_signature">{{ post.author }}</p>
           <!-- comments -->
           <p class="title">COMMENTS ON POST:</p>
           <CommentsPaginated :post_slug="post_slug"></CommentsPaginated>
+          <!-- carousels -->
+          <p class="subtitle">CHECK OUT THESE TRENDING POSTS</p>
+          <Carousel v-if="posts.length" :posts=posts></Carousel>
+          <p class="subtitle">MORE POSTS BY {{ post.author }}</p>
+          <Carousel v-if="author_posts.length" :posts=author_posts></Carousel>
         </div>
       </section>
       <!-- end post-main -->
@@ -134,6 +176,9 @@ const compiledMarkdown = computed(() => {
 <style scoped>
 .main {
   display: flex;
+  max-width: var(--max-page-width);
+  margin: 0 auto;
+  justify-content: center;
 }
 .post-main {
   padding: 0 4rem;
@@ -209,5 +254,13 @@ const compiledMarkdown = computed(() => {
 .post-content {
   font-size: unset !important;
   /* font-size: 2rem; */
+}
+
+.title{
+  font-size: 3rem;
+}
+
+.subtitle{
+  font-size: 2rem;
 }
 </style>

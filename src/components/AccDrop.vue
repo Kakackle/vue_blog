@@ -24,11 +24,19 @@ const goToProfile = () =>{
 
 <template>
     <div class="acc-drop">
-        <p>{{ user.name }}</p>
-        <p>slug: {{ user.slug }}</p>
-        <img class="av-img" :src=user.avatar>
-        <button @click="goToProfile">GO TO PROFILE</button>
-        <button @click="emitLogout">LOG OUT</button>
+        <div class="top">
+            <img class="av-img" :src=user.avatar>
+            <div class="top-text">
+                <p>{{ user.name }}</p>
+                <p id="slug">{{ user.slug }}</p>
+            </div>
+        </div>
+        <div class="bottom">
+            <button class="gotoprof hover" @click="goToProfile">Go to profile
+                <ion-icon class="arr-icon" name="arrow-forward-outline"></ion-icon>
+            </button>
+            <button class="logout hover" @click="emitLogout">LOG OUT</button>
+        </div>
     </div>
 </template>
 
@@ -38,23 +46,65 @@ const goToProfile = () =>{
 }
 .acc-drop{
     position: absolute;
-    top: 3rem;
-    right: -4rem;
-    background-color: #636e72;
+    top: 40px;
+    right: -20px;
+    background-color: var(--almost-white);
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    border: 1px solid white;
-    gap: 0.5rem;
-
-    font-size: 2rem;
-    color: white;
-}
-.acc-drop button{
-    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid var(--mid-gray);
+    gap: 5px;
+    /* font-size: 2rem; */
+    width: 220px;
 }
 .av-img{
-    height: 10rem;
-    width: 10rem;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--dark-gray)
+}
+.top{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.top-text{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.top-text p{
+    font-size: 2rem;
+    color: var(--dark-gray);
+}
+#slug{
+    font-size: 1.2rem;
+}
+.bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: var(--dark-gray);
+}
+.bottom button{
+    font-size: 1.8rem;
+}
+.arr-icon{
+    font-size: 1.8rem;
+}
+.gotoprof{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.gotoprof:hover{
+    border-bottom: 1px solid var(--dark-gray);
+}
+.logout{
+    background-color: var(--dark-gray);
+    padding: 2px 10px;
+    color: var(--almost-white)
 }
 </style>

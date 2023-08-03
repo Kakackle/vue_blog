@@ -155,10 +155,13 @@ const logout = () => {
                 </div>
                 
                 <div class="nav-acc">
-                    <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop"
-                        >ACC <ion-icon name="heart"></ion-icon
-                    ></span>
-                    <span v-else class="acc hover" @click="logInDrop = !logInDrop">Log in</span>
+                    <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">
+                        <!-- ACC <ion-icon name="heart"></ion-icon> -->
+                        <img :src="userStore.getUser().avatar" class="nav-avatar"
+                            :class="{'nav-avatar-open': accDrop}">
+                    </span>
+                    <span v-else class="acc hover" @click="logInDrop = !logInDrop"
+                        :class="{'nav-avatar-open': logInDrop}">Log in</span>
                 </div>
                 <LoginDrop
                     v-if="logInDrop"
@@ -218,7 +221,7 @@ const logout = () => {
 
 .login-drop,
 .acc-drop {
-    position: absolute;
+    /* position: absolute;
     top: 3rem;
     right: -4rem;
     background-color: #636e72;
@@ -226,7 +229,8 @@ const logout = () => {
     flex-direction: column;
     padding: 1rem;
     border: 1px solid white;
-    gap: 0.5rem;
+    gap: 0.5rem; */
+    z-index: 2;
 }
 
 .login-text {
@@ -298,10 +302,22 @@ const logout = () => {
     justify-content: flex-start;
 }
 
+.nav-avatar{
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+}
+
+.nav-avatar-open{
+    padding: 2px;
+    border: 2px solid var(--almost-white);
+}
+
 .nav-drop{
   display: none;
   position: relative;
   height: 4rem;
+  z-index: 2;
 }
 .nav-burger{
   /* height: 4rem;

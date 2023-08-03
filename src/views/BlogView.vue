@@ -78,21 +78,22 @@ const filterByQuery = async function(query){
   // getPostsByFilters(checked.value, selectedPage.value, queryTerm.value, page_size.value);
 }
 
-//initial state, for backup
-// const getPosts = async function(){
-//   axios.get('posts/')
-//   .then((res)=>
-//   {
-//     posts.value = res.data.results;
-//     renderPosts.value = res.data.results;
-//     pages.value = res.data.context.page_links;
-//   })
-//   .catch((err)=>{
-//     console.log(err);
-//   })
-// }
+//initial state / poki co dla Carousel, TODO: zamienic to na pobieranie
+// "trending" postow 
+const getPosts = async function(){
+  axios.get('posts/')
+  .then((res)=>
+  {
+    posts.value = res.data.results;
+    renderPosts.value = res.data.results;
+    pages.value = res.data.context.page_links;
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
 
-// getPosts();
+getPosts();
 
 </script>
 
@@ -121,9 +122,9 @@ const filterByQuery = async function(query){
       </div>
       <!-- <ion-icon name="close-sharp" class="side-drop hover" v-if="sideDropOpen"></ion-icon> -->
     </section>
-    <section class="carousel-sect">
+    <section class="carousel-sect" v-if="posts">
       <p class="title">CHECK OUT THESE TRENDING POSTS</p>
-      <Carousel></Carousel>
+      <Carousel :posts=posts v-if="posts.length"></Carousel>
     </section>
     <section class="subscribe-sect">
       <SubscribeForm></SubscribeForm>
