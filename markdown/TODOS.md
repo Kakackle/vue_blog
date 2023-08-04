@@ -17,6 +17,10 @@
 1. TODO: lepsze composables z srodkowym zwracaniem stanow itd
 2. TODO: Kompletnie zjebane wszedzie sa rozmiary czcionek w stylach przez to ograniczenie markdown ze font-size nie moze byc globalnie 62.5%
 ALE: zamiast kombinowac z zamienianiem wszedzie rozmiarow moze mozna dodac to w na view gdzie to ma sens, a ~~wylaczyc~~ NIE WLACZAC tylko na dwoch (czyli tworzenie postu i wyswietlanie) gdzie jest md - NAGLE MD DZIALA MIMO GLOBALNEGO 62.5%, OKEJ, SUPER
+3. ALE TODO: mozna w markdownie doslownie wpisywac html (przyklad w "Second blog post")
+   Co oznacza, ze tam mozna centrowac i zamiast pisac ### mozna pisac <h2> 
+  a zamiast ![img]("https..") mozna zrobic <img src="https:...">
+  Co robic najlatwiej poprzez danie uzytkownikom przyciskow ktore beda to dodawaly do tresci
 
 3. TODO: obsluga md w list i card preview? bo widac kodowanie md i brzydko to wyglada typu ### i obrazki ... tylko kwestia zeby jesli obrazki to nie wyjebawalo wysokosci na zmieszczenie tylko zeby go usuwalo - to by bylo w sumie nawet spoko gdyby bylo widasc tylko poczatek obrazka a reszta ucina, przy czym jesli ucina to najlepiej z blurem itd itd
 

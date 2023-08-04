@@ -1,7 +1,8 @@
 <!-- 
     Whole post view
     TODO: Upieknienie
-    TODO: moze jesli jestes zalogowny to umozliw klikniecie "edytuj" in place, idk
+    TODO: moze jesli jestes zalogowny jako autor postu to umozliw klikniecie "edytuj",
+    w przeciwnym wypadku nie wyswietlaj
 -->
 <script setup>
 import { defineAsyncComponent, onMounted } from "vue";
@@ -40,6 +41,7 @@ const getPost = async function () {
   }
   postExists.value = 1;
   getPostsByAuthor(post.value.author);
+  getAuthor();
   // aktualizacja wyswietlen w database
   axios.patch(
     `http://127.0.0.1:8000/api/posts/${post_slug}`,
@@ -56,12 +58,25 @@ const getPost = async function () {
 
 getPost();
 
+const author = ref();
+// user do wyswietlania imienia zamiast sluga
+const getAuthor = async function(){
+  axios.get(`users/${post.value.author}`)
+  .then((res)=>{
+    author.value = res.data;
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
+
 import { marked } from "marked";
 const compiledMarkdown = computed(() => {
-  return marked.parse(post.value.content, {
+  // FIXME: tu robione - DOMPURIFY
+  return DOMPurify.sanitize(marked.parse(post.value.content, {
     mangle: false,
     headerIds: false,
-  });
+  }));
 });
 
 // const comments = ref();
@@ -117,27 +132,30 @@ getPosts();
   <div>
     <GoBackButton></GoBackButton>
     <main class="main">
-      <section class="post-main" v-if="postExists">
-        <div class="post">
-          <p class="post-title">{{ post.title }}</p>
-          <div class="second-row">
-            <p
-              class="post-author hover"
-              @click="router.push({ name: 'user', params: { user_slug: post.author } })"
-            >
-              {{ post.author }}
-            </p>
-            <p class="centerdot">&centerdot;</p>
-            <p class="post-date">{{ post.date_posted }}</p>
-            <p class="centerdot">&centerdot;</p>
-            <p class="post-date">views: {{ post.views }}</p>
-            <p class="centerdot">&centerdot;</p>
+      <section class="post-main section-separator" v-if="postExists">
+        <div class="post section-separator">
+          <div class="title-div">
+            <p class="post-title">{{ post.title }}</p>
             <button
               class="go-button hover"
               @click="router.push({ name: 'create', params: { post_slug: post.slug } })"
-            >
-              EDIT POST
+              >EDIT POST
             </button>
+          </div>
+          <div class="second-row">
+            <p
+              class="post-author hover"
+              v-if="author"
+              @click="router.push({ name: 'user', params: { user_slug: post.author } })"
+            >
+              {{ author.name }}
+            </p>
+            <!-- <p class="centerdot">&centerdot;</p> -->
+            <p class="post-date">{{ post.date_posted }}</p>
+            <!-- <p class="centerdot">&centerdot;</p> -->
+            <p class="post-date">{{ post.views }} views</p>
+            <!-- <p class="centerdot">&centerdot;</p> -->
+            <p class="post-date post-likes">{{ post.likes }} likes</p>
           </div>
 
           <div class="post-tags">
@@ -153,83 +171,139 @@ getPosts();
           <img :src="post.img" class="post-img" />
           <!-- <div class="post-content">{{ post.content }}</div> -->
           <div class="post-content prose" v-html="compiledMarkdown"></div>
-          <p class="author_signature">{{ post.author }}</p>
-          <!-- comments -->
-          <p class="title">COMMENTS ON POST:</p>
-          <CommentsPaginated :post_slug="post_slug"></CommentsPaginated>
-          <!-- carousels -->
-          <p class="subtitle">CHECK OUT THESE TRENDING POSTS</p>
-          <Carousel v-if="posts.length" :posts=posts></Carousel>
-          <p class="subtitle">MORE POSTS BY {{ post.author }}</p>
-          <Carousel v-if="author_posts.length" :posts=author_posts></Carousel>
+          <p class="author-signature">{{ author.name }}</p>
+          
         </div>
       </section>
-      <!-- end post-main -->
-      <section class="post-main" v-else>Else</section>
-      <section class="side">
-        <div class="side-ting">Side</div>
+            <!-- end post-main -->
+      <section class="section-bottom section-separator">
+        <!-- comments -->
+        <p class="subtitle">See what people had to say about this post:</p>
+          <CommentsPaginated :post_slug="post_slug"></CommentsPaginated>
+          <!-- carousels -->
+          <p class="subtitle">Check out these trending posts</p>
+          <Carousel class="section-separator" v-if="posts.length" :posts=posts></Carousel>
+          <p class="subtitle">More posts by {{ author.name }}</p>
+          <Carousel class="section-separator" v-if="author_posts.length" :posts=author_posts></Carousel>
       </section>
+      <Footer></Footer>
+
+      <!-- <section class="post-main" v-else>Else</section> -->
+      <!-- TODO: jakis side? -->
     </main>
   </div>
 </template>
 
 <style scoped>
 .main {
+
   display: flex;
   max-width: var(--max-page-width);
   margin: 0 auto;
-  justify-content: center;
+  /* justify-content: center; */
+  flex-direction: column;
+  align-items: center;
 }
 .post-main {
-  padding: 0 4rem;
+  margin-top: 30px;
+  /* padding: 0 4rem; */
   width: 100%;
   display: flex;
+  border-bottom: 8px solid var(--accent-yellow);
 }
-.post-side {
+/* unused */
+/* .post-side {
   width: clamp(20rem, 25vw, 40rem);
   background-color: #636e72;
   height: 60rem;
-}
+} */
 .post {
-  width: clamp(40rem, 75vw, 120rem);
+  /* width: clamp(40rem, 75vw, 120rem); */
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  /* gap: 5px; */
   position: relative;
+  padding: 10px;
+}
+.title-div{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  line-height: 1;
 }
 .post-title {
-  font-size: 5.2rem;
+  font-size: 4rem;
+  color: var(--almost-black);
+}
+.go-button {
+  color: var(--mid-gray);
+  height: 2rem;
+  width: 10rem;
+  font-size: 1.5rem;
+  padding: 0.2rem;
+}
+.go-button:hover{
+  text-decoration: underline;
 }
 .second-row {
   display: flex;
   gap: 2rem;
   align-items: center;
+  padding: 0px 5px;
 }
-.centerdot {
+/* .centerdot {
   font-size: 2rem;
-}
+} */
 .post-author {
-  font-size: 2rem;
+  font-size: 1.5rem;
+  color: var(--mid-gray);
+  font-weight: 500;
 }
 .post-date {
   font-size: 1.5rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mid-light);
+}
+.post-likes{
+  color: var(--mid-gray);
 }
 .post-tags {
   display: flex;
   gap: 1rem;
   font-size: 1.5rem;
+  margin-bottom: 10px;
 }
 .post-content {
   font-size: 1.5rem;
 }
 .post-img {
-  height: 40rem;
-  width: 60rem;
+  /* width: 120%; */
+  height: 500px;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
-.post-side {
-  width: clamp(20rem, 25vw, 40rem);
+/* FIXME: post content po prostu nie chce zajmowac 100%, przyjmuje jakis limit i ma to w dupie */
+.post-content {
+  /* font-size: unset !important; */
+  font-size: 2rem;
+  color: var(--dark-gray);
+  /* line-height: 1; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* justify-content: center; */
+  /* padding: 10px; */
 }
+/* FIXME: */
+/* proby selectowania elementow html generowanych przez md ale chyba luj */
+/* #app > main > div > main > section > div > div.post-content.prose > h2{
+  color: red;
+}
+
+.post-content p img{
+  align-self: center;
+} */
+
 .comments {
   display: flex;
   flex-direction: column;
@@ -239,21 +313,11 @@ getPosts();
   display: flex;
   flex-direction: column;
 }
-.hover:hover {
-  cursor: pointer;
-  filter: brightness(0.5);
-  /* border-bottom: 1px solid black */
-}
-.go-button {
-  height: 2.2rem;
-  width: 10rem;
-  font-size: 1.5rem;
-  padding: 0.2rem;
-}
 
-.post-content {
-  font-size: unset !important;
-  /* font-size: 2rem; */
+.author-signature{
+  font-size: 2rem;
+  color: var(--dark-gray);
+  font-weight: 600;
 }
 
 .title{
@@ -262,5 +326,18 @@ getPosts();
 
 .subtitle{
   font-size: 2rem;
+  font-weight: 500;
+  color: var(--almost-black);
+  margin-bottom: 10px;
+}
+
+.section-bottom{
+  display: flex;
+  flex-direction: column;
+  /* width: 100%; */
+  max-width: var(--max-page-width);
+  margin: 0 auto;
+  /* flex-shrink: 1; */
+  align-items: flex-start;
 }
 </style>

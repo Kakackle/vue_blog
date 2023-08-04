@@ -30,6 +30,10 @@
     cursor: pointer;
 }
 
+.section-separator{
+  margin-bottom: var(--section-margin);
+}
+
 /* Scrollbar styles */
 
 ::-webkit-scrollbar{

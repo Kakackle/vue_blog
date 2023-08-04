@@ -139,26 +139,27 @@ const deleteComment = async function(){
     <div class="comment-main">
         <div class="top">
             <div class="top-left">
-                <p>{{ comment.author }}</p>
-                <p>-</p>
-                <p>{{ comment.date_posted }}</p>
-                <p>-</p>
-                <p>likes: {{ comment.likes }}</p>
-                <p>-</p>
-                <ion-icon class="like-icon hover" name="thumbs-up-sharp"
+                <p class="author">{{ comment.author }}</p>
+                <!-- <p>-</p> -->
+                <p class="date">{{ comment.date_posted }}</p>
+                <!-- <p>-</p> -->
+            </div>
+            <div class="top-right">
+                <!-- <p>-</p> -->
+                <div class="likes">
+                    <ion-icon class="like-icon hover" name="thumbs-up-sharp"
                     @click="updateLiked()"
-                ></ion-icon>
+                    ></ion-icon>
+                    <p>{{ comment.likes }}</p>
+                </div>
                 <ion-icon name="trash-outline" class="like-icon hover"
                     @click="deleteComment"></ion-icon>
             </div>
-            <div class="top-rigt">
-                <button class="like">LIKE</button>
-            </div>
         </div>
         <div class="bottom">
-            {{ comment.content }}
+            <p>{{ comment.content }}</p>
             <div class="controls">
-                <button class="reply" @click="displayReply = 1">reply</button>
+                <button class="reply-button" @click="displayReply = 1">reply</button>
                 <button class="edit" @click="openEdit">edit</button>
             </div>
         </div>
@@ -172,7 +173,7 @@ const deleteComment = async function(){
     <!-- edit -->
     <div class="reply-form" v-if=displayEdit>
         <textarea class="reply-text" v-model="newContent">{{ comment.content }}</textarea>
-        <button class="close-reply" @click="editComment">submit</button>
+        <button class="close-reply hover" @click="editComment">submit</button>
     </div>
     <Comment v-for="(reply, reply_id) in comment.replies" :comment="reply"
     class="reply"></Comment>
@@ -183,42 +184,100 @@ const deleteComment = async function(){
 .main{
     display: flex;
     flex-direction: column;
+    flex-shrink: 1;
     /* position: relative; */
-    gap: 0.5rem;
+    gap: 5px;
+    /* padding: 0px 10px; */
+    /* width: 100%; */
+    /* max-width: 800px; */
+    width: clamp(400px, 90vw, 1000px);
+    flex-wrap: wrap;
 }
 .comment-main{
     display:flex;
     flex-direction: column;
-    border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.5);
+    border-radius: 3px;
+    border: 2px solid var(--mid-gray);
     padding: 1rem;
+    flex-shrink: 1;
+    width: 100%;
+    flex-wrap: wrap;
 }
 .top{
     display: flex;
     /* gap: 1rem; */
-    border-bottom: 1px solid rgba(0,0,0,0.8);
-    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--dark-gray);
+    margin-bottom: 10px;
     justify-content: space-between;
+    gap: 50px;
 }
-.top-left{
+.top-left, .top-right{
     display: flex;
-    gap: 1rem;
+    gap: 20px;
+    font-size: 2rem;
+    color: var(--dark-gray);
+    align-items: center;
+    padding: 2px;
+}
+.top-right{
+    justify-self: flex-end;
+}
+.likes{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 2rem;
+}
+.author{
+    font-weight: 600;
+}
+.date{
+    color: var(--mid-light);
+}
+.bottom{
+    font-size: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+}
+.controls{
+    display: flex;
+    align-self: flex-end;
+    gap: 10px;
+}
+/* TODO: moze to udostepnic globalniej jako cos typu "hover-underline" */
+.controls button:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+.like-icon{
+    color: var(--mid-light);
 }
 .reply-form{
     display: flex;
     flex-direction: column;
+    transform: translateX(20px);
+    border: 2px dashed var(--mid-light);
+    color: var(--dark-gray);
+    font-size: 1.2rem;
+    padding: 5px;
 }
 .reply-text{
     width: 100%;
     height: 50px;
 }
 .close-reply{
-    width: 60px;
+    /* width: 60px; */
+    background-color: var(--mid-gray);
+    font-weight: 600;
+    color: var(--almost-white);
+    padding: 2px 10px;
     align-self: end;
 }
-.controls{
-    display: flex;
-    gap: 1.5rem;
+.close-reply:hover{
+    filter: brightness(0.5);
 }
 .reply{
     /* position: absolute;s */

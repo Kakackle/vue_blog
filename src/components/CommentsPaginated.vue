@@ -79,9 +79,9 @@ const addNewComment = async function(){
 </script>
 
 <template>
-<div class="main">
+<div class="comments-main">
     <div class="comments-list" v-if="comments">
-        <button class="submit-button" @click="displayReply=1">ADD NEW COMMENT</button>
+        <button class="submit-button hover" @click="displayReply=1">ADD A NEW COMMENT</button>
         <!-- reply form -->
         <div class="reply-form" v-if=displayReply>
             <textarea class="reply-text" placeholder="write your response..."
@@ -108,14 +108,28 @@ const addNewComment = async function(){
 </template>
 
 <style scoped>
+.comments-main{
+    padding: 0px 10px;
+    max-width: var(--max-page-width);
+    /* margin: 0 auto; */
+    /* width: 100%; */
+    /* width: 100vw; */
+    flex-shrink: 1;
+    display: flex;
+}
+.submit-button{
+    font-size: 2rem;
+    color: var(--dark-gray);
+}
+.submit-button:hover{
+    text-decoration: underline;
+}
 .comments-list{
     display: flex;
     flex-direction: column;
     gap: 5px;
-}
-.hover:hover{
-  cursor: pointer;
-  filter: brightness(0.7);
+    width: 100%;
+    flex-shrink: 1;
 }
 .pages{
     display: flex;
