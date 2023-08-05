@@ -129,9 +129,7 @@ getPosts();
     <section class="subscribe-sect">
       <SubscribeForm></SubscribeForm>
     </section>
-    <section class="footer-sect">
-      <Footer></Footer>
-    </section>
+    <Footer></Footer>
   </main>
 </template>
 
@@ -266,10 +264,9 @@ getPosts();
   margin: auto;
   margin-bottom: var(--section-margin);
 }
-
+/* 
 .footer-sect{
   margin-top: auto;
   width: 100vw;
-  /* margin-bottom: var(--section-margin); */
-}
+} */
 </style>

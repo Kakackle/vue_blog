@@ -3,6 +3,17 @@
     wybierane z listy istniejacych
  -->
 
+<!-- TODO: generalne: przydaloby sie stworzyc oddzielne komponenty
+    na wybieranie postu - i dosyc latwo by to chyba przekazywac
+    
+    oraz komponent na forme postu? i np zwraca obiekt emitem
+    preview nwm czy potrzeba, ale teoretycznie to samo co w poscie realnym tylko mniejsze
+
+    komponent na upload obrazkow i wyswietlanie ich?
+    potencjalnie czemu nie, bo potem by przekazywal tekst to wklejenia w
+    markdown postu czy cos tylko
+-->
+
 <script setup>
 import { ref, computed, watch } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
@@ -407,141 +418,171 @@ const addToMarkdown = function(add){
 <template>
     <div class="main">
     <GoBackButton></GoBackButton>
-    <div class="columns">
-        <!-- Select post from existing-->
-        <section class="select-sect">
-            <p class="title">SELECT A POST TO UPDATE:</p>
-            <!-- PrimeVue -->
-            <AutoComplete v-model="selectedPost" optionLabel="title"
-                :suggestions="filteredPosts" v-if="allPosts" @complete="search"
-                @item-select="selectPost(selectedPost)"
-                />
-            <label for="ifLogged">IF LOGGED: </label>
-            <input type="checkbox" id="ifLogged" v-model="ifLoggedIn">
-                <!-- @complete="selectPost(selectPost)"-->
-            <!-- reczna lista postow -->
-            <div class="post-selection" v-if="postsExist">
-                <p v-for="post in posts"
-                @click=selectPost(post)>{{ post.title }}</p>
-            </div>
-            <!-- paginacja listy postow -->
-            <div class="pages">
-                <p class="page" v-for="(page, page_id) in pages" 
-                @click="getPostsByPage(page[0], page_id)"
-                :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
-            </div>
-            <!-- przyciski potwierdzajace -->
-            <p class="sub-title">selected post:</p>
-            <p class="sub-title" v-if="selectedPost">{{selectedPost.title}}</p>
-            <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
-            <div class="confirm-delete" v-if="confirmDelete">
-                <p class="title">ARE YOU SURE?</p>
-                <div class="buttons">
-                    <button class="submit-button hover" @click="deletePost">YES</button>
-                    <button class="submit-button hover" @click="cancelDel">NO</button>
+    <!-- Select post from existing-->
+    <!-- TODO: tylko jesli wchodzimy od zera bez wybranego postu? -->
+    <!-- albo zawsze zwiniete i trzeba kliknac zeby rozwinac - chyba lepiej -->
+    <section class="select-sect">
+        <!-- wybor postu -->
+        <p class="title">SELECT A POST TO UPDATE:</p>
+        <!-- PrimeVue -->
+        <container class="select-cont">
+            <div class="select-left">
+                <div class="filters">
+                    <AutoComplete v-model="selectedPost" optionLabel="title"
+                        :suggestions="filteredPosts" v-if="allPosts" @complete="search"
+                        @item-select="selectPost(selectedPost)"
+                        />
+                    <!-- czy tylko wyswietlac posty zalogowanego -->
+                    <div>
+                        <input type="checkbox" id="ifLogged" v-model="ifLoggedIn">
+                        <label for="ifLogged">Only list your posts </label>
+                    </div>
+                        <!-- @complete="selectPost(selectPost)"-->
+                </div>
+                <!-- reczna lista postow -->
+                <div class="post-selection" v-if="postsExist">
+                    <p v-for="post in posts"
+                    @click=selectPost(post)>{{ post.title }}</p>
+                </div>
+                <!-- paginacja listy postow -->
+                <div class="pages">
+                    <p class="page hover" v-for="(page, page_id) in pages" 
+                    @click="getPostsByPage(page[0], page_id)"
+                    :class="(selectedPage === page_id)? 'selected' : 'normal'">{{ page[1] }}</p>
                 </div>
             </div>
-        </section>
+            <!-- wybrany post i przyciski potwierdzajace operacje -->
+            <div class="select-right">
+                <p class="sub-sub-title">SELECTED POST:</p>
+                <p class="sub-title" v-if="selectedPost">{{selectedPost.title}}</p>
+                <button class="submit-button hover" @click="confirmDel" v-if="selectedPost">DELETE POST</button>
+                <div class="confirm-delete" v-if="confirmDelete">
+                    <p class="title">ARE YOU SURE?</p>
+                    <div class="buttons">
+                        <button class="submit-button hover" @click="deletePost">YES</button>
+                        <button class="submit-button hover" @click="cancelDel">NO</button>
+                    </div>
+                </div>
+            </div>
+        </container>
+    </section>
+    <div class="post-columns">
         <!-- Create /edit post -->
         <section class="post-sect">
-        <span class="title">CREATE A NEW POST:</span>
-        <div class="input-form" v-if="tagsExist && usersExist">
-            <div class="form-inputs">
-                <div class="form-label">
-                    <label for="title">title:</label>
-                    <input type="text" class="text-input" id="title" v-model="newTitle">
+            <!-- TODO: tutaj alternatywne tytuly w zaleznosci czy jest wybrany post czy nie -->
+            <!-- jak tak to "UPDATE POST" -->
+            <!-- jak nie to create -->
+            <span class="title">CREATE A NEW POST:</span>
+            <div class="input-form" v-if="tagsExist && usersExist">
+                <div class="form-inputs">
+                    <!-- tytul -->
+                    <div class="form-label">
+                        <label for="title">title:</label>
+                        <input type="text" class="text-input" id="title" v-model="newTitle">
+                    </div>
+                    <!-- autor select -->
+                    <div class="form-label">
+                        <label for="author">author:</label>
+                        <select class="text-input" id="author" v-model="newAuthor">
+                            <option v-for="user in users" :value=user>{{ user.name }}</option>
+                        </select>
+                    </div>
+                    <!-- tags select -->
+                    <div class="form-label">
+                        <label for="tags">tags:</label>
+                        <select class="text-input" id="tags" v-model="newTags" multiple>
+                            <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
+                        </select>
+                    </div>
+                    <!-- add new tag -->
+                    <div class="form-label">
+                        <label for="new_tag">new tag:</label>
+                        <input type="text" id="new_tag" v-model="newTag">
+                        <ion-icon class="tag-icon hover" name="add-outline"
+                        @click="addToTags()"></ion-icon>
+                    </div>
+                    <p class="form-label">tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
+                    <!-- post content -->
+                    <div class="form-label">
+                        <label for="content">content:</label>
+                        <textarea id="content" class="text-input" v-model="newContent"></textarea>
+                    </div>
+                    <!-- content controls -->
+                    <div class="md-controls">
+                        <button class="md-button" @click="addToMarkdown(`#`)">H1</button>
+                        <button class="md-button" @click="addToMarkdown(`##`)">H2</button>
+                        <button class="md-button" @click="addToMarkdown(`###`)">H3</button>
+                    </div>
+                    <!-- cover image -->
+                    <p class="warn">WARNING: during editing you have to pick a value if you want it to have an image attached,
+                        below is the previous image</p>
+                    <!-- img input -->
+                    <div class="form-label">
+                        <label for="img">img:</label>
+                        <input type="file" accept="image/jpeg, image/jpg,
+                        image/png, image/gif" @change=uploadImage>
+                        <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+                    </div>
+                    <!-- image label -->
+                    <div class="label-format">
+                        <p>IMAGE PREVIEW:</p>
+                        <img :src="previewImage" class="preview-img"/>
+                    </div>
+                    <!-- date picker -->
+                    <button class="submit-button hover" @click="openDate=1">CHOOSE DATE</button>
+                    <VDatePicker v-model.string="newDate" :masks="masks" @click="openDate=0"
+                        v-if="openDate"/>
+                        <p class="date">Date: {{ newDate }}</p>
                 </div>
-                <div class="form-label">
-                    <label for="author">author:</label>
-                    <select class="text-input" id="author" v-model="newAuthor">
-                        <option v-for="user in users" :value=user>{{ user.name }}</option>
-                    </select>
-                </div>
-                <!-- tags select -->
-                <div class="form-label">
-                    <label for="tags">tags:</label>
-                    <select class="text-input" id="tags" v-model="newTags" multiple>
-                        <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
-                    </select>
-                </div>
-                <!-- add new tag -->
-                <div class="form-label">
-                    <label for="new_tag">new tag:</label>
-                    <input type="text" id="new_tag" v-model="newTag">
-                    <ion-icon class="tag-icon hover" name="add-outline"
-                    @click="addToTags()"></ion-icon>
-                </div>
-                <p class="form-label">tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
-                <div class="form-label">
-                    <label for="content">content:</label>
-                    <textarea id="content" class="text-input" v-model="newContent"></textarea>
-                </div>
-                <div class="md-controls">
-                    <button class="md-button" @click="addToMarkdown(`#`)">H1</button>
-                    <button class="md-button" @click="addToMarkdown(`##`)">H2</button>
-                    <button class="md-button" @click="addToMarkdown(`###`)">H3</button>
-                </div>
-                <!-- img -->
-                <p class="warn">WARNING: during editing you have to pick a value if you want it to have an image attached,
-                    below is the previous image</p>
-                <div class="form-label">
-                    <label for="img">img:</label>
-                    <input type="file" accept="image/jpeg, image/jpg,
-                    image/png, image/gif" @change=uploadImage>
-                    <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
-                </div>
-                <div class="label-format">
-                    <p>IMAGE PREVIEW:</p>
-                    <img :src="previewImage" class="preview-img"/>
-                </div>
-                <button class="submit-button hover" @click="openDate=1">CHOOSE DATE</button>
-                <VDatePicker v-model.string="newDate" :masks="masks" @click="openDate=0"
-                    v-if="openDate"/>
-                    <p class="date">Date: {{ newDate }}</p>
             </div>
-        </div>
-        <div v-if="newAuthor && loggedUser">
-            <div class="buttons" v-if="loggedUser.slug === newAuthor.slug">
-                <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
-                <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+            <!-- jesli autor postu edytowanego zgadza sie z zalogowanym -->
+            <div v-if="newAuthor && loggedUser">
+                <div class="buttons" v-if="loggedUser.slug === newAuthor.slug">
+                    <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
+                    <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
+                </div>
+                <p v-else>You must be the post's author to send a POST/PATCH request with the post's values</p>
             </div>
-            <p v-else>You must be the post's author to send a POST/PATCH request with the post's values</p>
-        </div>
-        <p v-else>You must first log in to be able to send POST/PATCH requests</p>
-        <p v-if="success" class="success">{{success}}</p>
-        <p v-if="error" class="error">{{error}}</p>
+            <!-- raport sukcesu dodania/edycji postu -->
+            <p v-else>You must first log in to be able to send POST/PATCH requests</p>
+            <p v-if="success" class="success">{{success}}</p>
+            <p v-if="error" class="error">{{error}}</p>
         </section>
         <!-- Post preview -->
-        <section class="post-preview prose" v-html="compiledMarkdown" v-if="newContent">
-        </section>
-
-
+        <div class="post-preview prose" v-html="compiledMarkdown" v-if="newContent">
+        </div>
     </div>
     <!-- image upload section -->
     <div class="upload-sect">
+        <!-- form -->
         <div class="img-name">
             <div class="img-name-left">
+                <!-- przesylanie obrazku -->
                 <div class="form-label">
                     <label for="up-img">img:</label>
                     <input type="file" name="up-img" accept="image/jpeg, image/jpg,
                     image/png, image/gif" @change=changePostImage required>
                     <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
                 </div>
+                <!-- nazwa -->
                 <div class="form-label">
                     <label for="up-name">name:</label>
                     <input type="text" name="up-name"
                     placeholder="name for img" v-model="newPostImgName" required>
                 </div>
             </div>
+            <!-- submit -->
             <div class="img-name-right">
                 <button class="submit-button" @click="uploadPostImage">SUBMIT</button>
             </div>
         </div>
+        <!-- zwracany link i preview obrazku TODO: wlasciwie to po co? nie lepiej jakos dodac
+        do tablicy juz przeslanych? -->
         <p>IMG LINK: {{ newPostImgUrl }}</p>
         <img :src="newPostImgUrl" class="upload-preview" v-if="newPostImgUrl">
     </div>
 
-    <!-- choose from uploaded images -->
+    <!-- choose from uploaded images  - tablica-->
     <section class="uploaded-images" v-if="uploadedImages">
         <p>IMAGES UPLOADED TO POST:</p>
         <div class="uploaded-list">
@@ -566,6 +607,120 @@ const addToMarkdown = function(add){
 </template>
 
 <style scoped>
+.main{
+    display: flex;
+    flex-direction: column;
+    max-width: var(--max-page-width);
+    margin: 0 auto;
+}
+/* -------------------------------------------------------------------------- */
+/*                             select post section                            */
+/* -------------------------------------------------------------------------- */
+.select-sect{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 20px;
+    padding: 10px;
+    border-bottom: 8px solid var(--dark-gray);
+}
+
+.select-cont{
+    display: flex;
+    /* gap: 50px; */
+}
+
+.title{
+    font-size: 2rem;
+}
+.select-left{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 300px;
+}
+
+.filters{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 2rem;
+}
+/* TODO: stylizacja tej listy wyboru - chociazby fontsize pls.. */
+.filters .p-autocomplete-item{
+    font-size: 20px;
+}
+
+.filters div{
+    font-size: 2rem;
+    display: flex;
+    gap: 2px;
+    align-items: center;
+}
+
+.post-selection{
+    font-size: 1.8rem;
+    /* max-width: 200px; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    gap: 5px;
+    color: var(--dark-gray);
+    /* border: 2px dashed var(--mid-light); */
+}
+.post-selection p:nth-of-type(2n){
+    background-color: var(--mid-lighter);
+}
+.post-selection p:hover{
+    font-weight: 600;
+    filter: brightness(0.7);
+}
+.pages{
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    gap: 1rem;
+}
+
+.page:hover{
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.select-right{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
+    gap: 10px;
+}
+/* FIXME: useless? */
+/* .selected{
+    font-weight: 700;
+} */
+.buttons{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+.confirm-delete{
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                           form + preview section                           */
+/* -------------------------------------------------------------------------- */
+
+.warn{
+    font-size: 1rem;
+    color: #636e72;
+}
+
 .columns{
     /* display: flex; */
     gap: 1rem;
@@ -574,7 +729,7 @@ const addToMarkdown = function(add){
     grid-template-columns: 1fr 3fr 3fr;
     padding: 2rem;
 }
-.post-sect, .select-sect{
+.post-sect{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -589,11 +744,13 @@ const addToMarkdown = function(add){
     display: flex;
     gap: 1rem;
 }
-.title{
-    font-size: 2rem;
-}
+
 .sub-title{
     font-size: 1.5rem;
+}
+
+.sub-sub-title{
+    font-size: 1.2rem;
 }
 .form-inputs{
     display: flex;
@@ -627,6 +784,10 @@ const addToMarkdown = function(add){
     height: 20rem;
 }
 .submit-button{
+    background-color: var(--dark-gray);
+    color: var(--almost-white);
+    padding: 2px 10px;
+    border-radius: 3px;
     font-size: 2rem;
 }
 .hover:hover{
@@ -654,46 +815,6 @@ const addToMarkdown = function(add){
     color: red;
 }
 
-.post-selection{
-    font-size: 1.2rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-.post-selection p:nth-of-type(2n){
-    background-color: rgba(0,0,0,0.1);
-}
-.post-selection p:hover{
-    font-weight: 600;
-    filter: brightness(0.7);
-}
-.pages{
-    display: flex;
-    font-size: 1.5rem;
-    gap: 1rem;
-}
-
-.page:hover{
-    font-weight: 600;
-    cursor: pointer;
-}
-.selected{
-    font-weight: 700;
-}
-.buttons{
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-}
-.confirm-delete{
-    display: flex;
-    flex-direction: column;
-}
-.warn{
-    font-size: 1rem;
-    color: #636e72;
-}
 .upload-sect{
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;

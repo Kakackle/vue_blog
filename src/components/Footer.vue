@@ -4,6 +4,7 @@
 </script>
 
 <template>
+    <section class="footer-sect">
     <div class="footer-back">
         <container class="footer-cont">
             <div class="contact">
@@ -58,9 +59,15 @@
             </div>
         </container>
     </div>
+</section>
 </template>
 
 <style scoped>
+.footer-sect{
+  margin-top: auto;
+  width: 100vw;
+  /* margin-bottom: var(--section-margin); */
+}
 .footer-back{
     width: 100%;
     background-color: var(--dark-gray);
