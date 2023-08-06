@@ -6,7 +6,7 @@
 <template>
     <section class="footer-sect">
     <div class="footer-back">
-        <container class="footer-cont">
+        <div class="footer-cont">
             <div class="contact">
                 <p class="footer-title">Contact me</p>
                 <div class="contact-info">
@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-        </container>
+        </div>
     </div>
 </section>
 </template>

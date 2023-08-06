@@ -12,11 +12,14 @@
     komponent na upload obrazkow i wyswietlanie ich?
     potencjalnie czemu nie, bo potem by przekazywal tekst to wklejenia w
     markdown postu czy cos tylko
+
+    FIXME: jakies problemy z reloadem z powodu bledow podobno...
 -->
 
 <script setup>
 import { ref, computed, watch } from 'vue';
 import GoBackButton from '../components/GoBackButton.vue';
+import Footer from '../components/Footer.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router'
 import { getDataFromLink } from '../composables/axiosComposables';
@@ -378,6 +381,8 @@ const uploadPostImage = async function(){
     })
     .then((res)=>{
         newPostImgUrl.value = res.data.image;
+        uploadedImages.value = undefined;
+        getUploadedImages();
     })
     .catch((err)=>{
         console.log(`fail ${err}`);
@@ -421,11 +426,11 @@ const addToMarkdown = function(add){
     <!-- Select post from existing-->
     <!-- TODO: tylko jesli wchodzimy od zera bez wybranego postu? -->
     <!-- albo zawsze zwiniete i trzeba kliknac zeby rozwinac - chyba lepiej -->
-    <section class="select-sect">
+    <section class="select-sect section-separator">
         <!-- wybor postu -->
         <p class="title">SELECT A POST TO UPDATE:</p>
         <!-- PrimeVue -->
-        <container class="select-cont">
+        <div class="select-cont">
             <div class="select-left">
                 <div class="filters">
                     <AutoComplete v-model="selectedPost" optionLabel="title"
@@ -464,15 +469,16 @@ const addToMarkdown = function(add){
                     </div>
                 </div>
             </div>
-        </container>
+        </div>
     </section>
-    <div class="post-columns">
+    <section class="post-columns section-separator">
         <!-- Create /edit post -->
-        <section class="post-sect">
+        <div class="post-form">
             <!-- TODO: tutaj alternatywne tytuly w zaleznosci czy jest wybrany post czy nie -->
             <!-- jak tak to "UPDATE POST" -->
             <!-- jak nie to create -->
             <span class="title">CREATE A NEW POST:</span>
+            <!-- form -->
             <div class="input-form" v-if="tagsExist && usersExist">
                 <div class="form-inputs">
                     <!-- tytul -->
@@ -490,49 +496,55 @@ const addToMarkdown = function(add){
                     <!-- tags select -->
                     <div class="form-label">
                         <label for="tags">tags:</label>
-                        <select class="text-input" id="tags" v-model="newTags" multiple>
+                        <select class="text-input multi-select" id="tags" v-model="newTags" multiple>
                             <option v-for="tag in tags" :value=tag.name>{{ tag.name }}</option>
                         </select>
                     </div>
                     <!-- add new tag -->
                     <div class="form-label">
-                        <label for="new_tag">new tag:</label>
+                        <label for="new_tag">Add a new tag:</label>
                         <input type="text" id="new_tag" v-model="newTag">
                         <ion-icon class="tag-icon hover" name="add-outline"
                         @click="addToTags()"></ion-icon>
                     </div>
-                    <p class="form-label">tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p>
-                    <!-- post content -->
-                    <div class="form-label">
-                        <label for="content">content:</label>
-                        <textarea id="content" class="text-input" v-model="newContent"></textarea>
-                    </div>
+                    <!-- DEBUG -->
+                    <!-- <p class="form-label">tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p> -->
                     <!-- content controls -->
+                    <!-- TODO: wiecej przyciskow i czemu newline nie dziala ahhh -->
                     <div class="md-controls">
                         <button class="md-button" @click="addToMarkdown(`#`)">H1</button>
                         <button class="md-button" @click="addToMarkdown(`##`)">H2</button>
                         <button class="md-button" @click="addToMarkdown(`###`)">H3</button>
+                    </div>
+                    <!-- post content -->
+                    <div class="form-label">
+                        <label for="content">content:</label>
+                        <textarea id="content" class="text-input" v-model="newContent"></textarea>
                     </div>
                     <!-- cover image -->
                     <p class="warn">WARNING: during editing you have to pick a value if you want it to have an image attached,
                         below is the previous image</p>
                     <!-- img input -->
                     <div class="form-label">
-                        <label for="img">img:</label>
-                        <input type="file" accept="image/jpeg, image/jpg,
+                        <label for="img-input">Cover Image:</label>
+                        <input id="img-input" type="file" accept="image/jpeg, image/jpg,
                         image/png, image/gif" @change=uploadImage>
                         <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
                     </div>
                     <!-- image label -->
-                    <div class="label-format">
-                        <p>IMAGE PREVIEW:</p>
+                    <div class="form-label">
+                        <p>Image preview:</p>
                         <img :src="previewImage" class="preview-img"/>
                     </div>
                     <!-- date picker -->
-                    <button class="submit-button hover" @click="openDate=1">CHOOSE DATE</button>
+                    <div class="form-label">
+                        <label>Date posted:</label>
+                        <button class="submit-button date-button hover" @click="openDate=1">CHOOSE DATE</button>
+                    </div>
+                    
                     <VDatePicker v-model.string="newDate" :masks="masks" @click="openDate=0"
                         v-if="openDate"/>
-                        <p class="date">Date: {{ newDate }}</p>
+                    <p class="date">Date chosen: {{ newDate }}</p>
                 </div>
             </div>
             <!-- jesli autor postu edytowanego zgadza sie z zalogowanym -->
@@ -541,68 +553,84 @@ const addToMarkdown = function(add){
                     <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
                     <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
                 </div>
-                <p v-else>You must be the post's author to send a POST/PATCH request with the post's values</p>
+                <p class="sub-title error" v-else>You must be the post's author to send a POST/PATCH request with the post's values</p>
             </div>
             <!-- raport sukcesu dodania/edycji postu -->
-            <p v-else>You must first log in to be able to send POST/PATCH requests</p>
+            <p class="sub-title error" v-else>You must first log in to be able to send POST/PATCH requests</p>
             <p v-if="success" class="success">{{success}}</p>
             <p v-if="error" class="error">{{error}}</p>
-        </section>
+        </div>
         <!-- Post preview -->
-        <div class="post-preview prose" v-html="compiledMarkdown" v-if="newContent">
+        <div class="post-preview">
+            <div class="title">POST PREVIEW:</div>
+            <div class="preview-text prose" v-html="compiledMarkdown" v-if="newContent">
+            </div>
         </div>
-    </div>
+
+    </section>
     <!-- image upload section -->
-    <div class="upload-sect">
-        <!-- form -->
-        <div class="img-name">
-            <div class="img-name-left">
-                <!-- przesylanie obrazku -->
-                <div class="form-label">
-                    <label for="up-img">img:</label>
-                    <input type="file" name="up-img" accept="image/jpeg, image/jpg,
-                    image/png, image/gif" @change=changePostImage required>
-                    <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+    <!-- TODO: tylko jesli jakis post jest wybrany, albo tylko przycisk submit wylaczyc -->
+    <section class="upload-sect section-separator">
+        <h1 class="title">IMAGE GRID</h1>
+        <p class="title">Here you can upload images to put inside your post</p>
+        <p class="sub-title">Just choose a file, a name for the image and click the submit button,
+            for it to appear in the table below, from which you can copy the markdown format
+            to put inside the post content just by clicking at the image's name</p>
+        
+        <div class="upload-grid">
+            <!-- form -->
+            <div class="img-name">
+                <div class="img-name-left">
+                    <!-- przesylanie obrazku -->
+                    <div class="form-label">
+                        <label for="up-img">Image:</label>
+                        <input type="file" name="up-img" id="up-img" accept="image/jpeg, image/jpg,
+                        image/png, image/gif" @change=changePostImage required>
+                        <!-- <input type="text" class="text-input" id="img" v-model="newImg"> -->
+                    </div>
+                    <!-- nazwa -->
+                    <div class="form-label">
+                        <label for="up-name">Image name:</label>
+                        <input type="text" name="up-name"
+                        placeholder="name for img" v-model="newPostImgName" required>
+                    </div>
                 </div>
-                <!-- nazwa -->
-                <div class="form-label">
-                    <label for="up-name">name:</label>
-                    <input type="text" name="up-name"
-                    placeholder="name for img" v-model="newPostImgName" required>
+                <!-- submit -->
+                <div class="img-name-right">
+                    <button class="submit-button" @click="uploadPostImage">SUBMIT</button>
                 </div>
             </div>
-            <!-- submit -->
-            <div class="img-name-right">
-                <button class="submit-button" @click="uploadPostImage">SUBMIT</button>
-            </div>
+            <!-- zwracany link i preview obrazku TODO: wlasciwie to po co? nie lepiej jakos dodac
+            do tablicy juz przeslanych? -->
+            <p class="sub-sub-title">Internal image link: {{ newPostImgUrl }}</p>
+            <img :src="newPostImgUrl" class="upload-preview" v-if="newPostImgUrl">
         </div>
-        <!-- zwracany link i preview obrazku TODO: wlasciwie to po co? nie lepiej jakos dodac
-        do tablicy juz przeslanych? -->
-        <p>IMG LINK: {{ newPostImgUrl }}</p>
-        <img :src="newPostImgUrl" class="upload-preview" v-if="newPostImgUrl">
-    </div>
+    </section>
 
     <!-- choose from uploaded images  - tablica-->
-    <section class="uploaded-images" v-if="uploadedImages">
-        <p>IMAGES UPLOADED TO POST:</p>
+    <section class="uploaded-images section-separator" v-if="uploadedImages">
+        <p class="title">IMAGES UPLOADED TO POST:</p>
         <div class="uploaded-list">
             <div class="uploaded-list-item" v-for="(img, img_id) in uploadedImages">
-                <p>{{ img.name }}</p>
-                <p class="hover" @click="copyToClipboard(img.image, img.name)">ADD TO MD: {{ img.image }}</p>
+                <p class="bolded">{{ img.name }}</p>
+                <p class="add-hover hover" @click="copyToClipboard(img.image, img.name)">Add to post: {{ img.image }}</p>
                 <img :src="img.image" class="upload-preview"/>
             </div>
         </div>
     </section>
     <!-- Under columns: useful links -->
-    <div class="useful">
-            <p>USEFUL LINKS:</p>
-            <a href="https://unsplash.com/"> IMAGES</a>
-            <a href="https://getlorem.com/">LOREM</a>
-    </div>
-    <div class="cheatsheet">
-        <p>SHORT MARKDOWN CHEATSHEET:</p>
-        <img src="../assets/images/markdown_cheatsheet.jpg">
-    </div>
+    <section class="extras-section section-separator">
+        <div class="cheatsheet">
+            <p class="title">SHORT MARKDOWN CHEATSHEET:</p>
+            <img src="../assets/images/markdown_cheatsheet.jpg">
+        </div>
+        <div class="useful">
+                <p class="title">OTHER USEFUL LINKS:</p>
+                <a href="https://unsplash.com/"> IMAGES</a>
+                <a href="https://getlorem.com/">LOREM</a>
+        </div>
+    </section>
+    <Footer></Footer>
 </div>
 </template>
 
@@ -630,14 +658,12 @@ const addToMarkdown = function(add){
     /* gap: 50px; */
 }
 
-.title{
-    font-size: 2rem;
-}
 .select-left{
     display: flex;
     flex-direction: column;
     gap: 5px;
-    max-width: 300px;
+    min-width: 250px;
+    max-width: 350px;
 }
 
 .filters{
@@ -697,10 +723,10 @@ const addToMarkdown = function(add){
     padding: 10px;
     gap: 10px;
 }
-/* FIXME: useless? */
-/* .selected{
+
+.selected{
     font-weight: 700;
-} */
+}
 .buttons{
     display: flex;
     gap: 1rem;
@@ -716,73 +742,120 @@ const addToMarkdown = function(add){
 /*                           form + preview section                           */
 /* -------------------------------------------------------------------------- */
 
-.warn{
-    font-size: 1rem;
-    color: #636e72;
+.post-columns{
+    /* max-width: var(--max-page-width); */
+    /* margin: 0 auto; */
+    display: flex;
+    /* width: 100vw; */
+    /* width: 780px; */
+    /* border: 2px dashed var(--dark-gray); */
+    flex-wrap: wrap;
 }
-
-.columns{
-    /* display: flex; */
-    gap: 1rem;
-    /* justify-content: center; */
-    display: grid;
-    grid-template-columns: 1fr 3fr 3fr;
-    padding: 2rem;
-}
-.post-sect{
+.post-form{
+    justify-self: flex-start;
     display: flex;
     flex-direction: column;
     align-items: center;
     /* justify-content: center; */
-    gap: 2rem;
-    padding: 2rem;
-    box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
+    gap: 20px;
+    padding: 20px;
+    /* width: 760px;    */
     /* width: 60%; */
     position: relative;
+    /* flex-shrink: 1; */
+    width: clamp(400px, 100%, 650px);
+    border-right: 6px solid var(--dark-gray);
 }
 .input-form{
+    width: 100%;
     display: flex;
-    gap: 1rem;
-}
-
-.sub-title{
-    font-size: 1.5rem;
-}
-
-.sub-sub-title{
-    font-size: 1.2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
 }
 .form-inputs{
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    gap: 1rem;
-    font-size: 2rem;
+    /* justify-content: space-evenly; */
+    gap: 10px;
+    /* font-size: 2rem; */
     /* height: 1.5rem; */
-    padding: 0;
+    /* padding: 0; */
 }
 .form-label{
-    font-size: 1.5rem;
+    font-size: 2rem;
     display: flex;
-    gap: 2rem;
+    align-items: center;
+    gap: 20px;
     min-height: 2rem;
 }
 .form-label label{
-    width: 4rem;
+    width: 6rem;
+    text-transform: capitalize;
 }
-.form-label input{
+.form-label input, select, textarea{
     width: 20rem;
-    height: 2rem;
+    height: 2.5rem;
+    padding: 0 4px;
+    border: 2px solid var(--mid-lighter);
+    border-radius: 3px;
+    font-size: 1.5rem;
+    color: var(--dark-gray);
 }
-.form-label select{
+
+.multi-select{
     height: 6rem;
-    width: 20rem;
 }
+
+.tag-icon{
+    background-color: var(--dark-gray);
+    color: var(--almost-white);
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
 .form-label textarea{
     /* width: 100%; */
-    width: 40rem;
-    height: 20rem;
+    font-size: 1.5rem;
+    width: clamp(25rem, 100%, 50rem);
+    height: 30rem;
 }
+
+.md-controls{
+    display: flex;
+    gap: 10px;
+    transform: translateX(8rem);
+}
+
+.md-button{
+    background-color: var(--dark-gray);
+    border-radius: 3px;
+    color: var(--almost-white);
+    font-size: 1.5rem;
+    /* width: 28px;
+    height: 20px; */
+    padding: 0 4px;
+}
+
+.warn{
+    font-size: 1.2rem;
+    color: #636e72;
+}
+
+#img-input{
+    font-size: 1.5rem;
+    color: var(--dark-gray);
+    height: 35px;
+    width: 50rem;
+    /* size: 60px; */
+}
+
+.preview-img{
+    /* max-height: 400px; */
+    /* max-width: 600px; */
+    width: clamp(300px, 100%, 500px);
+}
+
 .submit-button{
     background-color: var(--dark-gray);
     color: var(--almost-white);
@@ -790,41 +863,65 @@ const addToMarkdown = function(add){
     border-radius: 3px;
     font-size: 2rem;
 }
-.hover:hover{
-    cursor: pointer;
-    filter: brightness(0.7);
-}
-.useful{
-    /* position: absolute; */
-    display: flex;
-    flex-direction: column;
-    /* right: 2rem; */
-    font-size: 2rem;
-}
-.cheatsheet{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.success, .error{
-    font-size: 2rem;
-    font-weight: 500;
-    color: green;
-}
-.error{
-    color: red;
+
+.date-button{
+    width: 20rem;
 }
 
-.upload-sect{
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    justify-items: center;
+.date{
+    font-size: 1.5rem;
+}
+
+.post-preview{
+    padding: 10px;
+    /* position: absolute;
+    transform: translateX(780px); */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     align-items: center;
 }
+
+.preview-text{
+    font-size: 1.2rem;
+    align-self: flex-start;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            upload image section                            */
+/* -------------------------------------------------------------------------- */
+
+.upload-sect{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+.upload-grid{
+    /* display: grid;
+    grid-template-columns: 1fr 3fr 1fr; */
+    align-self: flex-start;
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    /* align-items: center; */
+}
+
+#up-img{
+    font-size: 1.5rem;
+    color: var(--dark-gray);
+    height: 35px;
+    width: 25rem;
+    /* size: 60px; */
+}
+
 .upload-preview{
     height: 200px;
     width: 320px;
 }
+
+
 .img-name{
     display: flex;
     align-items: center;
@@ -843,23 +940,100 @@ const addToMarkdown = function(add){
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px dashed rgba(0,0,0,0.5);
-    padding: 1rem;
+    /* border: 1px dashed rgba(0,0,0,0.5); */
+    padding: 10px;
 }
 .uploaded-list{
     display: flex;
     flex-direction: column;
-    width: 90%;
-    
+    width: 100%;
 }
 .uploaded-list-item{
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.5);
+    font-size: 2rem;
+    border-bottom: 1px solid var(--dark-gray);
 }
 .uploaded-list-item:nth-of-type(2n){
-    background-color: rgba(0,0,0,0.1);
+    background-color: var(--very-light);
 }
+
+.add-hover:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            extras/useful                                   */
+/* -------------------------------------------------------------------------- */
+
+.extras-section{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+}
+
+.useful{
+    /* position: absolute; */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* right: 2rem; */
+    font-size: 2rem;
+}
+.cheatsheet{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 general use                                */
+/* -------------------------------------------------------------------------- */
+
+.title{
+    font-size: 2rem;
+}
+
+.sub-title{
+    font-size: 1.5rem;
+}
+
+.sub-sub-title{
+    font-size: 1.2rem;
+}
+
+.bolded{
+    font-weight: 600;
+}
+
+.success, .error{
+    font-size: 2rem;
+    font-weight: 500;
+    color: green;
+}
+.error{
+    color: red;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   useful                                   */
+/* -------------------------------------------------------------------------- */
+.useful{
+    /* position: absolute; */
+    display: flex;
+    flex-direction: column;
+    /* right: 2rem; */
+    font-size: 2rem;
+}
+.cheatsheet{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 </style>

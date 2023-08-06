@@ -11,6 +11,7 @@ export default defineConfig({
         compilerOptions: {
           // ...
           isCustomElement: tag => tag.startsWith('ion-'),
+          // isCustomElement: tag => tag.startsWith('container'),
         },
         transformAssetUrls: {
           // ...

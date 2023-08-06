@@ -4,7 +4,7 @@
 </script>
 
 <template>
-    <container class="form-cont">
+    <div class="form-cont">
         <p class="title">INTERESTED IN READING MORE? SIGN UP FOR THE NEWSLETTER</p>
         <div class="form-div">
             <div class="left">
@@ -34,7 +34,7 @@
             <path d="M27.125 15.5C27.125 9.08203 21.918 3.875 15.5 3.875C9.08203 3.875 3.875 9.08203 3.875 15.5C3.875 21.918 9.08203 27.125 15.5 27.125C21.918 27.125 27.125 21.918 27.125 15.5Z" stroke="#F1DD28" stroke-width="1.9375" stroke-miterlimit="10"/>
             </svg>
         </div>
-    </container>
+    </div>
 </template>
 
 <style scoped>

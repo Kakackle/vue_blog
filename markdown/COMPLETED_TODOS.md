@@ -58,7 +58,7 @@ albo sa cale markdown editory, ale zastanawia jak ciezkie to jest (wagowo)
     albo pozwolic mu zuploadowac kilka i potem dac mu do wklejenia gdzie chce linki
     ogolnie Django uploading images, jak to przesylac przez rest, jak to serwowac?
 
-TODO: pobieranie np. w Nav (bo jest globalny) usera z API wedlug wpisanego
+3. pobieranie np. w Nav (bo jest globalny) usera z API wedlug wpisanego
 np w dropie username / slug
 na start moze byc przechowywane w Navie, potem localstorage
 i na podstawie tego wyswietlanie zalogowanego w dropach
