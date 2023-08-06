@@ -149,6 +149,7 @@ const updateLiked = async function(){
     display: flex;
     position: relative;
     border-bottom: 8px solid var(--dark-gray);
+    margin-bottom: 20px;
 }
 
 .left{

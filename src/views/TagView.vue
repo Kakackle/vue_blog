@@ -1,5 +1,7 @@
 <!-- 
     TODO: dodac co jesli wrong param w url do usera i postu
+    TODO: brakuje zwracania po edytowaniu informacji o sukcesie lub porazce
+    tostem
  -->
 <script setup>
 import { useRoute, useRouter} from 'vue-router';
@@ -114,25 +116,32 @@ const deleteTag = async function(){
 <div>
     <GoBackButton></GoBackButton>
     <!-- jesli poprawny response z API -->
-    <div v-if="tagExists">
+    <div v-if="tagExists" class="main">
         <!-- domyslny podglad -->
         <section class="tag-view" v-if="!beingEdited">
-            <p class="tag-name">Name: {{tag.name}}</p>
-            <p class="tag-desc">Desc: {{tag.description}}</p>
-            <button class="submit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
-            <p class="posts" v-if="posts"> Posts:</p>
-            <PostsPaginated v-if="posts.length" :type="'small'" :posts="posts" :pages="pages"></PostsPaginated>
+            <div class="nameandedit">
+                <p class="tag-name">{{tag.name}}:</p>
+                <button class="edit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
+            </div>
+            <p class="tag-desc">{{tag.description}}</p>
+            <p class="title" v-if="posts">Posts with tag {{ tag.name }}:</p>
+            <PostsPaginated v-if="posts.length" :type="'large'"
+                :posts="posts" :pages="pages" class="posts-paginated"></PostsPaginated>
             <p v-if="success" class="success">{{success}}</p>
             <p v-if="error" class="error">{{error}}</p>
         </section>
         <!-- jesli tag jest edytowany -->
-        <section class="tag-view" v-if="beingEdited">
-            <label for="name" class="tag-name">Name:</label>
-            <input type="text" id="name" class="tag-name" v-model="newName">
-            <label for="desc" class="tag-name">Desc:</label>
-            <textarea class="tag-desc-input" v-model="newDesc"></textarea>
+        <section class="tag-view edit-view" v-if="beingEdited">
+            <div class="label-div">
+                <label for="name">Name:</label>
+                <input type="text" id="name" v-model="newName">
+            </div>
+            <div class="label-div">
+                <label for="desc">Desc:</label>
+                <textarea class="tag-desc-input" v-model="newDesc"></textarea>
+            </div>
             <button class="submit-button hover" v-if="beingEdited" @click="submitEdit(user_id)">CONFIRM</button>
-            <button class="submit-button hover" @click="deleteTag">DELETE</button>
+            <button class="submit-button hover" @click="deleteTag">DELETE TAG</button>
         </section>
     </div>
     <!-- bad request etc -->
@@ -153,35 +162,92 @@ const deleteTag = async function(){
 </template>
 
 <style scoped>
+.main{
+    max-width: var(--max-page-width);
+    margin: 0 auto;
+    margin-top: 50px;
+}
 .tag-view{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+}
+
+.nameandedit{
+    display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 50px;
 }
-.tag-name, .tag-desc, .tag-post{
-    font-size: 2rem;
+
+.tag-name{
+    color: var(--dark-gray);
+    font-size: 3rem;
+    text-decoration: underline;
+    text-underline-offset: 8px;
 }
-.tag-desc-input{
-    font-size: 2rem;
-    width: 24rem;
-    height: 8rem;
-}
-.posts{
+
+.edit-button{
     font-size: 1.5rem;
-    border-top: 2px dashed rgba(0,0,0,0.5);
+    color: var(--mid-light);
+}
+
+.tag-desc{
+    color: var(--dark-gray);
+    font-size: 1.5rem;
+    width: 40rem;
+}
+
+.title{
+    font-size: 2rem;
+}
+
+.posts-paginated{
+    align-self: center;
+    max-width: 1000px;
+}
+
+
+.edit-view{
+    
+}
+
+.label-div{
+    display: flex;
+    font-size: 1.5rem;
+}
+
+.label-div label{
+    font-size: 1.5rem;
+    width: 8rem;
+}
+
+.label-div input, textarea{
+    border: 3px solid var(--mid-light);
+    border-radius: 3px;
+}
+
+.tag-desc-input{
+    font-size: 1.5rem;
+    width: 40rem;
+    height: 10rem;
 }
 
 .submit-button{
-    width: 12rem;
+    width: 15rem;
     height: 3rem;
     font-size: 2rem;
+    background-color: var(--dark-gray);
+    color: var(--almost-white);
+    border-radius: 3px;
 }
-.hover:hover{
+/* .hover:hover{
     cursor: pointer;
     filter: brightness(0.7);
-}
+} */
+
 .success, .error{
     font-size: 2rem;
     font-weight: 500;

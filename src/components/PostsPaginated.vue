@@ -169,7 +169,7 @@ getPosts(query_string.value);
 .post-list{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 10px;
 }
 
 .page:hover{

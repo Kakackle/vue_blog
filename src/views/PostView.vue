@@ -203,6 +203,7 @@ getPosts();
   /* justify-content: center; */
   flex-direction: column;
   align-items: center;
+  background-color: var(--almost-white);
 }
 .post-main {
   margin-top: 30px;
