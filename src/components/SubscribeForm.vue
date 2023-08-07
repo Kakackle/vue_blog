@@ -1,4 +1,4 @@
-<!-- TODO: zrobic na wzor figmy -->
+<!-- TODO: funkcjonalnosc mailowania itd -->
 <script setup>
 
 </script>

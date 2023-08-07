@@ -1,10 +1,6 @@
 <!-- 
     Carousel for displaying PreviewCard components for a quick moving display
     of either most recent, popular or belongng to user posts
-    TODO: ruch, zmiana wyswietlanych?
-    TODO: zamiast pobierania postow powinno akceptowac posty jako prop, zeby mogly
-    byc rozne wyswietlane, czy to "trendujace" czy to inne posty autora w ladnej postaci
-    zamiast listy po prostu albo "inne popularne posty tego autora" etc
  -->
 
 <script setup>

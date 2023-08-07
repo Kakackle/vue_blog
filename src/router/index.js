@@ -1,4 +1,4 @@
-// TODO: Lazy loading? Moze jesli initial load strony stanie sie dlugi
+// FIXME: Lazy loading? Moze jesli initial load strony stanie sie dlugi
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import BlogView from "../views/BlogView.vue";

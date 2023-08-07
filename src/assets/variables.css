@@ -30,6 +30,12 @@
     cursor: pointer;
 }
 
+.hover-underline:hover{
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
 .section-separator{
   margin-bottom: var(--section-margin);
 }

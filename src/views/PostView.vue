@@ -171,7 +171,7 @@ getPosts();
           <img :src="post.img" class="post-img" />
           <!-- <div class="post-content">{{ post.content }}</div> -->
           <div class="post-content prose" v-html="compiledMarkdown"></div>
-          <p class="author-signature">{{ author.name }}</p>
+          <p class="author-signature" v-if="author">{{ author.name }}</p>
           
         </div>
       </section>
@@ -183,7 +183,7 @@ getPosts();
           <!-- carousels -->
           <p class="subtitle">Check out these trending posts</p>
           <Carousel class="section-separator" v-if="posts.length" :posts=posts></Carousel>
-          <p class="subtitle">More posts by {{ author.name }}</p>
+          <p class="subtitle" v-if="author">More posts by {{ author.name }}</p>
           <Carousel class="section-separator" v-if="author_posts.length" :posts=author_posts></Carousel>
       </section>
       <Footer></Footer>

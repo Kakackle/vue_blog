@@ -1,11 +1,11 @@
 <!-- 
-    TODO: zarzadzanie jak ze jesli uzytkownik ma polubiony post i jest on na stronie,
-    to ikonka lajka zmienia kolor na zolty np
+    renderowanie jest czescia wlasnie komponentu postu i musi sprawdzac
+    np. czy author.slug = loggedUser.slug
  -->
 <script setup>
 
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import axios from 'axios';
 
 import Tag from './Tag.vue';
@@ -25,10 +25,10 @@ const error = ref('')
 const router = useRouter();
 
 const props = defineProps(['post'])
-const post = props.post
+const post = ref(props.post);
 
 const user = ref();
-user.value = post.author;
+user.value = post.value.author;
 
 const getAuthor = async function(){
     axios.get(`users/${user.value}`)
@@ -42,51 +42,96 @@ const getAuthor = async function(){
 
 getAuthor();
 
+// FIXME: poki co zrobie tak ze we froncie sprawdzane czy juz polajkowane
+// i w zaleznosci od tego wyslij liste z nowym uzytnikiem albo bez jak juz byl
+// ale potem lepiej by to robic w django, bo to taka racej backendowa operacja
+// a frontent powinien byc glownie od wyswietlania a nie trzymania stanu
+
+// FIXME: potencjalny problem kompozycji - poprzez lajkowanie albo cokolwiek
+// aktualizujemy stan postu, ale post pobierany i przesylany jest z zewnatrz
+// jako prop - moze rozwiazac to zamieniajac prop na ref i watchujac?
+// okej, ale i tak trzeba pobrac od nowa z database z nowa iloscia, lista itd
+
+const emit = defineEmits(['refresh']);
+
 const updateLiked = async function(){
-    console.log(`old liked_by: ${post.liked_by}`);
+    // aktualne liked_by
+    console.log(`old liked_by: ${post.value.liked_by}`);
     success.value='';
     error.value='';
+    // jesli zalogowany user jest aktualny, a jesli bylo zalogowanie nie wykryte
+    //to upewnij sie
     if(!loggedUser.slug){
         loggedUser.value = userStore.getUser();
     }
+    // przypisz nowego uzytkownika do zmiennej new_liked_by
+    // FIXME: - wlasciwie useless
     new_liked_by.value = loggedUser.value;
+    // jesli nie ma zalogowanego uzytkownika to powroc
     if(!new_liked_by.value){
         toast.error(`log in first before trying to like`);
         return
     }
-    if(post.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
+    // jesli zalogowany uzytkownik NIE JEST w liscie lajkujacych post
+    if(post.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
         console.log(`logged user not in liked_by`);
-
-        post.liked_by.push(new_liked_by.value.slug);
-        console.log(`new liked_by: ${post.liked_by}`);
-        
-        axios.patch(`posts/${post.slug}`, {
-            liked_by: post.liked_by,
-            likes: post.liked_by.length
-        },
-        {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-        })
-        .then((res)=>{
-            // console.log(`data sent: ${post.liked_by}`)
-            success.value = `added to likes, ${res.status}, ${res.statusText}`;
-            toast.success(success.value);
-            new_liked_by.value=undefined;
-            
-        })
-        .catch((err)=>{
-            error.value = `${err.status}, ${err.statusText}`;
-            toast.error(error.value);
-            console.log(`update like err: ${err}`);
-        })
+        // dodaj uzytkownika do lajkujacych
+        post.value.liked_by.push(new_liked_by.value.slug);
     }
+    // jesli JEST juz na liscie
     else{
+        const user_index = post.value.liked_by.indexOf(new_liked_by.value.slug)
+        post.value.liked_by.splice(user_index, 1);
         console.log('user in liked_by already');
-        toast.error('user in liked_by already');
+        if (post.value.liked_by.length === 0){
+            post.value.liked_by = [];
+        }
+        // toast.error('user in liked_by already');
     }
+    //po dodaniu albo usunieciu
+    console.log(`new liked_by: ${post.value.liked_by},
+     type: ${typeof post.value.liked_by},
+     len: ${post.value.liked_by.length}`);
+    
+    // przeslij nowy stan
+    axios.patch(`posts/${post.value.slug}`, {
+        liked_by: post.value.liked_by,
+        likes: post.value.liked_by.length
+    },
+    {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+    })
+    .then((res)=>{
+        // console.log(`data sent: ${post.liked_by}`)
+        success.value = `changed post likes, ${res.status}, ${res.statusText}`;
+        toast.success(success.value);
+        console.log(success.value);
+        new_liked_by.value=undefined;
+        emit('refresh');
+    })
+    .catch((err)=>{
+        error.value = `${err.status}, ${err.statusText}`;
+        toast.error(error.value);
+        console.log(`update like err: ${err}`);
+    })
 }
+
+
+// if post liked by logged user
+
+const post_liked = computed(()=>{
+    if(loggedUser.value && post.value)
+        return post.value.liked_by.includes(loggedUser.value.slug);
+    else return false;
+})
+
+// const post_liked = ()=>{
+//     if(loggedUser.value && user.value)
+//     return loggedUser.value.slug === user.value.slug;
+//     else return false;
+// }
 
 
 </script>
@@ -101,12 +146,14 @@ const updateLiked = async function(){
         <div class="top">
             <div class="top-left">
                 <p class="title">{{ post.title }}</p>
+                <p v-if=post_liked>Post liked</p>
             </div>
             <div class="top-right">
                 <!-- <p class="post_id">id: {{ post.id }}</p> -->
                 <p class="likes">
                     <ion-icon class="like-icon hover" name="thumbs-up-sharp"
-                    @click="updateLiked()"></ion-icon>
+                    @click="updateLiked()"
+                    :class="{'post-liked': post_liked}"></ion-icon>
                     <p>{{ post.likes }}</p>
                 </p>
                 <p class="views"><ion-icon class="like-icon" name="eye">
@@ -167,6 +214,7 @@ const updateLiked = async function(){
 
 .right{
     padding: 0 10px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -197,9 +245,14 @@ const updateLiked = async function(){
 }
 .like-icon{
     font-size: 1.5rem;
-    color:var(--dark-gray);
+    color: var(--dark-gray);
     /* right: 3rem; */
 }
+
+.post-liked{
+    color: var(--accent-yellow);
+}
+
 .arr-icon{
     position: absolute;
     font-size: 1.5rem;

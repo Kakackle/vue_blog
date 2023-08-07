@@ -50,6 +50,8 @@ const addNewComment = async function(){
 // i musialbym o tym dawac znac uzytkownikowi podczas pisania ile mu zostalo jeszcze znakow
 //  i jesli sie nie zgadza to nie wysylac requesta
 // - cos tam jeszcze
+// co najlatwiej zalatwic na froncie, zeby uzytkownik mial od razu informacje
+// a nie musial wysylac i dostawc informacje ze nie przeszlo
 
 const openEdit = () =>{
     displayEdit.value = 1;
@@ -159,8 +161,8 @@ const deleteComment = async function(){
         <div class="bottom">
             <p>{{ comment.content }}</p>
             <div class="controls">
-                <button class="reply-button" @click="displayReply = 1">reply</button>
-                <button class="edit" @click="openEdit">edit</button>
+                <button class="reply-button hover-underline" @click="displayReply = 1">reply</button>
+                <button class="edit hover-underline" @click="openEdit">edit</button>
             </div>
         </div>
     </div>
@@ -246,12 +248,7 @@ const deleteComment = async function(){
     align-self: flex-end;
     gap: 10px;
 }
-/* TODO: moze to udostepnic globalniej jako cos typu "hover-underline" */
-.controls button:hover{
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 4px;
-}
+
 .like-icon{
     color: var(--mid-light);
 }

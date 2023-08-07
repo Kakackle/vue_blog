@@ -12,8 +12,6 @@
     komponent na upload obrazkow i wyswietlanie ich?
     potencjalnie czemu nie, bo potem by przekazywal tekst to wklejenia w
     markdown postu czy cos tylko
-
-    FIXME: jakies problemy z reloadem z powodu bledow podobno...
 -->
 
 <script setup>
@@ -220,52 +218,6 @@ const selectPost = function(post){
     getUploadedImages();
 }
 
-async function getFileFromUrl(url, defaultType = 'image/jpg') {
-    // FIXME: poki co sie poddaje
-    // trzeba jakos odebrac albo link albo z endpointu img (przy edycji postu)
-    // i jakos to przeksztalcic na pelnoprawny img
-    // i potem wyslac
-    // ale nie mam pojecia jak
-
-//   const response = await fetch(url)
-//   const data = await response.blob() 
-//   return new File([data], name, {
-//     type: data.type || defaultType,
-//   })
-//   axios.get(url)
-//   .then((res)=>{
-//     data = res.data.blob()
-//     newImg.value = new File([data], name, {
-//     type: data.type || defaultType,
-//     })
-//     console.log(`data: ${data}`)
-//   })
-//   .catch((err)=>{
-//     console.log(err);
-//   })
-//   axios.get(`image/${selectedPost.value.slug}`)
-//   .then((res)=>{
-//     // console.log(res.data);
-//     newImg.value = res.data;
-//   })
-//   .catch((err)=>{
-//     console.log(err);
-//   })
-
-// fetch(`image/${selectedPost.value.slug}`)
-// .then(res => res.blob())
-// .then(blob=>{
-//     var reader = new FileReader();
-//     reader.readAsDataURL(blob); 
-//     reader.onloadend = function() {
-//     var base64data = reader.result;
-//     newImg.value = base64data;                
-//     console.log(base64data);
-//     }
-// })
-
-}
-
 const submitForm = function(method){
     success.value = '';
     error.value = '';
@@ -424,6 +376,7 @@ const addToMarkdown = function(add){
     <div class="main">
     <GoBackButton></GoBackButton>
     <!-- Select post from existing-->
+    <!-- FIXME: tutaj robione -->
     <!-- TODO: tylko jesli wchodzimy od zera bez wybranego postu? -->
     <!-- albo zawsze zwiniete i trzeba kliknac zeby rozwinac - chyba lepiej -->
     <section class="select-sect section-separator">
@@ -561,6 +514,8 @@ const addToMarkdown = function(add){
             <p v-if="error" class="error">{{error}}</p>
         </div>
         <!-- Post preview -->
+        <!-- TODO: tutaj moze mozna by poza contentem dodac tez tytul
+            i autora, date, cover jako czesc preview, ale kosmetyczne -->
         <div class="post-preview">
             <div class="title">POST PREVIEW:</div>
             <div class="preview-text prose" v-html="compiledMarkdown" v-if="newContent">

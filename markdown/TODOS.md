@@ -1,11 +1,9 @@
 # Nowe funkcjonalnosci
-4. TODO: zliczanie ilosci postow autora, postow z tagiem etc, to bardziej moze czesc Django, jako dodatkowa startystyka
-7. TODO: ta karuzela jakos ruchoma? albo "stala" ale jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie), albo losowe, albo najwiecej lajkow/wyswietlen w ciagu ostatnich 7/30 w/e dni, jakims "algorytmem" (czyli kalkulacja stosunku)
-4. [ Django ] TODO: jakies resizowanie obrazkow przy uploadzie i zapisywanie w roznych rozmiarach typu thumbnail
-# Duze rzeczy
-1. custom user / profile i logowanie
-    - potem powiazywanie tworzonych postow z aktualnym uzytkownikiem itd
-    - komentarze - sposob powiazania w django i odpowiadania i forma na tworzenie
+4. TODO: zliczanie ilosci postow autora, postow z tagiem etc, to bardziej moze czesc Django, jako dodatkowa startystyka - potem dodac na froncie wyswietlanies
+7. TODO: jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie), albo losowe, albo najwiecej lajkow/wyswietlen w ciagu ostatnich 7/30 w/e dni, jakims "algorytmem" (czyli kalkulacja stosunku) - ale to kwestia [ Django ]
+
+8. jakos zamienic to query na lepszy system filtracji/searchu,
+   bo na pewno są, aktualnie jest dosyc kaleki
 
 # Uzupelnienie funkcjonalnosci
 1. TODO: Chujowa ta stylizacja listy z Prime, zrobienie wlasnej jest dosyc latwe, serio, dropdown + kwestia by hover dobrze sie nakladal tylko na wskazana opcje - moze nawet jako komponent, tylko wtedy kwestia czy dac jakos slot czy prop na funkcje czy co, zeby uzytkownik mogl jako prop podac teksty ale i czy to ma byc tylko tekst czy link, czy po kliknieciu ma wywolywac jakas funkcje itd
@@ -15,16 +13,12 @@
 
 # Fixes
 1. TODO: lepsze composables z srodkowym zwracaniem stanow itd
-2. TODO: Kompletnie zjebane wszedzie sa rozmiary czcionek w stylach przez to ograniczenie markdown ze font-size nie moze byc globalnie 62.5%
-ALE: zamiast kombinowac z zamienianiem wszedzie rozmiarow moze mozna dodac to w na view gdzie to ma sens, a ~~wylaczyc~~ NIE WLACZAC tylko na dwoch (czyli tworzenie postu i wyswietlanie) gdzie jest md - NAGLE MD DZIALA MIMO GLOBALNEGO 62.5%, OKEJ, SUPER
-3. ALE TODO: mozna w markdownie doslownie wpisywac html (przyklad w "Second blog post")
+3. TODO: mozna w markdownie doslownie wpisywac html (przyklad w "Second blog post")
    Co oznacza, ze tam mozna centrowac i zamiast pisac ### mozna pisac <h2> 
   a zamiast ![img]("https..") mozna zrobic <img src="https:...">
   Co robic najlatwiej poprzez danie uzytkownikom przyciskow ktore beda to dodawaly do tresci
 
-3. TODO: obsluga md w list i card preview? bo widac kodowanie md i brzydko to wyglada typu ### i obrazki ... tylko kwestia zeby jesli obrazki to nie wyjebawalo wysokosci na zmieszczenie tylko zeby go usuwalo - to by bylo w sumie nawet spoko gdyby bylo widasc tylko poczatek obrazka a reszta ucina, przy czym jesli ucina to najlepiej z blurem itd itd
-
-4. TODO: W kazdym komponencie zmiana kolorkow na nowe
+3. TODO: obsluga md w list i card preview? bo widac kodowanie md i brzydko to wyglada typu ### i obrazki ... tylko kwestia zeby jesli obrazki to nie wyjebawalo wysokosci na zmieszczenie tylko zeby go ucinalo - to by bylo w sumie nawet spoko gdyby bylo widasc tylko poczatek obrazka a reszta ucina, przy czym jesli ucina to najlepiej z blurem itd itd
 
 # Pomysly
 

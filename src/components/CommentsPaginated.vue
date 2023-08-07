@@ -12,7 +12,6 @@ const selected_page = ref(0);
 
 const query_string = `comments/?post=${post_slug}`;
 
-// TODO: posty sortowane w zly psosob?
 const getComments = async function(link){
     axios.get(link)
     .then((res)=>{
@@ -35,8 +34,9 @@ const getCommentsByPage = async function(link, page_id){
 
 getComments(query_string);
 
-// FIXME: this shit never gets called??? why???
-// i ogolnie refreshowanei jest giga inconsistent, nie wiem...
+// funkcja do refreshowania wyswietlanego stanu, tzn zarowno tutaj gdy dodawany nowy komentarz
+// jak i emitowany na zewnatrz jako event "refresh" by i tam zaktualizowal sie caly
+// stan wizualny
 const refresh = function(){
     console.log(`refresh got called`);
     comments.value=[];
@@ -67,7 +67,6 @@ const addNewComment = async function(){
     .then((res)=>{
         console.log(`add comment POST success: ${res.status}, ${res.statusText}`);
         newContent.value = '';
-        displayReply.value = 0;
         displayReply.value = 0;
         refresh();
     })

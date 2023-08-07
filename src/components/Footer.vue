@@ -1,4 +1,4 @@
-<!-- TODO: Footer na wzor figmy -->
+<!-- TODO: uzupelnic linki do social media itd, ale to jak juz bedzie wszystko -->
 <script setup>
 
 </script>

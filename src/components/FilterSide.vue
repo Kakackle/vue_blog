@@ -2,9 +2,6 @@
     Komponent majacy pelnic funkcje umieszczalnego z boku strony dodajacy funkcje filtracji
     postow po query lub wyborze checkboxow
     poki co glownie zajmuje sie wyswietlaniem ich oraz oblusga wpisywania,
-
-    TODO: potem jakos sie zamieni to query na lepszy system filtracji/searchu,
-    bo na pewno są, aktualnie jest dosyc kaleki [Django]
  -->
 
 <script setup>
@@ -90,7 +87,6 @@ const emitQuery = async () =>{
     });
 }
 
-// TODO: dynamiczne te daty z danych
 const dates = [
     'Today',
     'Last 3 days',

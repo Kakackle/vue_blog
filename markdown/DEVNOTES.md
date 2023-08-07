@@ -43,6 +43,15 @@ który sprawia, że dane przesyłane są w postaci multipart, i niezaleznie czy 
 
 widzialem ze komus kiedys to manglowalo dane, ale moze nie mial obu parserow albo mi dopiero zacznie, ale poki co
 
+3. jakos przekazywanie z Nava do komponentow zalogowanego uzytkownika - po prostu store
+
+4. Zmiana stylow etc zalezna od wartosci ze store, jak np. zalogowany uzytkownik
+ - bardzo prosta sprawa, nawet nie trzeba uzywac watch, wystarczy storetorefs oraz nastepnei render elementu ktory ma sie zmieniac uzaleznic od :key=ta_wartosc.
+ - nie potrzeba zadnego v-if, tymczasowego zmieniania na undefined i spowrotem przypisywania
+ - takie kombinacje potrzebne sa tylko jesli tym czyms jest tablica, bo ref ma problem z wykrywaniem zmian w tablicach, ale z poprostu wartasciami dziala magicznie
+
+    przykladowe wykorzystanie: zmiana koloru przycisku polubienia postu w zaleznosci czy jest polubiony czy nie, co zalezy wlasnie od wartosci ze store typu zalogowany uzytkownik
+
 # Problemy porzucone
 
 1. Kwestia przypisywania czegos do elementu wyswietlajacego po keys z refa

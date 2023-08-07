@@ -1,7 +1,7 @@
 <!-- 
     View tymczasowo wyswietlajacy site map z vue routera
     Domyslnie wyswietlajacy takze informacje o stronie/autorze etc
-    TODO: te dodatkowe informacje, nad site mapa np
+    TODO: zrobic cos z tym sensownego, najpierw pewnie w Figmie
  -->
 <script setup>
 import GoBackButton from "../components/GoBackButton.vue";

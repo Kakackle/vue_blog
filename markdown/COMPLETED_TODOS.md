@@ -68,3 +68,9 @@ umozliwianie edycji uzytkownika tylko jesli zgadza sie z zalogowanym itd..
 czyli kluczowe operacje dla strony obslugujacej konta, a taka wlasnie strone chcemy
 przy czym zwaz, ze to co robisz w ten sposob nachodzi na to co powinien robic
 twoj backed, czyli obsluga authentication, persmissions itd
+
+
+## Idk
+
+1. Kompletnie zjebane wszedzie sa rozmiary czcionek w stylach przez to ograniczenie markdown ze font-size nie moze byc globalnie 62.5%
+ALE: zamiast kombinowac z zamienianiem wszedzie rozmiarow moze mozna dodac to w na view gdzie to ma sens, a ~~wylaczyc~~ NIE WLACZAC tylko na dwoch (czyli tworzenie postu i wyswietlanie) gdzie jest md - NAGLE MD DZIALA MIMO GLOBALNEGO 62.5%, OKEJ, SUPER

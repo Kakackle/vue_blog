@@ -41,19 +41,6 @@ const routeStore = useRouteStore();
 const { routeHistory, breadcrumbList } = storeToRefs(routeStore);
 // const breadcrumbList = ref(routeHistory.value)
 
-// FIXME: this watch never happens, what the fuck
-// watch(routeHistory, ()=>{
-//     console.log(routeHistory.value.length);
-//     if(routeHistory.value.length < 10)
-//         breadcrumbList.value = routeHistory.value;
-//     else
-//         breadcrumbList.value = routeHistory.value.slice(-10);
-//     console.log(`bread: ${breadcrumbList.value}`);
-// });
-
-// konkretnie:
-// TODO: jakos przekazywanie z Nava do komponentow zalogowanego uzytkownika
-
 // const user = ref()
 const loggedIn = ref(0);
 const logInDrop = ref(0);
@@ -158,7 +145,8 @@ const logout = () => {
                     <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">
                         <!-- ACC <ion-icon name="heart"></ion-icon> -->
                         <img :src="userStore.getUser().avatar" class="nav-avatar"
-                            :class="{'nav-avatar-open': accDrop}">
+                            :class="{'nav-avatar-open': accDrop}"
+                            v-if="loggedIn">
                     </span>
                     <span v-else class="acc hover" @click="logInDrop = !logInDrop"
                         :class="{'nav-avatar-open': logInDrop}">Log in</span>

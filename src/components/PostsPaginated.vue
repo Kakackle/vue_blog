@@ -15,7 +15,7 @@
 
  -->
 <script setup>
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import PreviewList from './PreviewList.vue';
 import PreviewListLarge from './PreviewListLarge.vue'
 // import { getDataFromLink } from "../composables/axiosComposables";
@@ -95,10 +95,24 @@ const getPostsByPage = async function(link, page_id){
 // getPostsByPage('posts/', selectedPage.value);
 getPosts(query_string.value);
 
+
+// FIXME: tutaj poki co zrobie watchem wykrywanie zmiany zalogowanego uzytkownika
+// i uzasadnie renderowanie calosci od tej wartosci, co powinno rerenderowac
+// cale postspaginated, bez zadnego dodatkowego pobierania
+// ALE problem z tym moze byc taki, ze musze to zrobic tutaj oraz np. w filtrach
+// w celu filtracji po aktualnie zalogowanym uzytkowniku itd
+// i czy zamiast w wielu miejscach nie mozna by tego zrobic gdzies wyzej typu blog view
+
+import { useUserStore } from '../stores/user';
+import { storeToRefs } from 'pinia';
+const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore);
+// const current_user = ref()
+
 </script>
 
 <template>
-    <div class="post-list" v-if="posts">
+    <div class="post-list" v-if="posts" :key="loggedUser">
         <div class="controls">
             <div class="page_size">
             <p class="hover" v-for="(size, size_id) in page_sizes"
@@ -122,7 +136,8 @@ getPosts(query_string.value);
             <PreviewList v-for="(post, post_id) in posts" :post="post"
                 v-if="type === 'small'"></PreviewList>
             <PreviewListLarge v-for="(post, post_id) in posts" :post="post" 
-                v-if="type === 'large'"></PreviewListLarge>
+                v-if="type === 'large'"
+                @refresh="getPostsByPage(query_string, selectedPage)"></PreviewListLarge>
             <div class="pages" v-if="pages">
                 <p class="page" v-for="(page, page_id) in pages"
                     @click="getPostsByPage(page[0], page_id)"
