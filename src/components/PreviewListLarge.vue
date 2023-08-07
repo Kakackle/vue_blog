@@ -134,6 +134,16 @@ const post_liked = computed(()=>{
 // }
 
 
+// Try using markdown in preview
+import { marked } from "marked";
+const compiledMarkdown = computed(() => {
+  return DOMPurify.sanitize(marked.parse(post.value.content.slice(0,250), {
+    mangle: false,
+    headerIds: false,
+  }));
+});
+
+
 </script>
 
 <template>
@@ -173,8 +183,8 @@ const post_liked = computed(()=>{
             <p class="author hover" v-if="user.name"
                 @click="router.push({name: 'user', params: {user_slug: user.slug}})"
             >{{ user.name }}</p>
-            
-            <p class="content">{{ post.content.slice(0,250) }}...</p>
+            <div class="content prose" v-html="compiledMarkdown"></div>
+            <!-- <p class="content">{{ post.content.slice(0,250) }}...</p> -->
         </div>
     </div>
 
@@ -190,6 +200,7 @@ const post_liked = computed(()=>{
     /* width: 900px; */
     width: clamp(500px, 100%, 900px);
     /* height: 10rem; */
+    height: 220px;
     padding: 1rem;
     /* box-shadow: 0px 5px 12px rgba(0,0,0,0.15); */
     /* border-radius: 0.5rem; */
@@ -197,6 +208,7 @@ const post_liked = computed(()=>{
     position: relative;
     border-bottom: 8px solid var(--dark-gray);
     margin-bottom: 20px;
+    overflow: hidden;
 }
 
 .left{
@@ -218,6 +230,19 @@ const post_liked = computed(()=>{
     display: flex;
     flex-direction: column;
     gap: 5px;
+    /* padding-bottom: 20px; */
+    overflow: hidden;
+}
+
+.right:after {
+  content: '';
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  height: 20%;
+  bottom: 0px;
+  background: linear-gradient(180deg, rgba(139,167,32,0) 0%, rgba(255,255,255,1) 100%);
+  pointer-events: none;
 }
 
 .top{

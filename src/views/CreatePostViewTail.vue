@@ -207,7 +207,6 @@ const selectPost = function(post){
 }
 
 async function getFileFromUrl(url, defaultType = 'image/jpg') {
-    // FIXME: poki co sie poddaje
     // trzeba jakos odebrac albo link albo z endpointu img (przy edycji postu)
     // i jakos to przeksztalcic na pelnoprawny img
     // i potem wyslac
@@ -311,7 +310,6 @@ import AutoComplete from 'primevue/autocomplete';
 import { storeToRefs } from 'pinia';
 import router from '../router';
 
-//FIXME: troche chujowe takie pobieranie all postow
 //gdyby bylo ich bardzo duzo to duzy hit dla performance moze byc
 //ale jak inaczej to zrobic? bo chcialbym szukajac miec dostep do wszystkiego
 //zeby moglo wszystko sugerowac

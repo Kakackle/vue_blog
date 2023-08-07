@@ -12,13 +12,7 @@
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk
 
 # Fixes
-1. TODO: lepsze composables z srodkowym zwracaniem stanow itd
-3. TODO: mozna w markdownie doslownie wpisywac html (przyklad w "Second blog post")
-   Co oznacza, ze tam mozna centrowac i zamiast pisac ### mozna pisac <h2> 
-  a zamiast ![img]("https..") mozna zrobic <img src="https:...">
-  Co robic najlatwiej poprzez danie uzytkownikom przyciskow ktore beda to dodawaly do tresci
-
-3. TODO: obsluga md w list i card preview? bo widac kodowanie md i brzydko to wyglada typu ### i obrazki ... tylko kwestia zeby jesli obrazki to nie wyjebawalo wysokosci na zmieszczenie tylko zeby go ucinalo - to by bylo w sumie nawet spoko gdyby bylo widasc tylko poczatek obrazka a reszta ucina, przy czym jesli ucina to najlepiej z blurem itd itd
+1. TODO: lepsze composables z srodkowym zwracaniem stanow itd 
 
 # Pomysly
 

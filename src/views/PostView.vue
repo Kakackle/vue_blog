@@ -1,8 +1,5 @@
 <!-- 
     Whole post view
-    TODO: Upieknienie
-    TODO: moze jesli jestes zalogowny jako autor postu to umozliw klikniecie "edytuj",
-    w przeciwnym wypadku nie wyswietlaj
 -->
 <script setup>
 import { defineAsyncComponent, onMounted } from "vue";
@@ -21,6 +18,10 @@ import { useRouteStore } from "../stores/routeHistory";
 import { storeToRefs } from "pinia";
 const routeStore = useRouteStore();
 const { routeHistory } = storeToRefs(routeStore);
+
+import { useUserStore} from "../stores/user";
+const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore);
 
 const route = useRoute();
 const router = useRouter();
@@ -72,7 +73,6 @@ const getAuthor = async function(){
 
 import { marked } from "marked";
 const compiledMarkdown = computed(() => {
-  // FIXME: tu robione - DOMPURIFY
   return DOMPurify.sanitize(marked.parse(post.value.content, {
     mangle: false,
     headerIds: false,
@@ -95,7 +95,6 @@ const compiledMarkdown = computed(() => {
 
 // getCommentsByPost(post_slug);
 
-// FIXME: aktualnie robione
 const author_posts = ref([]);
 // posty uzytkownika do karuzeli
 const getPostsByAuthor = async function(author){
@@ -136,11 +135,14 @@ getPosts();
         <div class="post section-separator">
           <div class="title-div">
             <p class="post-title">{{ post.title }}</p>
-            <button
-              class="go-button hover"
-              @click="router.push({ name: 'create', params: { post_slug: post.slug } })"
-              >EDIT POST
-            </button>
+            <div v-if="loggedUser">
+              <button
+                class="go-button hover"
+                @click="router.push({ name: 'create', params: { post_slug: post.slug } })"
+                v-if="loggedUser.slug === post.author"
+                >EDIT POST
+              </button>
+            </div>
           </div>
           <div class="second-row">
             <p
@@ -189,7 +191,6 @@ getPosts();
       <Footer></Footer>
 
       <!-- <section class="post-main" v-else>Else</section> -->
-      <!-- TODO: jakis side? -->
     </main>
   </div>
 </template>
@@ -283,7 +284,7 @@ getPosts();
   object-fit: cover;
   margin-bottom: 10px;
 }
-/* FIXME: post content po prostu nie chce zajmowac 100%, przyjmuje jakis limit i ma to w dupie */
+
 .post-content {
   /* font-size: unset !important; */
   font-size: 2rem;
@@ -291,7 +292,9 @@ getPosts();
   /* line-height: 1; */
   display: flex;
   flex-direction: column;
-  width: 100%;
+  /* width: 100%; */
+  /* min-width: 1200px; */
+  min-width: 100%;
   /* justify-content: center; */
   /* padding: 10px; */
 }

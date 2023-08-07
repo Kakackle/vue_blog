@@ -358,17 +358,43 @@ const getUploadedImages = async function(){
     })
 }
 
+// defacto teraz poza kopiowaniem do clipboardu dodaje tez do postu
 const copyToClipboard = function(link, name){
     navigator.clipboard.writeText(link);
-    let md_str = `  ![${name}](${link} "${name}")`
+
+    // samo dodawanie obrazku
+    // let md_str = `  ![${name}](${link} "${name}")`
+
+    // dodawanie obrazku wycentrowanego
+    let md_str = `\r\n` + `<p align="center">
+    <img width="600" height="400" src="${link}" alt="${name}">
+    </p>`;
     newContent.value += `  ${md_str}`;
 }
 
 // markdown editor controls
 
 const addToMarkdown = function(add){
-    newContent.value += add;
+    newContent.value += '\r\n' + add + ' ';
 }
+
+const centerMarkdown = function(){
+    newContent.value += '\r\n' + '<p align=center>{{your content here}}</p>' + ' ';
+}
+
+const boldMarkdown = ()=>{
+    newContent.value += '\r\n' + `**{{your content here}}**` + ' ';
+}
+
+const italicsMarkdown = ()=>{
+    newContent.value += '\r\n' + `*{{your content here}}*` + ' ';
+}
+
+const linkMarkdown = ()=>{
+    newContent.value += '\r\n' + `[Link title here](hyperlink here)` + ' ';
+}
+
+const selectOpen = ref(0);
 
 </script>
 
@@ -376,12 +402,16 @@ const addToMarkdown = function(add){
     <div class="main">
     <GoBackButton></GoBackButton>
     <!-- Select post from existing-->
-    <!-- FIXME: tutaj robione -->
-    <!-- TODO: tylko jesli wchodzimy od zera bez wybranego postu? -->
-    <!-- albo zawsze zwiniete i trzeba kliknac zeby rozwinac - chyba lepiej -->
-    <section class="select-sect section-separator">
+    <div class="select-dropdown">
+        <p>SELECT A POST TO UPDATE:</p>
+        <ion-icon name="caret-down-outline" class="caret-icon hover"
+        :class="{'select-open': selectOpen}"
+        @click="selectOpen? selectOpen = 0: selectOpen = 1"
+        ></ion-icon>
+    </div>
+    <section class="select-sect section-separator" v-if="selectOpen">
         <!-- wybor postu -->
-        <p class="title">SELECT A POST TO UPDATE:</p>
+        <!-- <p class="title">SELECT A POST TO UPDATE:</p> -->
         <!-- PrimeVue -->
         <div class="select-cont">
             <div class="select-left">
@@ -424,13 +454,12 @@ const addToMarkdown = function(add){
             </div>
         </div>
     </section>
+
     <section class="post-columns section-separator">
         <!-- Create /edit post -->
         <div class="post-form">
-            <!-- TODO: tutaj alternatywne tytuly w zaleznosci czy jest wybrany post czy nie -->
-            <!-- jak tak to "UPDATE POST" -->
-            <!-- jak nie to create -->
-            <span class="title">CREATE A NEW POST:</span>
+            <span class="title" v-if="selectedPost">UPDATE POST:</span>
+            <span class="title" v-else>CREATE A NEW POST:</span>
             <!-- form -->
             <div class="input-form" v-if="tagsExist && usersExist">
                 <div class="form-inputs">
@@ -463,11 +492,14 @@ const addToMarkdown = function(add){
                     <!-- DEBUG -->
                     <!-- <p class="form-label">tags to be sent: <p v-for="tag in newTags">{{tag}}</p> </p> -->
                     <!-- content controls -->
-                    <!-- TODO: wiecej przyciskow i czemu newline nie dziala ahhh -->
                     <div class="md-controls">
                         <button class="md-button" @click="addToMarkdown(`#`)">H1</button>
                         <button class="md-button" @click="addToMarkdown(`##`)">H2</button>
                         <button class="md-button" @click="addToMarkdown(`###`)">H3</button>
+                        <button class="md-button" @click="centerMarkdown">Center</button>
+                        <button class="md-button" @click="boldMarkdown">B</button>
+                        <button class="md-button" @click="italicsMarkdown">I</button>
+                        <button class="md-button" @click="linkMarkdown">Link</button>
                     </div>
                     <!-- post content -->
                     <div class="form-label">
@@ -513,18 +545,24 @@ const addToMarkdown = function(add){
             <p v-if="success" class="success">{{success}}</p>
             <p v-if="error" class="error">{{error}}</p>
         </div>
+
         <!-- Post preview -->
-        <!-- TODO: tutaj moze mozna by poza contentem dodac tez tytul
-            i autora, date, cover jako czesc preview, ale kosmetyczne -->
         <div class="post-preview">
-            <div class="title">POST PREVIEW:</div>
+            <p class="title">POST PREVIEW:</p>
+            <div>
+                <p v-if="newTitle" class="preview-title">{{ newTitle }}</p>
+                <div class="preview-subdiv">
+                    <p v-if="newAuthor">{{ newAuthor.name }}</p>
+                    <p v-if="newDate">{{ newDate }}</p>
+                </div>
+            </div>
+            <p class="sub-sub-title"></p>
             <div class="preview-text prose" v-html="compiledMarkdown" v-if="newContent">
             </div>
         </div>
 
     </section>
     <!-- image upload section -->
-    <!-- TODO: tylko jesli jakis post jest wybrany, albo tylko przycisk submit wylaczyc -->
     <section class="upload-sect section-separator">
         <h1 class="title">IMAGE GRID</h1>
         <p class="title">Here you can upload images to put inside your post</p>
@@ -552,11 +590,10 @@ const addToMarkdown = function(add){
                 </div>
                 <!-- submit -->
                 <div class="img-name-right">
-                    <button class="submit-button" @click="uploadPostImage">SUBMIT</button>
+                    <button class="submit-button" v-if="newPostImgName" @click="uploadPostImage">SUBMIT</button>
                 </div>
             </div>
-            <!-- zwracany link i preview obrazku TODO: wlasciwie to po co? nie lepiej jakos dodac
-            do tablicy juz przeslanych? -->
+            <!-- zwracany link i preview obrazku -->
             <p class="sub-sub-title">Internal image link: {{ newPostImgUrl }}</p>
             <img :src="newPostImgUrl" class="upload-preview" v-if="newPostImgUrl">
         </div>
@@ -603,7 +640,6 @@ const addToMarkdown = function(add){
     display: flex;
     flex-direction: column;
     gap: 5px;
-    margin-top: 20px;
     padding: 10px;
     border-bottom: 8px solid var(--dark-gray);
 }
@@ -627,7 +663,7 @@ const addToMarkdown = function(add){
     align-items: center;
     font-size: 2rem;
 }
-/* TODO: stylizacja tej listy wyboru - chociazby fontsize pls.. */
+/* TODO: stylizacja tej listy wyboru - chociazby fontsize pls.. - jak to zrobic */
 .filters .p-autocomplete-item{
     font-size: 20px;
 }
@@ -691,7 +727,29 @@ const addToMarkdown = function(add){
     display: flex;
     flex-direction: column;
 }
+.select-dropdown{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 3rem;
+    color: var(--dark-gray);
+    padding: 2px 10px;
+    margin-top: 20px;
+}
 
+.select-open{
+    visibility: visible;
+    font-size: 2rem;
+    /* color: var(--accent-yellow); */
+    /* border-radius: 50%; */
+    border-radius: 3px;
+    border: 2px solid var(--dark-gray);
+}
+
+.caret-icon{
+    font-size: 2rem;
+    visibility: visible;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                           form + preview section                           */
@@ -827,6 +885,8 @@ const addToMarkdown = function(add){
     font-size: 1.5rem;
 }
 
+/* ============== PREVIEW ============ */
+
 .post-preview{
     padding: 10px;
     /* position: absolute;
@@ -835,11 +895,30 @@ const addToMarkdown = function(add){
     flex-direction: column;
     gap: 20px;
     align-items: center;
+    max-width: var(--max-page-width);
+}
+
+.post-preview div{
+    align-self: flex-start;
+}
+
+
+.preview-subdiv{
+    align-self: flex-start;
+    display: flex;
+    gap: 10px;
+    font-size: 1.2rem;
+    color: var(--mid-light);
+}
+
+.preview-title{
+    align-self: start;
+    font-size: 4rem;
 }
 
 .preview-text{
     font-size: 1.2rem;
-    align-self: flex-start;
+    /* align-self: flex-start; */
 }
 
 /* -------------------------------------------------------------------------- */
@@ -852,6 +931,7 @@ const addToMarkdown = function(add){
     align-items: center;
     gap: 10px;
     padding: 10px;
+    border-top: 2px dashed var(--dark-gray);
 }
 .upload-grid{
     /* display: grid;

@@ -1,7 +1,6 @@
 <!-- 
-    TODO: dodac co jesli wrong param w url do usera i postu
-    TODO: brakuje zwracania po edytowaniu informacji o sukcesie lub porazce
-    tostem
+    FIXME: brakuje zwracania po edytowaniu informacji o sukcesie lub porazce
+    tostem czy czyms ale w/e
  -->
 <script setup>
 import { useRoute, useRouter} from 'vue-router';

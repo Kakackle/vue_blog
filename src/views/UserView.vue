@@ -30,7 +30,7 @@ const errorMsg = ref();
 //for pagination
 const PAGE_SIZES = [5, 10, 15];
 
-//TODO: nowy img itd..
+//TODO: nowy img itd.. - najpierw w Django
 const newName = ref('');
 const newUsername = ref('');
 const newMail = ref('');
@@ -131,7 +131,6 @@ getUser(user_slug);
             </div>
             <!-- turn display into inputs for editing -->
             <div v-if="beingEdited" class="user-right user-editing">
-                <!-- TODO: wymiana avatara uzytkownika -->
                 <div class="label-div">
                     <label for="av-img">profile pic.:</label>    
                     <img :src=user.avatar class="av-img" id="av-img">

@@ -52,6 +52,14 @@ widzialem ze komus kiedys to manglowalo dane, ale moze nie mial obu parserow alb
 
     przykladowe wykorzystanie: zmiana koloru przycisku polubienia postu w zaleznosci czy jest polubiony czy nie, co zalezy wlasnie od wartosci ze store typu zalogowany uzytkownik
 
+5. tailwind prose i markdown i osiaganie pelnej szerokosci
+przykladowo createpostview: post-content po prostu nie chcialo zajmowac 100%, przyjmuje jakis limit i ma to w dupie
+
+ale min-width juz sie sluchalo wiec nie wiem o co chodzi, ale chyba cos ze min-width ma przewage nad width i max-width, wiec pokonuje jakies wewnetrzne limity niewidoczne
+
+6. Blur na dole containera
+rozwiazanie ze stacka z wykorzystaniem elementu :after https://stackoverflow.com/a/61772690
+
 # Problemy porzucone
 
 1. Kwestia przypisywania czegos do elementu wyswietlajacego po keys z refa
