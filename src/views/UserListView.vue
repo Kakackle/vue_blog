@@ -1,6 +1,8 @@
 <script setup>
 import {ref} from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const users = ref();
 
 const getAllUsers = async function(){
@@ -21,11 +23,17 @@ getAllUsers();
 <template>
 <div class="main">
     <p class="title">ALL USERS LIST:</p>
-    <ol class="users" v-if="users">
-        <li v-for="user in users">
-            <router-link :to="{name: 'user', params:{user_slug: user.slug}}">{{user.slug}}</router-link>
-        </li>
-    </ol>
+    <section class="users" v-if="users">
+        <div class="user" v-for="user in users">
+            <p class="name">{{ user.name }}</p>
+            <p class="desc">{{ user.mail }}</p>
+            <p class="desc">{{ user.bio }}</p>
+            <ion-icon name="arrow-forward-outline" class="icon hover"
+            @click="router.push({name: 'user', params:{user_slug: user.slug}})"
+            ></ion-icon>
+            <!-- <router-link :to="{name: 'user', params:{user_slug: user.slug}}">{{user.slug}}</router-link> -->
+        </div>
+    </section>
 </div>
 </template>
 
@@ -34,6 +42,30 @@ getAllUsers();
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 1.5rem;
+    gap: 1rem;
+    max-width: var(--max-page-width);
+    margin: 0 auto;
+    color: var(--dark-gray);
+}
+.title{
+    font-size: 4rem;
+}
+.users{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.user{
+    font-size: 2rem;
+    position: relative;
+}
+.icon{
+    position: absolute;
+    right: 1rem;
+}
+
+.name{
+    font-weight: 500;
+    text-decoration: underline;
 }
 </style>

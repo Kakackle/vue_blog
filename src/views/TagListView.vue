@@ -75,8 +75,8 @@ const submitTag = async function(){
     </section>
     <section class="tags" v-if="tags.length">
         <div class="tag" v-for="tag in tags">
-            <p class="name">Name: {{ tag.name }}</p>
-            <p class="desc">Desc: {{ tag.description }}</p>
+            <p class="name">{{ tag.name }}</p>
+            <p class="desc">{{ tag.description }}</p>
             <ion-icon name="arrow-forward-outline" class="icon hover"
             @click="router.push({name: 'tag', params: {tag_slug: tag.name}})"
             ></ion-icon>
@@ -108,6 +108,13 @@ const submitTag = async function(){
     position: absolute;
     right: 1rem;
 }
+
+.name{
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+/* ========== add new tag ========== */
 .submit-button{
     width: 14rem;
     height: 3rem;
@@ -120,8 +127,5 @@ const submitTag = async function(){
     width: 24rem;
     height: 8rem;
     font-size: 1.5rem;
-}
-.hover:hover{
-    cursor: pointer;
 }
 </style>

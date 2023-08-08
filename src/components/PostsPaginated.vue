@@ -96,7 +96,7 @@ const getPostsByPage = async function(link, page_id){
 getPosts(query_string.value);
 
 
-// FIXME: tutaj poki co zrobie watchem wykrywanie zmiany zalogowanego uzytkownika
+// tutaj poki co zrobie watchem wykrywanie zmiany zalogowanego uzytkownika
 // i uzasadnie renderowanie calosci od tej wartosci, co powinno rerenderowac
 // cale postspaginated, bez zadnego dodatkowego pobierania
 // ALE problem z tym moze byc taki, ze musze to zrobic tutaj oraz np. w filtrach

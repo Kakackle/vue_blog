@@ -277,10 +277,7 @@ import AutoComplete from 'primevue/autocomplete';
 import { storeToRefs } from 'pinia';
 import router from '../router';
 
-//FIXME: troche chujowe takie pobieranie all postow
-//gdyby bylo ich bardzo duzo to duzy hit dla performance moze byc
-//ale jak inaczej to zrobic? bo chcialbym szukajac miec dostep do wszystkiego
-//zeby moglo wszystko sugerowac
+// pobieranie wszystkich postow na potrzeby autosugestii
 const filteredPosts = ref();
 const allPosts = ref();
 const getAllPosts = async function(){
@@ -653,8 +650,9 @@ const selectOpen = ref(0);
     display: flex;
     flex-direction: column;
     gap: 5px;
-    min-width: 250px;
-    max-width: 350px;
+    /* min-width: 300px;
+    max-width: 350px; */
+    width: 100%;
 }
 
 .filters{
@@ -663,10 +661,48 @@ const selectOpen = ref(0);
     align-items: center;
     font-size: 2rem;
 }
-/* TODO: stylizacja tej listy wyboru - chociazby fontsize pls.. - jak to zrobic */
-.filters .p-autocomplete-item{
-    font-size: 20px;
+
+:deep(.p-autocomplete){
+    /* font-size: 1.5rem; */
+    /* background-color: red; */
+    width: 250px;
+    overflow: hidden; 
+    display: flex;
+    flex-wrap: wrap;
+    /* padding: 10px; */
+    /* font-size: 1.5rem; */
 }
+
+:deep(.p-autocomplete-input){
+    width: 250px;
+    font-size: 1.5rem;
+    color: var(--var-gray);
+    border: 2px solid var(--mid-light);
+    border-radius: 3px;
+}
+:deep(.p-hidden-accessible){
+    color: var(--mid-light);
+}
+
+/* :deep(.p-component .p-autocomplete-items){
+    background-color: red;
+    font-size: 20px;
+} */
+
+/*
+
+:deep(.p-autocomplete-panel){
+    background-color: var(--almost-white);
+}
+
+:deep(.p-autocomplete-items){
+    font-size: 20px;
+    background-color: var(--almost-white);
+}
+
+:deep(.p-autocomplete-item){
+
+} */
 
 .filters div{
     font-size: 2rem;
@@ -1072,3 +1108,11 @@ const selectOpen = ref(0);
 }
 
 </style>
+
+<!-- <style module>
+    .autocomp{
+        /* background-color: red; */
+        font-size: 1.5rem;
+
+    }
+</style> -->

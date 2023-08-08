@@ -1,4 +1,4 @@
-<!-- TODO: funkcjonalnosc mailowania itd -->
+<!-- TODO: [Django?] funkcjonalnosc mailowania itd -->
 <script setup>
 
 </script>

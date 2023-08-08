@@ -1,4 +1,3 @@
-// FIXME: Lazy loading? Moze jesli initial load strony stanie sie dlugi
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import BlogView from "../views/BlogView.vue";
@@ -7,6 +6,7 @@ import AboutViewTailwind from "../views/AboutViewTailwind.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import MarkdownView from "../views/MarkdownView.vue";
 import DatePickerView from "../views/DatePickerView.vue";
+import DropdownView from "../views/DropdownView.vue"
 import TestView from "../views/TestView.vue";
 
 import userRoutes from "./userRoutes";
@@ -80,6 +80,15 @@ const router = createRouter({
       meta: {
         desc: "date",
         title: "date",
+      },
+    },
+    {
+      path: "/dropdown",
+      name: "dropdown",
+      component: DropdownView,
+      meta: {
+        desc: "drop",
+        title: "drop",
       },
     },
     {

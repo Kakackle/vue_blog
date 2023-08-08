@@ -1,12 +1,4 @@
 <!-- 
-    TODO: zeby to dzialalo, w global base.css musi byc wylaczone font-size: 62.5%;
-    ale na tej bazie skalowalem reszte komponentow...
-    i nie widzie sposobu jak wylaczyc to w  tylko jednym komponencie
-    wiec najpewniej trzeba bedzie dodac do kazdego innego na start
-    *{
-        font-size: 62.5%;
-    }
-    albo dodatkowy plik importowany w kazdym z nich poza tym z markdown, na to samo wychodzi
  -->
 <script setup>
 import {marked} from 'marked';

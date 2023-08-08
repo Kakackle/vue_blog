@@ -1,7 +1,3 @@
-<!-- 
-    FIXME: brakuje zwracania po edytowaniu informacji o sukcesie lub porazce
-    tostem czy czyms ale w/e
- -->
 <script setup>
 import { useRoute, useRouter} from 'vue-router';
 import { ref } from 'vue';
@@ -9,6 +5,11 @@ import axios from 'axios';
 import PreviewList from "../components/PreviewList.vue"
 import GoBackButton from "../components/GoBackButton.vue"
 import PostsPaginated from '../components/PostsPaginated.vue';
+
+import {useToast} from "vue-toastification";
+const toast = useToast();
+const success = ref('');
+const error = ref('')
 
 const route = useRoute();
 const router = useRouter();
@@ -67,9 +68,6 @@ const getPostsByTag = async function(link){
 
 getTagBySlug(tag_slug);
 
-const success = ref('');
-const error = ref('');
-
 const newName = ref('');
 const newDesc = ref('');
 
@@ -87,10 +85,12 @@ const submitEdit = async function(){
     }
     axios.patch(`tags/${tag.value.id}`, newTag)
     .then((res)=>{
-        success.value += res.status + ' ' + res.statusText; 
+        success.value += res.status + ' ' + res.statusText;
+        toast.success(success.value);
     })
     .catch((err)=>{
-        error.value += err;
+        error.value +='an error ocurred: ' + err;
+        toast.error(error.value);
     })
     .finally(()=>{
         newName.value = '';

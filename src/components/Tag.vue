@@ -1,9 +1,13 @@
 <script setup>
 const props = defineProps(['tag']);
+import { useRouter } from 'vue-router';
+const router = useRouter();
 </script>
 
 <template>
-<p class="tag">{{ props.tag }}</p>
+<p class="tag"
+    @click="router.push({name: 'tags', params:{tag_slug: props.tag}})"
+    >{{ props.tag }}</p>
 </template>
 
 <style scoped>

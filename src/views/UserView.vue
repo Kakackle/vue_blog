@@ -30,7 +30,7 @@ const errorMsg = ref();
 //for pagination
 const PAGE_SIZES = [5, 10, 15];
 
-//TODO: nowy img itd.. - najpierw w Django
+//TODO:[Django] nowy img itd.. - najpierw w Django
 const newName = ref('');
 const newUsername = ref('');
 const newMail = ref('');
@@ -174,7 +174,6 @@ getUser(user_slug);
                 </div>
             </subsection>
             <subsection class="tags">
-                <!-- TODO: funkcjonalnosc klikania tych tagow -->
                 <p class="title">{{ user.name }}'s most popular tags</p>
                 <div class="tags-div">
                     <Tag :tag="'programming'"></Tag>
@@ -184,7 +183,7 @@ getUser(user_slug);
                     <Tag :tag="'diy'"></Tag>
                 </div>
             </subsection>
-            <!-- TODO: po funkcjonalnosci followowancyh w django tu udynamicznic -->
+            <!-- TODO:[Django] po funkcjonalnosci followowancyh w django tu udynamicznic -->
             <subsection class="followed">
                 <p class="title">Users followed by {{ user.name }}</p>
                 <div class="followed-users">

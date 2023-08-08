@@ -1,4 +1,4 @@
-TODO: [TUTAJ] Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
+Tutaj Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
 
 # Porzucone elementy
 1. JSDOC
@@ -86,3 +86,24 @@ wiec potem przesuwajac albo nadpisujac rzeczy, klucze sie nie zgadzaly i wszystk
 ```
 
 rozwiazanie: nie wiem w tym przypadku konkretnym, w nowym trzeba by tworzyc kompletnie nowy obiekt i go zwracac i powodowac rerender obiektu z kluczami czy cos
+
+
+# Jak rozwiazac? Bardziej zlozone problemy
+
+## Performance etc
+
+### Na potrzeby przeszukiwania calosci, filtracji, autocomplete
+
+troche chujowe takie pobieranie wszystkich postow i trzymanie
+gdyby bylo ich bardzo duzo to duzy hit dla performance moze byc
+ale jak inaczej to zrobic? bo chcialbym szukajac miec dostep do wszystkiego
+zeby moglo wszystko sugerowac
+
+mozna by wysylac requesty z tekstem do backendu - ale to duzo requestow, opoznienia wraz z wpisywaniem
+
+alternatywnie, mozna by miec dodatkowy endpoint zwracajacy np tylko tytuly postow, co znacznie zredukuje ilosc danych, bo nawet 1000 po prostu tytulow to nic, ale 1000 postow z contentem itd to juz moze byc duzo
+
+### Routes
+
+Lazy loading? Moze jesli initial load strony stanie sie dlugi
+czyli ladowanie komponentow/views tylko kiedy route jest otwierane, w przeciwnym wypadku ladowane sa od samego poczatku wraz z ladowaniem calej strony

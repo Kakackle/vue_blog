@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import axios from 'axios';
 import { useUserStore } from '../stores/user';
 import { storeToRefs } from 'pinia';
@@ -23,6 +23,10 @@ const addNewComment = async function(){
         console.log('log in to add a comment');
         return;
     }
+    if (newContent.value.length > 500){
+        toast.error("the lenght of the comment can't exceed 500 characters");
+        return;
+    }
     const newComm = {
         csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
         content: newContent.value,
@@ -42,16 +46,25 @@ const addNewComment = async function(){
     })
 }
 
-// TODO: sprawdzenie roznych warunkow typu:
-// - uzytkownik nie moze lajkowac swojego komenta
-// - uzytkownik moze edytowac tylko wlasne komenty
-// - tylko wlasne komenty usuwac
-// TODO: wazne? chcialbym na komentach miec max ilosc znakow
-// i musialbym o tym dawac znac uzytkownikowi podczas pisania ile mu zostalo jeszcze znakow
-//  i jesli sie nie zgadza to nie wysylac requesta
-// - cos tam jeszcze
-// co najlatwiej zalatwic na froncie, zeby uzytkownik mial od razu informacje
-// a nie musial wysylac i dostawc informacje ze nie przeszlo
+/* -------------------------------------------------------------------------- */
+/*                               obsluga lajkow                               */
+/* -------------------------------------------------------------------------- */
+
+const comment_liked = computed(()=>{
+    if(loggedUser.value && comment.value)
+        return comment.value.liked_by.includes(loggedUser.value.slug);
+    else return false;
+})
+
+/* -------------------------------------------------------------------------- */
+/*          sprawdzanie zgodnosci zalogowanego uzytkownika z autorem          */
+/* -------------------------------------------------------------------------- */
+
+const is_author = computed(()=>{
+    if(loggedUser.value && comment.value)
+        return comment.value.author === loggedUser.value.slug;
+    else return false;
+})
 
 const openEdit = () =>{
     displayEdit.value = 1;
@@ -62,6 +75,10 @@ const editComment = async function(){
     if (!loggedUser.value) {
         console.log('log in to add a comment');
         return;
+    }
+    if(loggedUser.value.slug !== comment.value.author){
+        toast.error(`you can't edit other user's posts`);
+        return
     }
     const newComm = {
         csrfmiddlewaretoken: 'Y5460zBRZdCSK3n3MOJYVssZBcBtYtgvUoVn0nltSrBGOBvIXAYmESEFuvHijfrZ',
@@ -91,43 +108,61 @@ const error = ref('')
 const updateLiked = async function(){
     success.value='';
     error.value='';
-    if(!loggedUser.slug){
+    if(!loggedUser.value.slug){
         loggedUser.value = userStore.getUser();
     }
+    //czy jakikolwiek uzytkownik zalogowany
     new_liked_by.value = loggedUser.value;
     if(!new_liked_by.value){
         toast.error(`log in first before trying to like`);
         return
     }
+    if(loggedUser.value.slug === comment.value.author){
+        toast.error(`you can't like your own comments, silly`);
+        return
+    }
+    //czy uzytkownik juz w liscie lubiacych
     if(comment.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
         console.log(`logged user not in liked_by`);
-
         comment.value.liked_by.push(new_liked_by.value.slug);
-        
-        axios.patch(`comments/${comment.value.id}`, {
-            liked_by: comment.value.liked_by,
-            likes: comment.value.liked_by.length
-        })
-        .then((res)=>{
-            success.value = `added to likes, ${res.status}, ${res.statusText}`;
-            toast.success(success.value);
-            new_liked_by.value=undefined;
-            emit('refresh');
-            
-        })
-        .catch((err)=>{
-            error.value = `${err.status}, ${err.statusText}`;
-            toast.error(error.value);
-            console.log(`updating comment likes error: ${err}`);
-        })
     }
     else{
+        const user_index = comment.value.liked_by.indexOf(loggedUser.value.slug);
+        comment.value.liked_by.splice(user_index, 1);
+        if (comment.value.liked_by.length === 0){
+            comment.value.liked_by = [];
+        }
         console.log('user in liked_by already');
-        toast.error('user in liked_by already');
+        // toast.error('user in liked_by already');
     }
+    console.log(`new liked_by: ${comment.value.liked_by},
+     type: ${typeof comment.value.liked_by},
+     len: ${comment.value.liked_by.length}`);
+    
+    axios.patch(`comments/${comment.value.id}`, {
+        liked_by: comment.value.liked_by,
+        likes: comment.value.liked_by.length
+    })
+    .then((res)=>{
+        success.value = `updated likes, ${res.status}, ${res.statusText}`;
+        toast.success(success.value);
+        new_liked_by.value=undefined;
+        emit('refresh');
+        
+    })
+    .catch((err)=>{
+        error.value = `${err.status}, ${err.statusText}`;
+        toast.error(error.value);
+        console.log(`updating comment likes error: ${err}`);
+    })
 }
+    
 
 const deleteComment = async function(){
+    if(loggedUser.value.slug !== comment.value.author){
+        toast.error(`you can't delete other user's comments`);
+        return
+    }
     axios.delete(`comments/${comment.value.id}`)
     .then((res)=>{console.log(`delete comment success: ${res}`);
     emit('refresh')})
@@ -151,18 +186,23 @@ const deleteComment = async function(){
                 <div class="likes">
                     <ion-icon class="like-icon hover" name="thumbs-up-sharp"
                     @click="updateLiked()"
+                    :class="{'comment-liked': comment_liked}"
                     ></ion-icon>
                     <p>{{ comment.likes }}</p>
                 </div>
                 <ion-icon name="trash-outline" class="like-icon hover"
-                    @click="deleteComment"></ion-icon>
+                    @click="deleteComment"
+                    v-if="is_author"></ion-icon>
             </div>
         </div>
         <div class="bottom">
             <p>{{ comment.content }}</p>
             <div class="controls">
-                <button class="reply-button hover-underline" @click="displayReply = 1">reply</button>
-                <button class="edit hover-underline" @click="openEdit">edit</button>
+                <button class="reply-button hover-underline"
+                    @click="displayReply = 1"
+                    v-if="!is_author">reply</button>
+                <button class="edit hover-underline" @click="openEdit"
+                    v-if="is_author">edit</button>
             </div>
         </div>
     </div>
@@ -170,14 +210,17 @@ const deleteComment = async function(){
     <div class="reply-form" v-if=displayReply>
         <textarea class="reply-text" placeholder="write your response..."
         v-model="newContent"></textarea>
-        <button class="close-reply" @click="addNewComment">submit</button>
+        <div class="reply-bottom">
+            <p class="characters">{{ 500 - newContent.length  }} characters left</p>
+            <button class="close-reply" @click="addNewComment">submit</button>
+        </div>
     </div>
     <!-- edit -->
     <div class="reply-form" v-if=displayEdit>
         <textarea class="reply-text" v-model="newContent">{{ comment.content }}</textarea>
         <button class="close-reply hover" @click="editComment">submit</button>
     </div>
-    <Comment v-for="(reply, reply_id) in comment.replies" :comment="reply"
+    <Comment @refresh="emit('refresh')" v-for="(reply, reply_id) in comment.replies" :comment="reply"
     class="reply"></Comment>
 </div>
 </template>
@@ -250,8 +293,15 @@ const deleteComment = async function(){
 }
 
 .like-icon{
-    color: var(--mid-light);
+    color: var(--mid-gray);
+    visibility: visible;
 }
+
+.comment-liked{
+    color: var(--accent-yellow);
+    visibility: visible;
+}
+
 .reply-form{
     display: flex;
     flex-direction: column;
@@ -282,8 +332,18 @@ const deleteComment = async function(){
     /* left: 10px; */
     transform: translateX(20px);
 }
-.hover:hover{
+
+.reply-bottom{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+/* .hover:hover{
     cursor: pointer;
     filter: brightness(0.7);
-}
+} */
 </style>

@@ -15,20 +15,21 @@ const userStore = useUserStore();
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-import Dropdown from "primevue/dropdown";
+// import Dropdown from "primevue/dropdown";
+import Dropdown from "./Dropdown.vue";
 
 const dropdown_list_routes = [
     {
-        name: "Users list",
-        path: "userlist",
+        title: "Users list",
+        route: "userlist",
     },
     {
-        name: "Tags list",
-        path: "tags",
+        title: "Tags list",
+        route: "tags",
     },
     {
-        name: "Posts list",
-        path: "postlist",
+        title: "Posts list",
+        route: "postlist",
     },
 ];
 const selected_list = ref();
@@ -108,17 +109,15 @@ const logout = () => {
                     <router-link class="hover" to="/">Home</router-link>
                     <RouterLink class="hover" to="/about">About</RouterLink>
                     <RouterLink class="hover" to="/blog">Blog</RouterLink>
-                    <Dropdown
+                    <!-- <Dropdown
                         v-model="selected_list"
                         :options="dropdown_list_routes"
                         optionLabel="name"
                         placeholder="LISTS"
                         @change="router.push({ name: selected_list.path })"
                     >
-                        <!-- <template #optiongroup="slotProps" @click="router.push({name: slotProps.option.path})">
-                    <RouterLink class="hover" :to="{name: slotProps.option.path}">{{ slotProps.option.name }}</RouterLink>
-                </template> -->
-                    </Dropdown>
+                    </Dropdown> -->
+                    <Dropdown :items="dropdown_list_routes" :title="'Lists'"></Dropdown>
                 </div>
                 
                 <div class="nav-drop" :class="{'drop-open': navDropOpen}">

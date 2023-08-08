@@ -1,13 +1,11 @@
 # Nowe funkcjonalnosci
-4. TODO: zliczanie ilosci postow autora, postow z tagiem etc, to bardziej moze czesc Django, jako dodatkowa startystyka - potem dodac na froncie wyswietlanies
-7. TODO: jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie), albo losowe, albo najwiecej lajkow/wyswietlen w ciagu ostatnich 7/30 w/e dni, jakims "algorytmem" (czyli kalkulacja stosunku) - ale to kwestia [ Django ]
+4. TODO: [Django] zliczanie ilosci postow autora, postow z tagiem etc, to bardziej moze czesc Django, jako dodatkowa startystyka - potem dodac na froncie wyswietlanies
+7. TODO: [Django] jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie), albo losowe, albo najwiecej lajkow/wyswietlen w ciagu ostatnich 7/30 w/e dni, jakims "algorytmem" (czyli kalkulacja stosunku) - ale to kwestia [ Django ]
 
-8. jakos zamienic to query na lepszy system filtracji/searchu,
+8. [Django] jakos zamienic to query na lepszy system filtracji/searchu,
    bo na pewno są, aktualnie jest dosyc kaleki
 
 # Uzupelnienie funkcjonalnosci
-1. TODO: Chujowa ta stylizacja listy z Prime, zrobienie wlasnej jest dosyc latwe, serio, dropdown + kwestia by hover dobrze sie nakladal tylko na wskazana opcje - moze nawet jako komponent, tylko wtedy kwestia czy dac jakos slot czy prop na funkcje czy co, zeby uzytkownik mogl jako prop podac teksty ale i czy to ma byc tylko tekst czy link, czy po kliknieciu ma wywolywac jakas funkcje itd
-
 
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk
 

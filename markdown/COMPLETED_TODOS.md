@@ -1,5 +1,4 @@
 # Idk, zobaczymy czy okaze sie przydatne takie zapisywanie
-## TODO: upieknic, Moze jakies kategorie, typy
 
 1. Mozliwosc dodawania ~~tagow~~ i userow [POST] (chodzi o czy beda problemy ze slug)
 4. Routowanie w vue po slugach do postow i uzytkownikow - ale duzo bedzie naprawiania
@@ -76,7 +75,16 @@ przy czym zwaz, ze to co robisz w ten sposob nachodzi na to co powinien robic
 twoj backed, czyli obsluga authentication, persmissions itd
 
 
-## Idk
+## Wyglad, Idk
 
 1. Kompletnie zjebane wszedzie sa rozmiary czcionek w stylach przez to ograniczenie markdown ze font-size nie moze byc globalnie 62.5%
 ALE: zamiast kombinowac z zamienianiem wszedzie rozmiarow moze mozna dodac to w na view gdzie to ma sens, a ~~wylaczyc~~ NIE WLACZAC tylko na dwoch (czyli tworzenie postu i wyswietlanie) gdzie jest md - NAGLE MD DZIALA MIMO GLOBALNEGO 62.5%, OKEJ, SUPER
+
+2. Chujowa ta stylizacja listy z Prime, zrobienie wlasnej jest dosyc latwe, serio, dropdown + kwestia by hover dobrze sie nakladal tylko na wskazana opcje - moze nawet jako komponent, tylko wtedy kwestia czy dac jakos slot czy prop na funkcje czy co, zeby uzytkownik mogl jako prop podac teksty ale i czy to ma byc tylko tekst czy link, czy po kliknieciu ma wywolywac jakas funkcje itd
+
+3. wazne? chcialbym na komentach miec max ilosc znakow
+// i musialbym o tym dawac znac uzytkownikowi podczas pisania ile mu zostalo jeszcze znakow
+//  i jesli sie nie zgadza to nie wysylac requesta
+// - cos tam jeszcze
+// co najlatwiej zalatwic na froncie, zeby uzytkownik mial od razu informacje
+// a nie musial wysylac i dostawc informacje ze nie przeszlo

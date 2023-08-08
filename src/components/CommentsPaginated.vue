@@ -83,9 +83,12 @@ const addNewComment = async function(){
         <button class="submit-button hover" @click="displayReply=1">ADD A NEW COMMENT</button>
         <!-- reply form -->
         <div class="reply-form" v-if=displayReply>
-            <textarea class="reply-text" placeholder="write your response..."
+            <textarea class="reply-text" placeholder="write your comment..."
             v-model="newContent"></textarea>
-            <button class="close-reply" @click="addNewComment">submit</button>
+            <div class="reply-bottom">
+                <p class="characters">{{ 500 - newContent.length  }} characters left</p>
+                <button class="close-reply hover" @click="addNewComment">submit</button>
+            </div>
         </div>
         <!-- comments -->
         <div class="comment" v-for="(comm, comm_id) in comments" v-if="comments.length">
@@ -146,13 +149,33 @@ const addNewComment = async function(){
 .reply-form{
     display: flex;
     flex-direction: column;
+    border: 2px solid var(--mid-light);
+    border-bottom: 4px solid var(--mid-gray);
+    margin-bottom: 10px;
+    border-radius: 3px;
 }
 .reply-text{
     width: 100%;
     height: 50px;
+    font-size: 1.2rem;
+    padding: 5px;
 }
 .close-reply{
     width: 60px;
     align-self: end;
+    background-color: var(--mid-gray);
+    color: var(--almost-white);
+    font-weight: 500;
+    padding: 2px;
+}
+
+.reply-bottom{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 1.5rem;
+    padding: 5px;
 }
 </style>

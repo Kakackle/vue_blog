@@ -108,7 +108,7 @@ const getPostsByAuthor = async function(author){
   })
 }
 
-// TODO: + pobieranie trendujacych tu tez, moze jakos w composables by to zawrzec potem
+// TODO:[Django] pobieranie trendujacych tu tez, moze jakos w composables by to zawrzec potem
 
 const posts = ref([]);
 const getPosts = async function(){
@@ -298,15 +298,6 @@ getPosts();
   /* justify-content: center; */
   /* padding: 10px; */
 }
-/* FIXME: */
-/* proby selectowania elementow html generowanych przez md ale chyba luj */
-/* #app > main > div > main > section > div > div.post-content.prose > h2{
-  color: red;
-}
-
-.post-content p img{
-  align-self: center;
-} */
 
 .comments {
   display: flex;

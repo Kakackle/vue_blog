@@ -42,16 +42,6 @@ const getAuthor = async function(){
 
 getAuthor();
 
-// FIXME: poki co zrobie tak ze we froncie sprawdzane czy juz polajkowane
-// i w zaleznosci od tego wyslij liste z nowym uzytnikiem albo bez jak juz byl
-// ale potem lepiej by to robic w django, bo to taka racej backendowa operacja
-// a frontent powinien byc glownie od wyswietlania a nie trzymania stanu
-
-// FIXME: potencjalny problem kompozycji - poprzez lajkowanie albo cokolwiek
-// aktualizujemy stan postu, ale post pobierany i przesylany jest z zewnatrz
-// jako prop - moze rozwiazac to zamieniajac prop na ref i watchujac?
-// okej, ale i tak trzeba pobrac od nowa z database z nowa iloscia, lista itd
-
 const emit = defineEmits(['refresh']);
 
 const updateLiked = async function(){
@@ -65,7 +55,6 @@ const updateLiked = async function(){
         loggedUser.value = userStore.getUser();
     }
     // przypisz nowego uzytkownika do zmiennej new_liked_by
-    // FIXME: - wlasciwie useless
     new_liked_by.value = loggedUser.value;
     // jesli nie ma zalogowanego uzytkownika to powroc
     if(!new_liked_by.value){
@@ -156,7 +145,7 @@ const compiledMarkdown = computed(() => {
         <div class="top">
             <div class="top-left">
                 <p class="title">{{ post.title }}</p>
-                <p v-if=post_liked>Post liked</p>
+                <!-- <p v-if=post_liked>Post liked</p> -->
             </div>
             <div class="top-right">
                 <!-- <p class="post_id">id: {{ post.id }}</p> -->
@@ -249,6 +238,7 @@ const compiledMarkdown = computed(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid black;
 }
 
 .top-right{
@@ -287,7 +277,7 @@ const compiledMarkdown = computed(() => {
 
 .title{
     font-size: 2.4rem;
-    border-bottom: 2px solid black;
+    /* border-bottom: 2px solid black; */
     /* width: 100%; */
 }
 .author{
@@ -301,7 +291,10 @@ const compiledMarkdown = computed(() => {
 }
 
 .content{
+    margin-top: 10px;
     font-size: 1.2rem;
+    /* min-width: 500px; */
+    max-width: 700px;
 }
 
 </style>
