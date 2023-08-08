@@ -108,8 +108,6 @@ const getPostsByAuthor = async function(author){
   })
 }
 
-// TODO:[Django] pobieranie trendujacych tu tez, moze jakos w composables by to zawrzec potem
-
 const posts = ref([]);
 const getPosts = async function(){
   axios.get(`posts/`)
@@ -121,9 +119,23 @@ const getPosts = async function(){
   })
 }
 getPosts();
+
+const trending_posts = ref([]);
+const getTrendingPosts = async function(){
+  axios.get(`posts/trending/`)
+  .then((res)=>{
+    trending_posts.value = res.data;
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+}
+getTrendingPosts();
+
 // + kwestia - getpostbyauthor moze byc tylko wywolywane w getpost
 // bo music post istniec czy daloby sie inaczej?
 // getPostsByAuthor(post.value.author);
+
 
 </script>
 
@@ -184,7 +196,7 @@ getPosts();
           <CommentsPaginated :post_slug="post_slug"></CommentsPaginated>
           <!-- carousels -->
           <p class="subtitle">Check out these trending posts</p>
-          <Carousel class="section-separator" v-if="posts.length" :posts=posts></Carousel>
+          <Carousel class="section-separator" v-if="trending_posts.length" :posts=trending_posts></Carousel>
           <p class="subtitle" v-if="author">More posts by {{ author.name }}</p>
           <Carousel class="section-separator" v-if="author_posts.length" :posts=author_posts></Carousel>
       </section>
