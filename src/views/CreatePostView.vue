@@ -3,6 +3,11 @@
     wybierane z listy istniejacych
  -->
 
+<!-- TODO: wybieranie reczne autora bez sensu - zalogowany uzytkownik jest autorem zawsze -->
+<!-- TODO: jesli error to nei usuwaj wszystkiego -->
+<!-- TODO: error blokuje czasem dalsze wysylanie? -->
+<!-- TODO: you must first log in tez chyba nie znika zbytnio -->
+
 <!-- TODO: generalne: przydaloby sie stworzyc oddzielne komponenty
     na wybieranie postu - i dosyc latwo by to chyba przekazywac
     
@@ -227,16 +232,22 @@ const submitForm = function(method){
         title: newTitle.value,
         tags: newTags.value,
         content: newContent.value,
-        img: newImg.value,
         author: parseInt(newAuthor.value.id),
-        date_posted: newDate.value
     }
 
     console.log(`data sent: ${JSON.stringify(newPost)}`)
     
     let met_url = '';
 
+    if(newImg.value){
+        newPost.img = newImg.value;
+    }
+
     if(method === "post"){
+        // jesli post, to ustaw date na podana, jesli patch to nie
+        newPost.date_posted = newDate.value;
+        console.log(newPost.date_posted);
+        // osobny endpoint na postowanie, poniewaz customowy
         met_url = `users/${newAuthor.value.id}/post`;
     }
     else{

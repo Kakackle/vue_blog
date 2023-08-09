@@ -5,7 +5,9 @@
 8. [Django] jakos zamienic to query na lepszy system filtracji/searchu,
    bo na pewno są, aktualnie jest dosyc kaleki
 
-9. [Vue] Animacje oraz kiedy klikasz na np. posts paginated strone - scroll do gory strony a nie zostaje w tym samym miejscu
+9. [Vue] TODO: Animacje oraz kiedy klikasz na np. posts paginated strone - scroll do gory strony a nie zostaje w tym samym miejscu
+
+10. [Vue] TODO: dodac na post preview i stronie postu ostatnia date edycji (tez wazna infromacja dla uzytnikow)
 
 # Uzupelnienie funkcjonalnosci
 

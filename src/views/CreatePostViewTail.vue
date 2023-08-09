@@ -260,9 +260,7 @@ const submitForm = function(method){
         title: newTitle.value,
         tags: newTags.value,
         content: newContent.value,
-        img: newImg.value,
         author: parseInt(newAuthor.value.id),
-        date_posted: newDate.value
     }
 
     console.log(`data sent: ${JSON.stringify(newPost)}`)
