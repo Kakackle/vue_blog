@@ -8,6 +8,10 @@
 import axios from 'axios';
 import { nextTick, onMounted } from 'vue';
 import { ref, reactive } from 'vue';
+import { useUserStore } from '../stores/user';
+import { storeToRefs } from 'pinia';
+const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore);
 
 //wszystkie tagi
 const tags = ref([]);
@@ -21,6 +25,17 @@ const query_string = ref('');
 const users = ref([]);
 //zaznaczeni userzy
 const checkedUsers = ref([]);
+
+//wybrane specjalne tryby
+
+// tylko polubione posty
+const liked_by = ref(false);
+// tylko wlasne posty
+const own = ref(false);
+// followed
+const followed = ref();
+// commented
+const commented = ref();
 
 /**
  * Funckja odbierajaca wszystkie tagi z API
@@ -71,6 +86,19 @@ const get_query_string = function(tags, users, search){
     if(search){
         query_string += `&title=${search}`;
     }
+    console.log(`own.value: ${own.value}`);
+    if(own.value){
+        // console.log(`own logged: ${loggedUser.value.slug}`);
+        if(loggedUser.value){
+            query_string += `&own=${loggedUser.value.slug}`;
+        }
+    }
+    if(liked_by.value){
+        // console.log(`liked logged: ${loggedUser.value.slug}`);
+        if(loggedUser.value){
+            query_string += `&liked_by=${loggedUser.value.slug}`;
+        }
+    }
     console.log(`resulting filter query: ${query_string}`);
     return query_string
 }
@@ -106,12 +134,12 @@ const specials = [
 </script>
 
 <template>
-    <div class="side-div unified-shadow">
+    <div class="side-div unified-shadow" :key="loggedUser">
         <p class="boxes-title">FILTER BY SEARCH</p>
-
+        <!-- input search term tytulow -->
         <input type="search" class="search" placeholder="post title"
             v-model="search" @keyup.enter="emitQuery">
-
+        <!-- wybor checkboxow tagow, przekazywanych przez checkedTag -->
         <p class="boxes-title">FILTER BY TAGS:</p>
         <div class="boxes" v-if="tags.length">
             <div v-for="(tag, tag_id) in tags" class="box">    
@@ -122,6 +150,7 @@ const specials = [
                 <label :for=tag_id>{{ tag.name }}</label>
             </div>         
         </div>
+        <!-- po dacie -->
         <p class="boxes-title">FILTER BY DATE:</p>
         <div class="boxes" v-if="dates.length">
             <div v-for="(date, date_id) in dates" class="box">    
@@ -131,6 +160,7 @@ const specials = [
                 <label :for=date_id>{{ date }}</label>
             </div>         
         </div>
+        <!-- po autorze -->
         <p class="boxes-title">FILTER BY AUTHOR:</p>
         <div class="boxes" v-if="tags.length">
             <div v-for="(user, user_id) in users" class="box">    
@@ -141,13 +171,27 @@ const specials = [
                 <label :for=user_id>{{ user.name }}</label>
             </div>         
         </div>
+        <!-- specjalne -->
         <div class="boxes boxes-special" v-if="specials.length">
-            <div v-for="(spec, spec_id) in specials" class="box">    
+            <!-- <div v-for="(spec, spec_id) in specials" class="box">    
                 <input type="checkbox" :id=spec_id name="tag-box"
                     class="tag-box hover"
-                    :value=spec>
+                    :value=spec v-model="checkedSpecial"
+                    @change="emitQuery">
                 <label :for=spec_id>{{ spec }}</label>
-            </div>         
+            </div>  -->
+            <div class="box">
+                <input type="checkbox" id="liked_by" class="tag-box hover"
+                    v-model="liked_by"
+                    @change="emitQuery">
+                <label for="liked_by">Only show posts liked by you</label>
+            </div>
+            <div class="box">
+                <input type="checkbox" id="own" class="tag-box hover"
+                    v-model="own"
+                    @change="emitQuery">
+                <label for="own">Only show your own posts</label>
+            </div>
         </div>
     </div>
 
