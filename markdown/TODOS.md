@@ -5,6 +5,8 @@
 8. [Django] jakos zamienic to query na lepszy system filtracji/searchu,
    bo na pewno są, aktualnie jest dosyc kaleki
 
+9. [Vue] Animacje oraz kiedy klikasz na np. posts paginated strone - scroll do gory strony a nie zostaje w tym samym miejscu
+
 # Uzupelnienie funkcjonalnosci
 
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk

@@ -3,9 +3,9 @@
     allows for viewing and editing/patching
  -->
 <script setup>
-import { useRouter, useRoute, routerKey } from 'vue-router';
+import { useRouter, useRoute, routerKey, onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 // import PreviewList from '../components/PreviewList.vue'; 
 import PostsPaginated from '../components/PostsPaginated.vue';
 import GoBackButton from '../components/GoBackButton.vue';
@@ -18,8 +18,20 @@ const {loggedUser} = storeToRefs(userStore);
 
 const route = useRoute();
 const router = useRouter();
-const user_slug = route.params.user_slug;
-const query_string = `posts/?author=${user_slug}`;
+const user_slug = ref(route.params.user_slug);
+const query_string = `posts/?author=${user_slug.value}`;
+
+// problem: this never happens!
+
+// onBeforeRouteUpdate((to, from)=>{
+//     console.log(` =============== onbeforeroute ============= `);
+//     if(to.params.user_slug !== from.params.user_slug){
+//         getUser(to.params.user_slug);
+//     }
+//     else{
+//         getUser(user_slug.value);
+//     }
+// })
 
 const user = ref();
 const userExists = ref(0);
@@ -35,6 +47,7 @@ const newName = ref('');
 const newUsername = ref('');
 const newMail = ref('');
 const newBio = ref('');
+const newAvatar = ref();
 
 const success = ref('');
 const error = ref('');
@@ -48,14 +61,34 @@ const openEdit = () =>{
     beingEdited.value = 1;
 }
 
+const previewImage = ref();
+
+const uploadNewImage = function(e){
+    newAvatar.value = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(newAvatar.value);
+    reader.onload = e =>{
+                    previewImage.value = e.target.result;
+                };
+}
+
+
 const submitEdit = async function(slug){
-    const newPost = {
+    let newPost = {
         name: newName.value,
         username: newUsername.value,
         mail: newMail.value,
         bio: newBio.value
     }
-    axios.patch(`users/${slug}`, newPost)
+    if(newAvatar.value){
+        newPost.avatar = newAvatar.value
+    }
+    axios.patch(`users/${slug}`, newPost,
+    {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    })
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText; 
     })
@@ -67,7 +100,8 @@ const submitEdit = async function(slug){
         newUsername.value = '';
         newMail.value = '';
         newBio.value = '';
-        getUser(user_slug);
+        newAvatar.value = undefined;
+        getUser(user_slug.value);
         beingEdited.value = 0;
     })
 }
@@ -84,12 +118,12 @@ const getUser = function(slug){
     .catch((error)=>{
         userExists.value = 0;
         errorMsg.value = error;
-        router.push({name: 'catchall', params:{wrong_param: user_slug}});
+        router.push({name: 'catchall', params:{wrong_param: user_slug.value}});
     })
 }
 
 const deleteUser = async function(){
-    axios.delete(`users/${user_slug}`)
+    axios.delete(`users/${user_slug.value}`)
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText; 
     })
@@ -110,12 +144,22 @@ const deleteUser = async function(){
 //     })
 // }
 
-getUser(user_slug);
+getUser(user_slug.value);
+
+// FIXME: wykrywa, wykonuje sie, ale komponent sie nie rerenderuje, mimo v-if oraz mimo :key
+watch(()=>{
+    route.params.user_slug,
+    (new_slug, old_slug)=>{
+        user_slug.value = undefined;
+        user_slug.value = route.params.user_slug;
+        getUser(user_slug.value);
+    }
+})
 
 </script>
 
 <template>
-    <main>
+    <main v-if="user_slug" :key="user_slug">
         <GoBackButton></GoBackButton>
         <section class="main" v-if="userExists">
             <!-- basic view -->
@@ -132,8 +176,14 @@ getUser(user_slug);
             <!-- turn display into inputs for editing -->
             <div v-if="beingEdited" class="user-right user-editing">
                 <div class="label-div">
-                    <label for="av-img">profile pic.:</label>    
-                    <img :src=user.avatar class="av-img" id="av-img">
+                    <label for="av-img">profile pic.:</label>
+                    <img :src="previewImage" class="av-img" id="av-img" v-if="previewImage">
+                    <img :src=user.avatar class="av-img" id="av-img" v-else>
+                </div>
+                <div class="label-div">
+                    <label for="av-input">Upload a new image</label>
+                    <input type="file" id="av-input" class="hover" accept="image/jpeg, image/jpg,
+                        image/png, image/gif" @change="uploadNewImage">
                 </div>
                 <div class="label-div">
                     <label for="name">name:</label>
@@ -269,6 +319,10 @@ getUser(user_slug);
     text-transform: capitalize;
     /* font-size: 1.5rem; */
 }
+/* 
+.label-div-img{
+    flex-direction: column;
+} */
 
 .label-div label{
     font-size: 1.5rem;

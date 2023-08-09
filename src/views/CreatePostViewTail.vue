@@ -269,7 +269,15 @@ const submitForm = function(method){
     
     let met_url = '';
 
+    // jesli byl podany nowy obrazek - przeslij, jesli nie to nie
+    if(newImg.value){
+        newPost.img = newImg.value;
+    }
+
     if(method === "post"){
+        // jesli post, to ustaw date na podana, jesli patch to nie
+        newPost.date_posted = newDate.value;
+        // osobny endpoint na postowanie, poniewaz customowy
         met_url = `users/${newAuthor.value.id}/post`;
     }
     else{
