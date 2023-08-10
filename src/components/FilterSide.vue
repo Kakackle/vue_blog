@@ -26,6 +26,9 @@ const users = ref([]);
 //zaznaczeni userzy
 const checkedUsers = ref([]);
 
+// days / jak dawne
+const days = ref(0);
+
 //wybrane specjalne tryby
 
 // tylko polubione posty
@@ -82,6 +85,10 @@ const get_query_string = function(tags, users, search){
     users.forEach((user)=>{
         query_string += `&author=${user}`;
     })
+    // jak dawne posty jesli wybrane, czyli >0
+    if(days.value>0){
+        query_string+=`&days=${days.value}`;
+    }
     //jesli query term po tytulach postow
     if(search){
         query_string += `&title=${search}`;
@@ -94,9 +101,18 @@ const get_query_string = function(tags, users, search){
         }
     }
     if(liked_by.value){
-        // console.log(`liked logged: ${loggedUser.value.slug}`);
         if(loggedUser.value){
             query_string += `&liked_by=${loggedUser.value.slug}`;
+        }
+    }
+    if(commented.value){
+        if(loggedUser.value){
+            query_string += `&commented=${loggedUser.value.id}`;
+        }
+    }
+    if(followed.value){
+        if(loggedUser.value){
+            query_string += `&followed=${loggedUser.value.slug}`;
         }
     }
     console.log(`resulting filter query: ${query_string}`);
@@ -123,6 +139,11 @@ const dates = [
     'Last year',
     'Older than a year'
 ];
+
+const dates_values = [
+    1, 3, 7, 30, 365, 10000
+];
+
 //specjalne tryby stale ale dodanie ich funkcjonalnosci
 const specials = [
     'Only show posts by followed authors',
@@ -154,9 +175,11 @@ const specials = [
         <p class="boxes-title">FILTER BY DATE:</p>
         <div class="boxes" v-if="dates.length">
             <div v-for="(date, date_id) in dates" class="box">    
-                <input type="checkbox" :id=date_id name="tag-box"
+                <input type="radio" :id=date_id name="tag-box"
                     class="tag-box hover"
-                    :value=date>
+                    :value=dates_values[date_id]
+                    v-model="days"
+                    @change="emitQuery">
                 <label :for=date_id>{{ date }}</label>
             </div>         
         </div>
@@ -191,6 +214,18 @@ const specials = [
                     v-model="own"
                     @change="emitQuery">
                 <label for="own">Only show your own posts</label>
+            </div>
+            <div class="box">
+                <input type="checkbox" id="commented" class="tag-box hover"
+                    v-model="commented"
+                    @change="emitQuery">
+                <label for="commented">Only show posts you have commented on</label>
+            </div>
+            <div class="box">
+                <input type="checkbox" id="followed" class="tag-box hover"
+                    v-model="followed"
+                    @change="emitQuery">
+                <label for="followed">Only show posts from users you follow</label>
             </div>
         </div>
     </div>

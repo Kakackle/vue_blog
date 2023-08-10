@@ -44,17 +44,18 @@ const getPost = async function () {
   getPostsByAuthor(post.value.author);
   getAuthor();
   // aktualizacja wyswietlen w database
-  axios.patch(
-    `http://127.0.0.1:8000/api/posts/${post_slug}`,
-    {
-      views: post.value.views + 1,
-    },
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  // axios.patch(
+  //   `http://127.0.0.1:8000/api/posts/${post_slug}`,
+  //   {
+  //     views: post.value.views + 1,
+  //   },
+  //   {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //   }
+  // );
+  axios.patch(`posts/${post_slug}/view`);
 };
 
 getPost();

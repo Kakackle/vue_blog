@@ -60,6 +60,8 @@ ale min-width juz sie sluchalo wiec nie wiem o co chodzi, ale chyba cos ze min-w
 6. Blur na dole containera
 rozwiazanie ze stacka z wykorzystaniem elementu :after https://stackoverflow.com/a/61772690
 
+## Wazna notka (reminder) dotyczaca zmiany przy :key i v-if : nie zapominaj o dzialaniu akcja-reakcja - kiedy chcesz zeby cos sie zmienilo bo zmienia sie na backendzie, musisz to pobrac albo zaktualizowac
+
 # Problemy porzucone
 
 1. Kwestia przypisywania czegos do elementu wyswietlajacego po keys z refa
