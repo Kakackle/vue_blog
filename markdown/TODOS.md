@@ -9,6 +9,8 @@
 
 10. [Vue] TODO: dodac na post preview i stronie postu ostatnia date edycji (tez wazna infromacja dla uzytnikow)
 
+11. TODO: [Vue] - wyswietlanie zliczonych ilosci takich jak ilosc postow z tagiem, ilos followed, followed_by, ilosc komentow...
+
 # Uzupelnienie funkcjonalnosci
 
 5. ## Wazne: pomyslec nad jakimis refactorami i composables, bo duzo jest podobienst miedzy user/tag/post view, listami itd, idk

@@ -139,7 +139,7 @@ const cancelDel = ()=>{
 }
 
 const deletePost = async function(){
-    axios.delete(`posts/${selectedPost.value.id}`)
+    axios.delete(`posts/${selectedPost.value.slug}`)
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText;
         router.push({name: 'postlist'});

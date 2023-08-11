@@ -108,7 +108,7 @@ const logout = () => {
                 <div class="links links-horizontal">
                     <router-link class="hover" to="/">Home</router-link>
                     <RouterLink class="hover" to="/about">About</RouterLink>
-                    <RouterLink class="hover" to="/blog">Blog</RouterLink>
+                    <!-- <RouterLink class="hover" to="/blog">Blog</RouterLink> -->
                     <RouterLink class="hover" to="/create">New post</RouterLink>
                     <!-- <Dropdown
                         v-model="selected_list"

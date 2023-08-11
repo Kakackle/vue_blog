@@ -25,7 +25,7 @@ getAllUsers();
 
 <template>
 <div class="main">
-    <p class="title">ALL USERS LIST:</p>
+    <p class="title">ALL POSTS LIST:</p>
     <section class="posts" v-if="posts">
         <div class="post" v-for="post in posts">
             <p class="name">{{ post.title }}</p>

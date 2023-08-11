@@ -374,6 +374,14 @@ watch(loggedUser, ()=>{
                     <img class="followed-user" src="http://localhost:8000/media/images/avatars/32.jpg"> -->
                 </div>
             </subsection>
+            <div class="user-data">
+                <p class="title">Work in progress: user statistics</p>
+                <ul class="user-data-list">
+                    <li>Users followed by {{user.name }}: {{ user.followed_count}}</li>
+                    <li>Users following {{user.name }}: {{ user.followed_by_count}}</li>
+                    <li>Posts by {{user.name }}: {{ user.post_count}}</li>
+                </ul>
+            </div>
         </section>
     </main>
 </template>
@@ -552,6 +560,20 @@ watch(loggedUser, ()=>{
     width: 60px;
     border-radius: 50%;
     border: 4px solid var(--dark-gray);
+}
+
+.user-data, .user-data-list{
+    width: 100%;
+    padding: 10px;    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 2rem;
+}
+
+.user-data{
+    border-top: 4px dashed var(--dark-gray);
 }
 
 </style>
