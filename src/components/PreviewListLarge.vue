@@ -44,69 +44,38 @@ getAuthor();
 
 const emit = defineEmits(['refresh']);
 
-const updateLiked = async function(){
-    // aktualne liked_by
-    console.log(`old liked_by: ${post.value.liked_by}`);
+const updateLikedNew = async function(){
     success.value='';
     error.value='';
-    // jesli zalogowany user jest aktualny, a jesli bylo zalogowanie nie wykryte
-    //to upewnij sie
-    if(!loggedUser.slug){
+    // jesli stan zalogowanego uzytkownika nie jest aktualny
+    if(!loggedUser.value.slug){
         loggedUser.value = userStore.getUser();
     }
-    // przypisz nowego uzytkownika do zmiennej new_liked_by
-    new_liked_by.value = loggedUser.value;
-    // jesli nie ma zalogowanego uzytkownika to powroc
-    if(!new_liked_by.value){
+    // jesli uzytkownik mimo to nie zadawany
+    if(!loggedUser.value){
         toast.error(`log in first before trying to like`);
         return
     }
-    // jesli zalogowany uzytkownik NIE JEST w liscie lajkujacych post
-    if(post.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
-        console.log(`logged user not in liked_by`);
-        // dodaj uzytkownika do lajkujacych
-        post.value.liked_by.push(new_liked_by.value.slug);
+    if(loggedUser.value.slug === post.value.author){
+        toast.error(`you can't like your own posts, silly`);
+        return
     }
-    // jesli JEST juz na liscie
-    else{
-        const user_index = post.value.liked_by.indexOf(new_liked_by.value.slug)
-        post.value.liked_by.splice(user_index, 1);
-        console.log('user in liked_by already');
-        if (post.value.liked_by.length === 0){
-            post.value.liked_by = [];
-        }
-        // toast.error('user in liked_by already');
-    }
-    //po dodaniu albo usunieciu
-    console.log(`new liked_by: ${post.value.liked_by},
-     type: ${typeof post.value.liked_by},
-     len: ${post.value.liked_by.length}`);
-    
-    // przeslij nowy stan
-    axios.patch(`posts/${post.value.slug}`, {
-        liked_by: post.value.liked_by,
-        likes: post.value.liked_by.length
-    },
-    {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
+    axios.patch(`posts/${post.value.slug}/like`, {
+        user: loggedUser.value.id
     })
     .then((res)=>{
-        // console.log(`data sent: ${post.liked_by}`)
-        success.value = `changed post likes, ${res.status}, ${res.statusText}`;
+        console.log(res.data.message);
+        success.value = `updated likes, ${res.status}, ${res.statusText}`;
         toast.success(success.value);
-        console.log(success.value);
-        new_liked_by.value=undefined;
         emit('refresh');
+        // comment.value.liked_by = res.data.liked_by;
     })
     .catch((err)=>{
+        console.log(err);
         error.value = `${err.status}, ${err.statusText}`;
         toast.error(error.value);
-        console.log(`update like err: ${err}`);
     })
-}
-
+}  
 
 // if post liked by logged user
 
@@ -151,7 +120,7 @@ const compiledMarkdown = computed(() => {
                 <!-- <p class="post_id">id: {{ post.id }}</p> -->
                 <p class="likes">
                     <ion-icon class="like-icon hover" name="thumbs-up-sharp"
-                    @click="updateLiked()"
+                    @click="updateLikedNew()"
                     :class="{'post-liked': post_liked}"></ion-icon>
                     <p>{{ post.likes }}</p>
                 </p>

@@ -119,3 +119,70 @@ const updateLiked = async function(){
 }
 ```
 
+#### tak samo dla postow - nowy sposob dodawania polubien
+
+```
+const updateLiked = async function(){
+    // aktualne liked_by
+    console.log(`old liked_by: ${post.value.liked_by}`);
+    success.value='';
+    error.value='';
+    // jesli zalogowany user jest aktualny, a jesli bylo zalogowanie nie wykryte
+    //to upewnij sie
+    if(!loggedUser.slug){
+        loggedUser.value = userStore.getUser();
+    }
+    // przypisz nowego uzytkownika do zmiennej new_liked_by
+    new_liked_by.value = loggedUser.value;
+    // jesli nie ma zalogowanego uzytkownika to powroc
+    if(!new_liked_by.value){
+        toast.error(`log in first before trying to like`);
+        return
+    }
+    // jesli zalogowany uzytkownik NIE JEST w liscie lajkujacych post
+    if(post.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
+        console.log(`logged user not in liked_by`);
+        // dodaj uzytkownika do lajkujacych
+        post.value.liked_by.push(new_liked_by.value.slug);
+    }
+    // jesli JEST juz na liscie
+    else{
+        const user_index = post.value.liked_by.indexOf(new_liked_by.value.slug)
+        post.value.liked_by.splice(user_index, 1);
+        console.log('user in liked_by already');
+        if (post.value.liked_by.length === 0){
+            post.value.liked_by = [];
+        }
+        // toast.error('user in liked_by already');
+    }
+    //po dodaniu albo usunieciu
+    console.log(`new liked_by: ${post.value.liked_by},
+     type: ${typeof post.value.liked_by},
+     len: ${post.value.liked_by.length}`);
+    
+    // przeslij nowy stan
+    axios.patch(`posts/${post.value.slug}`, {
+        liked_by: post.value.liked_by,
+        likes: post.value.liked_by.length
+    },
+    {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+    })
+    .then((res)=>{
+        // console.log(`data sent: ${post.liked_by}`)
+        success.value = `changed post likes, ${res.status}, ${res.statusText}`;
+        toast.success(success.value);
+        console.log(success.value);
+        new_liked_by.value=undefined;
+        emit('refresh');
+    })
+    .catch((err)=>{
+        error.value = `${err.status}, ${err.statusText}`;
+        toast.error(error.value);
+        console.log(`update like err: ${err}`);
+    })
+}
+```
+
