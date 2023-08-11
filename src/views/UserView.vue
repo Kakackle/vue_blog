@@ -1,4 +1,6 @@
-<!-- 
+<!--
+    TODO: w sumie fajnie gdyby bylo wyswietlane jacy uzytkownicy go followuja
+    i moze liczba
     User view reached by supplying [user_slug] in params
     allows for viewing and editing/patching
  -->

@@ -104,16 +104,17 @@ const new_liked_by = ref();
 const success = ref('');
 const error = ref('')
 
-
-const updateLiked = async function(){
+// lajkowanie realizowane na backendzie, poprzez tylko wyslanie uzytkownika
+// backend decyduje czy dodac lajk czy juz jest i odjac
+const updateLikedNew = async function(){
     success.value='';
     error.value='';
+    // jesli stan zalogowanego uzytkownika nie jest aktualny
     if(!loggedUser.value.slug){
         loggedUser.value = userStore.getUser();
     }
-    //czy jakikolwiek uzytkownik zalogowany
-    new_liked_by.value = loggedUser.value;
-    if(!new_liked_by.value){
+    // jesli uzytkownik mimo to nie zadawany
+    if(!loggedUser.value){
         toast.error(`log in first before trying to like`);
         return
     }
@@ -121,42 +122,22 @@ const updateLiked = async function(){
         toast.error(`you can't like your own comments, silly`);
         return
     }
-    //czy uzytkownik juz w liscie lubiacych
-    if(comment.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
-        console.log(`logged user not in liked_by`);
-        comment.value.liked_by.push(new_liked_by.value.slug);
-    }
-    else{
-        const user_index = comment.value.liked_by.indexOf(loggedUser.value.slug);
-        comment.value.liked_by.splice(user_index, 1);
-        if (comment.value.liked_by.length === 0){
-            comment.value.liked_by = [];
-        }
-        console.log('user in liked_by already');
-        // toast.error('user in liked_by already');
-    }
-    console.log(`new liked_by: ${comment.value.liked_by},
-     type: ${typeof comment.value.liked_by},
-     len: ${comment.value.liked_by.length}`);
-    
-    axios.patch(`comments/${comment.value.id}`, {
-        liked_by: comment.value.liked_by,
-        likes: comment.value.liked_by.length
+    axios.patch(`comments/${comment.value.id}/like`, {
+        user: loggedUser.value.id
     })
     .then((res)=>{
+        console.log(res.data.message);
         success.value = `updated likes, ${res.status}, ${res.statusText}`;
         toast.success(success.value);
-        new_liked_by.value=undefined;
         emit('refresh');
-        
+        // comment.value.liked_by = res.data.liked_by;
     })
     .catch((err)=>{
+        console.log(err);
         error.value = `${err.status}, ${err.statusText}`;
         toast.error(error.value);
-        console.log(`updating comment likes error: ${err}`);
     })
-}
-    
+}  
 
 const deleteComment = async function(){
     if(loggedUser.value.slug !== comment.value.author){
@@ -185,7 +166,7 @@ const deleteComment = async function(){
                 <!-- <p>-</p> -->
                 <div class="likes">
                     <ion-icon class="like-icon hover" name="thumbs-up-sharp"
-                    @click="updateLiked()"
+                    @click="updateLikedNew()"
                     :class="{'comment-liked': comment_liked}"
                     ></ion-icon>
                     <p>{{ comment.likes }}</p>

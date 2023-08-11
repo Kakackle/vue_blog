@@ -58,3 +58,64 @@ async function getFileFromUrl(url, defaultType = 'image/jpg') {
 
 *status: zbyteczne*
 
+
+### Funkcja aktualizujaca polubienia na w tym przypadku modelu komentarzy, ktory posiada pole manytomany powiazane z uzytkownikami.
+
+Ta funkcja pobiera zatem z endpointu przez serializator listę uzytkownikow lubiacych post, dodaje do niego lub odejmuje od niej aktualnie zalogowanego uzytkownika i zwraca sprowrotem cala liste, ktora serializator akceptuje bez problemu
+
+Ale problem jest taki ze to bardzo duzo operacji logicznych jak na frontend, lepiej zostawic to backendowi i tak zostalo zrobione - jeden endpoint na backendzie przyjmuje zalogowanego uzytkownika i decyduje czy dodac czy odjac i to wykonuje
+
+```
+const updateLiked = async function(){
+    success.value='';
+    error.value='';
+    if(!loggedUser.value.slug){
+        loggedUser.value = userStore.getUser();
+    }
+    //czy jakikolwiek uzytkownik zalogowany
+    new_liked_by.value = loggedUser.value;
+    if(!new_liked_by.value){
+        toast.error(`log in first before trying to like`);
+        return
+    }
+    if(loggedUser.value.slug === comment.value.author){
+        toast.error(`you can't like your own comments, silly`);
+        return
+    }
+    //czy uzytkownik juz w liscie lubiacych
+    if(comment.value.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
+        console.log(`logged user not in liked_by`);
+        comment.value.liked_by.push(new_liked_by.value.slug);
+    }
+    else{
+        const user_index = comment.value.liked_by.indexOf(loggedUser.value.slug);
+        comment.value.liked_by.splice(user_index, 1);
+        if (comment.value.liked_by.length === 0){
+            comment.value.liked_by = [];
+        }
+        console.log('user in liked_by already');
+        // toast.error('user in liked_by already');
+    }
+    console.log(`new liked_by: ${comment.value.liked_by},
+     type: ${typeof comment.value.liked_by},
+     len: ${comment.value.liked_by.length}`);
+    
+    axios.patch(`comments/${comment.value.id}`, {
+        liked_by: comment.value.liked_by,
+        likes: comment.value.liked_by.length
+    })
+    .then((res)=>{
+        success.value = `updated likes, ${res.status}, ${res.statusText}`;
+        toast.success(success.value);
+        new_liked_by.value=undefined;
+        emit('refresh');
+        
+    })
+    .catch((err)=>{
+        error.value = `${err.status}, ${err.statusText}`;
+        toast.error(error.value);
+        console.log(`updating comment likes error: ${err}`);
+    })
+}
+```
+
