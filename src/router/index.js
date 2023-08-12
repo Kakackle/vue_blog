@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import BlogView from "../views/BlogView.vue";
 import AboutView from "../views/AboutView.vue";
@@ -53,6 +53,12 @@ const router = createRouter({
       },
     },
   ],
+  scrollBehavior(to, from, savedPosition){
+    return {
+      top: 0,
+      behavior: 'smooth'
+    };
+  },
 });
 
 router.beforeEach((to, from, next) => {

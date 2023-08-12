@@ -83,7 +83,7 @@ const submitEdit = async function(){
         name: newName.value,
         description: newDesc.value,
     }
-    axios.patch(`tags/${tag.value.id}`, newTag)
+    axios.patch(`tags/${tag.value.slug}`, newTag)
     .then((res)=>{
         success.value += res.status + ' ' + res.statusText;
         toast.success(success.value);

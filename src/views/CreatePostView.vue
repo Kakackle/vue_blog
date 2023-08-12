@@ -248,7 +248,7 @@ const submitForm = function(method){
         newPost.date_posted = newDate.value;
         console.log(newPost.date_posted);
         // osobny endpoint na postowanie, poniewaz customowy
-        met_url = `users/${newAuthor.value.id}/post`;
+        met_url = `users/${newAuthor.value.slug}/post`;
     }
     else{
         met_url = `posts/${selectedPost.value.slug}`;

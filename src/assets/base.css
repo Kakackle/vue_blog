@@ -8,6 +8,7 @@
 
 body{
   background-color: var(--almost-white);
+  padding-top: 40px;
 }
 
 @tailwind base;

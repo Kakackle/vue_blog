@@ -181,13 +181,18 @@ const logout = () => {
     font-size: 62.5% !important;
 } */
 .navbar {
-    height: 4rem;
+    height: 40px;
     width: 100%;
     background-color: var(--dark-gray);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 4rem;
+    position: fixed;
+    top: 0;
+    z-index: 5;
+    margin-bottom: 4px;
+    border-bottom: 4px solid var(--accent-yellow);
 }
 .nav-left{
     display: flex;

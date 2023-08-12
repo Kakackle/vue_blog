@@ -34,7 +34,7 @@ const addNewComment = async function(){
         author: loggedUser.value.slug,
         parent: comment.value.id
     }
-    axios.post('http://127.0.0.1:8000/api/create_comment', newComm)
+    axios.post('create_comment', newComm)
     .then((res)=>{
         console.log(`Add new comment POST: ${res.status}, ${res.statusText}`);
         newContent.value = '';
