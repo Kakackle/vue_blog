@@ -77,6 +77,7 @@ const submitTag = async function(){
         <div class="tag" v-for="tag in tags">
             <p class="name">{{ tag.name }}</p>
             <p class="desc">{{ tag.description }}</p>
+            <p class="desc">{{ tag.post_count }} posts with tag</p>
             <ion-icon name="arrow-forward-outline" class="icon hover"
             @click="router.push({name: 'tag', params: {tag_slug: tag.name}})"
             ></ion-icon>
@@ -98,6 +99,7 @@ const submitTag = async function(){
 .tags{
     display: flex;
     flex-direction: column;
+    max-width: calc(var(--max-page-width) - 200px);
     gap: 1rem;
 }
 .tag{

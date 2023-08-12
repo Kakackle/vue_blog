@@ -26,4 +26,28 @@ body{
   }
 }
 
+/* toasts */
+
+.Vue-Toastification__toast--default.toast-class{
+  /* background-color: red; */
+  padding: 0;
+  max-height: 20px;
+  min-height: 0px;
+  /* line-height: 0px; */
+}
+
+/* Applied to the toast body when using regular strings as content */
+.Vue-Toastification__toast-body.toast-body-class-1 {
+  font-size: 15px;
+  padding: 0;
+  max-height: 20px;
+  min-height: 0px;
+  /* line-height: 0px; */
+}
+
+/* Applied to a wrapper div when using a custom component as content */
+.Vue-Toastification__toast-component-body.toast-body-class-2 {
+  width: 100%;
+}
+
 /* https://flatuicolors.com/palette/us */

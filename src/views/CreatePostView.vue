@@ -3,11 +3,6 @@
     wybierane z listy istniejacych
  -->
 
-<!-- TODO: wybieranie reczne autora bez sensu - zalogowany uzytkownik jest autorem zawsze -->
-<!-- TODO: jesli error to nei usuwaj wszystkiego -->
-<!-- TODO: error blokuje czasem dalsze wysylanie? -->
-<!-- TODO: you must first log in tez chyba nie znika zbytnio -->
-
 <!-- TODO: generalne: przydaloby sie stworzyc oddzielne komponenty
     na wybieranie postu - i dosyc latwo by to chyba przekazywac
     
@@ -57,7 +52,7 @@ getToday();
 
 // nowe wartosci z inputow do przeslania
 const newTitle = ref("")
-const newAuthor = ref()
+const newAuthor = ref(loggedUser.value)
 const newTags = ref([])
 const newTag = ref('')
 const newContent = ref("")
@@ -97,6 +92,9 @@ if (ifLoggedIn.value === 1){
 
 //jesli zmieni sie zalogowany uzytkownik
 watch(loggedUser, ()=>{
+    
+    newAuthor.value = loggedUser.value;
+
     if(ifLoggedIn.value === 1){
     query_string.value=`posts/?author=${loggedUser.value.slug}`;
     }
@@ -119,7 +117,9 @@ watch(ifLoggedIn, ()=>{
 //czysci inputy i odswieza listy, z nowymi danymi (wywolywane po post lbu patch)
 const cleanInputs = async function(){
     newTitle.value = undefined
-    newAuthor.value = undefined
+
+    // newAuthor.value = undefined
+    
     newTags.value = [] // dla tablicy
     // newTags.value = undefined
     newContent.value = undefined
@@ -263,14 +263,16 @@ const submitForm = function(method){
         },
     })
     .then((res)=>{
-        success.value += res.status + ' ' + res.statusText; 
+        success.value += 'operation succesful: ' + res.status + ' ' + res.statusText; 
         toast.success(success.value);
+        // pola input czyszczone tylko jesli sukces, zeby przy bledzie latwiej bylo poprawic pomylki
+        cleanInputs()
     })
     .catch((err)=>{
-        error.value += err;
+        error.value += 'operation failed: ' + err;
         toast.error(error.value);
     })
-    .finally(cleanInputs)
+    // .finally(cleanInputs)
 }
 
 getTags();
@@ -476,13 +478,13 @@ const selectOpen = ref(0);
                         <label for="title">title:</label>
                         <input type="text" class="text-input" id="title" v-model="newTitle">
                     </div>
-                    <!-- autor select -->
-                    <div class="form-label">
+                    <!-- author select -->
+                    <!-- <div class="form-label">
                         <label for="author">author:</label>
                         <select class="text-input" id="author" v-model="newAuthor">
                             <option v-for="user in users" :value=user>{{ user.name }}</option>
                         </select>
-                    </div>
+                    </div> -->
                     <!-- tags select -->
                     <div class="form-label">
                         <label for="tags">tags:</label>
@@ -546,12 +548,12 @@ const selectOpen = ref(0);
                     <button class="submit-button hover" @click="submitForm(`post`)">POST &rarr;</button>
                     <button class="submit-button hover" @click="submitForm(`patch`)">PATCH &rarr;</button>
                 </div>
-                <p class="sub-title error" v-else>You must be the post's author to send a POST/PATCH request with the post's values</p>
+                <p v-else class="sub-title error">You must be the post's author to send a POST/PATCH request with the post's values</p>
             </div>
             <!-- raport sukcesu dodania/edycji postu -->
-            <p class="sub-title error" v-else>You must first log in to be able to send POST/PATCH requests</p>
-            <p v-if="success" class="success">{{success}}</p>
-            <p v-if="error" class="error">{{error}}</p>
+            <p class="sub-title error" v-if="!loggedUser">You must first log in to be able to send POST/PATCH requests</p>
+            <!-- <p v-if="success" class="success">{{success}}</p>
+            <p v-if="error" class="error">{{error}}</p> -->
         </div>
 
         <!-- Post preview -->

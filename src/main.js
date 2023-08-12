@@ -27,8 +27,8 @@ import "primevue/resources/primevue.min.css";
 
 //Toast options
 const options ={
-position: "top-right",
-  timeout: 3500,
+position: "bottom-right",
+  timeout: 2500,
   closeOnClick: true,
   pauseOnFocusLoss: true,
   pauseOnHover: true,
@@ -41,7 +41,11 @@ position: "top-right",
   rtl: false,
   transition: "Vue-Toastification__fade",
   maxToasts: 20,
-  newestOnTop: true
+  newestOnTop: true,
+  // For the actual toast, including different toast types:
+  toastClassName: "toast-class",
+  // For the toast body when using strings or a custom component as content
+  bodyClassName: ["toast-body-class-1", "toast-body-class-2"],
 }
 
 const app = createApp(App)

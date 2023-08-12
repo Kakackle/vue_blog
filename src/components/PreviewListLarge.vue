@@ -230,11 +230,13 @@ const compiledMarkdown = computed(() => {
 .like-icon{
     font-size: 1.5rem;
     color: var(--dark-gray);
+    visibility: visible;
     /* right: 3rem; */
 }
 
 .post-liked{
     color: var(--accent-yellow);
+    visibility: visible;
 }
 
 .arr-icon{

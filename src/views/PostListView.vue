@@ -49,7 +49,7 @@ getAllUsers();
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    max-width: var(--max-page-width);
+    /* max-width: var(--max-page-width); */
     margin: 0 auto;
     color: var(--dark-gray);
 }
@@ -59,6 +59,7 @@ getAllUsers();
 .posts{
     display: flex;
     flex-direction: column;
+    max-width: calc(var(--max-page-width) - 200px);
     gap: 1rem;
     width: 100%;
     padding: 10px;

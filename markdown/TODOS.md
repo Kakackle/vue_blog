@@ -1,15 +1,13 @@
 # Nowe funkcjonalnosci
-4. TODO: [Django] zliczanie ilosci postow autora, postow z tagiem etc, to bardziej moze czesc Django, jako dodatkowa startystyka - potem dodac na froncie wyswietlanies
-7. TODO: [Django] jakos filtrujaca 3 najnowsze posty albo 3 topowe wyswietlen (po nastepnym punkcie), albo losowe, albo najwiecej lajkow/wyswietlen w ciagu ostatnich 7/30 w/e dni, jakims "algorytmem" (czyli kalkulacja stosunku) - ale to kwestia [ Django ]
+5. TODO: [Vue] pozbyc sie troche console.logow itd
 
 8. [Django] jakos zamienic to query na lepszy system filtracji/searchu,
    bo na pewno są, aktualnie jest dosyc kaleki
 
 9. [Vue] TODO: Animacje oraz kiedy klikasz na np. posts paginated strone - scroll do gory strony a nie zostaje w tym samym miejscu
++ a takze w user view gdy zmieniany jest user poprzez klikniecie - ale to bardzo specyficzny warunek wiec.. moze przy KAZDYM wejsciu na podstrone by sie jakos to dalo
 
-10. [Vue] TODO: dodac na post preview i stronie postu ostatnia date edycji (tez wazna infromacja dla uzytnikow)
-
-11. TODO: [Vue] - wyswietlanie zliczonych ilosci takich jak ilosc postow z tagiem, ilos followed, followed_by, ilosc komentow...
+12. FIXME: [Vue] albo wylaczyc tostowanie albo jakos zdecydowanie zmniejszyc ich rozmiar bo fajne do debugowania ale dla uzytkownika moga byc przeszadzajace i nie potrzebne - luj, nie wiem 
 
 # Uzupelnienie funkcjonalnosci
 

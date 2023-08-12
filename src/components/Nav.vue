@@ -1,6 +1,7 @@
 <!-- 
     Komponent realizujacy funkcję navbara z routerlinkami
- -->
+    TODO: rozwiaz ten error z awatarem bo wnerwia
+-->
 <script setup>
 import axios from "axios";
 import { ref, watch } from "vue";
@@ -11,6 +12,7 @@ const toast = useToast();
 
 import { useUserStore } from "../stores/user.js";
 const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore)
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -58,6 +60,7 @@ const openNavDrop = function(){
   //if open, will remove border class and close drop
 };
 
+// ustawianie zalogowanego uzytkownika
 const getUser = function (user_slug) {
     axios
         .get(`users/${user_slug}`)
@@ -144,9 +147,9 @@ const logout = () => {
                 <div class="nav-acc">
                     <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">
                         <!-- ACC <ion-icon name="heart"></ion-icon> -->
-                        <img :src="userStore.getUser().avatar" class="nav-avatar"
+                        <img :src="loggedUser.avatar" class="nav-avatar"
                             :class="{'nav-avatar-open': accDrop}"
-                            v-if="loggedIn">
+                            v-if="loggedUser">
                     </span>
                     <span v-else class="acc hover" @click="logInDrop = !logInDrop"
                         :class="{'nav-avatar-open': logInDrop}">Log in</span>

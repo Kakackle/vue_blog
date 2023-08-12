@@ -28,6 +28,7 @@ getAllUsers();
             <p class="name">{{ user.name }}</p>
             <p class="desc">{{ user.mail }}</p>
             <p class="desc">{{ user.bio }}</p>
+            <p class="desc">{{user.post_count}} posts by user</p>
             <ion-icon name="arrow-forward-outline" class="icon hover"
             @click="router.push({name: 'user', params:{user_slug: user.slug}})"
             ></ion-icon>
@@ -43,7 +44,7 @@ getAllUsers();
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    max-width: var(--max-page-width);
+    /* max-width: var(--max-page-width); */
     margin: 0 auto;
     color: var(--dark-gray);
 }
@@ -54,6 +55,7 @@ getAllUsers();
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-width: calc(var(--max-page-width) - 200px);
 }
 .user{
     font-size: 2rem;

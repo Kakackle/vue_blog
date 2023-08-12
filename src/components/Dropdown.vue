@@ -9,6 +9,11 @@ const title = ref(props.title)
 
 const isOpen = ref(0);
 
+const choosePath = function(to_route){
+    isOpen.value = 0;
+    router.push({name: `${to_route}`})
+}
+
 </script>
 
 <template>
@@ -21,7 +26,7 @@ const isOpen = ref(0);
     <div class="dropdown" v-if="isOpen">
         <ul class="list">
             <li v-for="(item, index) in items" class="item hover"
-            @click="router.push({name: `${item.route}`})">
+            @click="choosePath(item.route)">
             <p>{{ item.title}}</p>
             </li>
         </ul>

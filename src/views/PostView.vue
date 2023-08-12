@@ -34,7 +34,7 @@ const postExists = ref(0);
 const errorMsg = ref("");
 
 const getPost = async function () {
-  post.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/${post_slug}`)).value;
+  post.value = (await getDataFromLink(`posts/${post_slug}`)).value;
   if (!post) {
     postExists.value = 0;
     console.log("post not found");
@@ -137,6 +137,52 @@ getTrendingPosts();
 // bo music post istniec czy daloby sie inaczej?
 // getPostsByAuthor(post.value.author);
 
+import {useToast} from "vue-toastification";
+const toast = useToast();
+
+const success = ref('');
+const error = ref('')
+
+const updateLikedNew = async function(){
+    success.value='';
+    error.value='';
+    // jesli stan zalogowanego uzytkownika nie jest aktualny
+    if(!loggedUser.value.slug){
+        loggedUser.value = userStore.getUser();
+    }
+    // jesli uzytkownik mimo to nie zadawany
+    if(!loggedUser.value){
+        toast.error(`log in first before trying to like`);
+        return
+    }
+    if(loggedUser.value.slug === post.value.author){
+        toast.error(`you can't like your own posts, silly`);
+        return
+    }
+    axios.patch(`posts/${post.value.slug}/like`, {
+        user: loggedUser.value.id
+    })
+    .then((res)=>{
+        console.log(res.data.message);
+        success.value = `updated likes, ${res.status}, ${res.statusText}`;
+        toast.success(success.value);
+        getPost();
+        // comment.value.liked_by = res.data.liked_by;
+    })
+    .catch((err)=>{
+        console.log(err);
+        error.value = `${err.status}, ${err.statusText}`;
+        toast.error(error.value);
+    })
+}  
+
+// if post liked by logged user
+
+const post_liked = computed(()=>{
+    if(loggedUser.value && post.value)
+        return post.value.liked_by.includes(loggedUser.value.slug);
+    else return false;
+})
 
 </script>
 
@@ -167,10 +213,18 @@ getTrendingPosts();
             </p>
             <!-- <p class="centerdot">&centerdot;</p> -->
             <p class="post-date">{{ post.date_posted }}</p>
+            <p class="edit-date">(last edited on {{ post.date_updated }})</p>
             <!-- <p class="centerdot">&centerdot;</p> -->
+
+            <!-- <p class="centerdot">&centerdot;</p> -->
+            <p class="likes">
+                    <ion-icon class="like-icon hover" name="thumbs-up-sharp"
+                    @click="updateLikedNew()"
+                    :class="{'post-liked': post_liked}"></ion-icon>
+                    <p>{{ post.likes }} likes </p>
+            </p>
             <p class="post-date">{{ post.views }} views</p>
-            <!-- <p class="centerdot">&centerdot;</p> -->
-            <p class="post-date post-likes">{{ post.likes }} likes</p>
+            <!-- <p class="post-date post-likes">{{ post.likes }} likes</p> -->
           </div>
 
           <div class="post-tags">
@@ -193,8 +247,8 @@ getTrendingPosts();
             <!-- end post-main -->
       <section class="section-bottom section-separator">
         <!-- comments -->
-        <p class="subtitle">See what people had to say about this post:</p>
-          <CommentsPaginated :post_slug="post_slug"></CommentsPaginated>
+        <p class="subtitle">See what people had to say about this post [{{ post.comment_count }} comments]:</p>
+          <CommentsPaginated :post="post" v-if="postExists"></CommentsPaginated>
           <!-- carousels -->
           <p class="subtitle">Check out these trending posts</p>
           <Carousel class="section-separator" v-if="trending_posts.length" :posts=trending_posts></Carousel>
@@ -277,7 +331,12 @@ getTrendingPosts();
 }
 .post-date {
   font-size: 1.5rem;
+  color: var(--mid-gray);
+}
+.edit-date{
+  font-size: 1.2rem;
   color: var(--mid-light);
+  transform: translateX(-15px);
 }
 .post-likes{
   color: var(--mid-gray);
@@ -348,4 +407,26 @@ getTrendingPosts();
   /* flex-shrink: 1; */
   align-items: flex-start;
 }
+
+
+.likes{
+    /* color:var(--dark-gray); */
+    display: flex;
+    align-items: center;
+    font-size: 2.5rem;
+    gap: 10px;
+    color: var(--mid-gray);
+}
+.like-icon{
+    font-size: 2rem;
+    /* color: var(--dark-gray); */
+    /* right: 3rem; */
+    visibility: visible;
+}
+
+.post-liked{
+    color: var(--accent-yellow);
+    visibility: visible;
+}
+
 </style>

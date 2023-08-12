@@ -1,57 +1,77 @@
 <!--
-    TODO: w sumie fajnie gdyby bylo wyswietlane jacy uzytkownicy go followuja
-    i moze liczba
     User view reached by supplying [user_slug] in params
     allows for viewing and editing/patching
  -->
+
 <script setup>
 import { useRouter, useRoute, routerKey, onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '../stores/user';
+import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
-// import PreviewList from '../components/PreviewList.vue'; 
+
 import PostsPaginated from '../components/PostsPaginated.vue';
 import GoBackButton from '../components/GoBackButton.vue';
 import Tag from '../components/Tag.vue';
+
 import axios from 'axios';
-import { storeToRefs } from 'pinia';
+import { useToast } from "vue-toastification";
 
-const userStore = useUserStore();
-const {loggedUser} = storeToRefs(userStore);
 
+/* -------------------------------------------------------------------------- */
+/*                                    setup                                   */
+/* -------------------------------------------------------------------------- */
+
+//odbieranie jaki uzytkownik ma byc wyswietlany z route w postaci str ze slugiem
 const route = useRoute();
 const router = useRouter();
 const user_slug = ref(route.params.user_slug);
-const query_string = `posts/?author=${user_slug.value}`;
-
-// problem: this never happens!
-
-// onBeforeRouteUpdate((to, from)=>{
-//     console.log(` =============== onbeforeroute ============= `);
-//     if(to.params.user_slug !== from.params.user_slug){
-//         getUser(to.params.user_slug);
-//     }
-//     else{
-//         getUser(user_slug.value);
-//     }
-// })
-
-const user = ref();
-const userExists = ref(0);
-const errorMsg = ref();
-// const posts = ref([]);
-// const pages = ref([]);
+const query_string = ref(`posts/?author=${user_slug.value}`);
 
 //for pagination
 const PAGE_SIZES = [5, 10, 15];
 
+//zwracanie informacji
+const toast = useToast();
+const success = ref('');
+const error = ref('');
+
+// uzytkownik zalogowany
+const userStore = useUserStore();
+const {loggedUser} = storeToRefs(userStore);
+
+// uzytkownik odbierany z API
+const user = ref();
+const userExists = ref(0);
+const errorMsg = ref();
+
+const getUser = function(slug){
+    axios.get(`users/${slug}`)
+    .then((res)=>{
+        user.value = res.data;
+        userExists.value = 1;
+    })
+    // .then(()=>{
+    //     getPosts(`posts/?author=${user_slug}`);
+    // })
+    .catch((error)=>{
+        userExists.value = 0;
+        errorMsg.value = error;
+        router.push({name: 'catchall', params:{wrong_param: user_slug.value}});
+    })
+}
+
+getUser(user_slug.value);
+
+/* -------------------------------------------------------------------------- */
+/*                                   editing                                  */
+/* -------------------------------------------------------------------------- */
+
+// editing input variables
 const newName = ref('');
 const newUsername = ref('');
 const newMail = ref('');
 const newBio = ref('');
 const newAvatar = ref();
-
-const success = ref('');
-const error = ref('');
 
 const beingEdited = ref(0);
 const openEdit = () =>{
@@ -73,7 +93,6 @@ const uploadNewImage = function(e){
                 };
 }
 
-
 const submitEdit = async function(slug){
     let newPost = {
         name: newName.value,
@@ -91,10 +110,12 @@ const submitEdit = async function(slug){
         },
     })
     .then((res)=>{
-        success.value += res.status + ' ' + res.statusText; 
+        success.value += 'updated user: ' + res.status + ' ' + res.statusText;
+        toast.success(success.value);
     })
     .catch((err)=>{
-        error.value += err;
+        error.value += 'failed to update user: ' + err;
+        toast.error(error.value);
     })
     .finally(()=>{
         newName.value = '';
@@ -107,53 +128,33 @@ const submitEdit = async function(slug){
     })
 }
 
-const getUser = function(slug){
-    axios.get(`users/${slug}`)
-    .then((res)=>{
-        user.value = res.data;
-        userExists.value = 1;
-    })
-    // .then(()=>{
-    //     getPosts(`posts/?author=${user_slug}`);
-    // })
-    .catch((error)=>{
-        userExists.value = 0;
-        errorMsg.value = error;
-        router.push({name: 'catchall', params:{wrong_param: user_slug.value}});
-    })
-}
+/* -------------------------------------------------------------------------- */
+/*                                  usuwanie                                  */
+/* -------------------------------------------------------------------------- */
 
 const deleteUser = async function(){
     axios.delete(`users/${user_slug.value}`)
     .then((res)=>{
-        success.value += res.status + ' ' + res.statusText; 
+        success.value += res.status + ' ' + res.statusText;
+        toast.success('user deleted');
     })
     .catch((err)=>{
         error.value += err.status + ' ' + res.statusText;
+        toast.error('failed to delete user');
     })
 }
-
-// const getPosts = async function(link){
-//     posts.value = [];
-//     axios.get(link)
-//     .then((res)=>{
-//         posts.value = res.data.results;
-//         pages.value = res.data.context.page_links;
-//     })
-//     .catch((err)=>{
-//         console.log(err);
-//     })
-// }
-
-getUser(user_slug.value);
 
 
 /* -------------------------------------------------------------------------- */
 /*                            obsluga followowania                            */
 /* -------------------------------------------------------------------------- */
 
+// nazwy uzytkownikow followowanych
 const followed_users = ref()
+// pelne dane uzytkownikow
 const followed_users_full = ref([]);
+
+// funkcja odbierajaca nazwy a nastepnie pelne dane
 const getFollowedUsers = function(){
     axios.get(`users/${user_slug.value}/followed`)
     .then((res)=>{
@@ -176,6 +177,11 @@ const getFollowedUsers = function(){
 
 getFollowedUsers();
 
+// dodawanie i usuwanie - przesylaja w body zalogowanego uzytkownika
+// do endpointu zwiazanego z wyswietlanym uzytkownikiem
+
+// dodatkowo wywoluje pobranie na nowo uzytkownikow sledzonych -
+// gdyz zmienia sie to na backendzie
 
 const addToFollowers = function(){
     axios.post(`users/${user_slug.value}/follow`, {
@@ -183,15 +189,12 @@ const addToFollowers = function(){
     })
     .then((res)=>{
         console.log(res.data);
-        // userExists.value = 0;
+        toast.success(`added ${user_slug.value} to follows`);
         getLoggedFollows();
     })
-    // .then(()=>{
-    //     set_is_followed();
-    //     // getUser(user_slug.value);
-    // })
     .catch((err)=>{
         console.log(err);
+        toast.success(`failed to add ${user_slug.value} to follows`);
     })
 }
 
@@ -201,55 +204,24 @@ const removeFromFollowers = function(){
     })
     .then((res)=>{
         console.log(res.data);
-        // userExists.value = 0;
+        toast.success(`removed ${user_slug.value} from follows`);
         getLoggedFollows();  
     })
-    // .then(()=>{
-    //     set_is_followed();
-    //     // getUser(user_slug.value);
-    // })
     .catch((err)=>{
         console.log(err);
+        toast.success(`failed to remove ${user_slug.value} from follows`);
     })
 }
 
 
-// FIXME: wykrywa, wykonuje sie, ale komponent sie nie rerenderuje, mimo v-if oraz mimo :key
-watch(()=>{
-    route.params.user_slug,
-    (new_slug, old_slug)=>{
-        user_slug.value = undefined;
-        user_slug.value = route.params.user_slug;
-        getUser(user_slug.value);
-    }
-})
+/* -------------------------------------------------------------------------- */
+/*                   uzytkownicy sledzeni przez zalogowanego                  */
+/* -------------------------------------------------------------------------- */
 
+// list uzytkownikow followowanych
 const loggedUserFollows = ref([]);
 
-const getLoggedFollows = function(){
-    axios.get(`users/${loggedUser.value.slug}/followed`)
-    .then((res)=>{
-        loggedUserFollows.value = res.data.followed;
-        // console.log(loggedUserFollows.value);
-        console.log(`loggedvalue: ${JSON.stringify(loggedUserFollows.value)}`)
-        // return res.data;
-    })
-    .then(()=>{
-        // userExists.value = 0;
-        set_is_followed();
-    }
-        
-    )
-    // .then((res)=>{
-    //     console.log(`json: ${res.json}`)
-    // })
-    .catch((err)=>{
-        console.log(err);
-    })
-}
-
-// TODO: tostowanie?
-
+// czy uzytkownik wyswietlany nalezy do followowanych zalogowanego
 const is_followed = ref(false);
 
 const set_is_followed = function(){
@@ -262,23 +234,43 @@ const set_is_followed = function(){
     }
 }
 
-watch(loggedUserFollows.value, ()=>{
+const getLoggedFollows = function(){
+    axios.get(`users/${loggedUser.value.slug}/followed`)
+    .then((res)=>{
+        loggedUserFollows.value = res.data.followed;
+        console.log(`loggedvalue: ${JSON.stringify(loggedUserFollows.value)}`)
+    })
+    .then(()=>{
+        set_is_followed();
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+}
 
+/* -------------------------------------------------------------------------- */
+/*                                obserwatorzy                                */
+/* -------------------------------------------------------------------------- */
+
+// jesli zmieni sie uzytkownik w route - pobierz dane nowego uzytkownika
+watch(route, ()=>{
+    user_slug.value = route.params.user_slug;
+    query_string.value = `posts/?author=${user_slug.value}`;
+    getUser(user_slug.value);
 })
 
+// jesli zmieni sie zalogowany uzytkownik - nowa lista followowanych
 watch(loggedUser, ()=>{
     if(loggedUser.value){
         getLoggedFollows();
-        // console.log(`arr: ${loggedUserFollows.value}, is: ${is_followed.value}`);
     }
 })
-
 
 </script>
 
 <template>
     <!-- <main v-if="user_slug" :key="is_followed"> -->
-    <main>
+    <main :key="user_slug">
         <GoBackButton></GoBackButton>
         <section class="main" v-if="userExists">
             <!-- basic view -->
@@ -300,6 +292,13 @@ watch(loggedUser, ()=>{
                     <p class="mail">{{ user.mail }}</p>
                     <p class="role">User role</p>
                     <p class="bio">{{ user.bio }}</p>
+                    <div class="user-stats">
+                        <p>{{ user.post_count }} posts </p>
+                        <p>{{ user.post_likes_received }} likes on posts </p>
+                        <p>{{ user.comment_count }} comments </p>
+                        <p>{{ user.comment_likes_received }} likes on comments</p>
+
+                    </div>
                 </div>
             </div>
             <!-- turn display into inputs for editing -->
@@ -362,26 +361,15 @@ watch(loggedUser, ()=>{
                     <Tag :tag="'diy'"></Tag>
                 </div>
             </subsection>
-            <!-- TODO:[Django] po funkcjonalnosci followowancyh w django tu udynamicznic -->
             <subsection class="followed">
-                <p class="title">Users followed by {{ user.name }}</p>
+                <p class="title">Users followed by {{ user.name }}: {{user.followed_count}}</p>
                 <div class="followed-users" v-if="followed_users_full">
                     <img class="followed-user hover" v-for="(user, user_id) in followed_users_full"
                         :src="user.avatar"
                         @click="router.push({name: 'user', params: {'user_slug': user.slug}})">
-                    <!-- <img class="followed-user" src="http://localhost:8000/media/images/avatars/21.jpg">
-                    <img class="followed-user" src="http://localhost:8000/media/images/avatars/31.jpg">
-                    <img class="followed-user" src="http://localhost:8000/media/images/avatars/32.jpg"> -->
                 </div>
+                <p class="title">Users following {{ user.name }}: {{user.followed_by_count}}</p>
             </subsection>
-            <div class="user-data">
-                <p class="title">Work in progress: user statistics</p>
-                <ul class="user-data-list">
-                    <li>Users followed by {{user.name }}: {{ user.followed_count}}</li>
-                    <li>Users following {{user.name }}: {{ user.followed_by_count}}</li>
-                    <li>Posts by {{user.name }}: {{ user.post_count}}</li>
-                </ul>
-            </div>
         </section>
     </main>
 </template>
@@ -438,6 +426,16 @@ watch(loggedUser, ()=>{
 .bio{
     margin-top: 10px;
     width: 40rem;
+}
+
+.user-stats{
+    margin-top: 10px;
+    display: flex;
+    font-size: 1.8rem;
+    gap: 10px;
+    font-weight: 500;
+    width: 20rem;
+    flex-wrap: wrap;
 }
 
 /* .user-info, .user-posts{

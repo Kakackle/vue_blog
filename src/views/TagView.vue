@@ -123,7 +123,7 @@ const deleteTag = async function(){
                 <button class="edit-button hover" v-if="!beingEdited" @click="openEdit">EDIT TAG</button>
             </div>
             <p class="tag-desc">{{tag.description}}</p>
-            <p class="title" v-if="posts">Posts with tag {{ tag.name }}:</p>
+            <p class="title" v-if="posts">Posts with tag {{ tag.name }} [{{ tag.post_count }}]:</p>
             <PostsPaginated v-if="posts.length" :type="'large'"
                 :posts="posts" :pages="pages" class="posts-paginated"></PostsPaginated>
             <p v-if="success" class="success">{{success}}</p>

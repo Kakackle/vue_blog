@@ -2,8 +2,9 @@
 import { nextTick, ref } from 'vue';
 import Comment from './Comment.vue';
 import axios from 'axios';
-const props = defineProps(['post_slug']);
-const post_slug = props.post_slug;
+const props = defineProps(['post']);
+const post = props.post;
+const post_slug = post.slug;
 
 const comments = ref();
 const pages = ref();
