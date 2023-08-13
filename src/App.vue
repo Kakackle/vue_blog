@@ -1,3 +1,5 @@
+<!-- FIXME: bardzo specyficzny blad - przechodzac tylko i wylacznie od user/costam do home
+albo gdziekolwiek, transition sie nie konczy, przez co nic sie nie wyswietla -->
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import Nav from './components/Nav.vue';
@@ -8,12 +10,13 @@ import Nav from './components/Nav.vue';
       <Nav></Nav>
   </header>
   <main>
-    <RouterView v-slot="{ Component }">
+    <!-- <Transition name="slide"> -->
+      <RouterView></RouterView>
+    <!-- <RouterView v-slot="{ Component }">
       <Transition name="fade" mode="out-in">
-      <!-- <Transition name="slide"> -->
         <component :is="Component"/>
       </Transition>
-    </RouterView>
+    </RouterView> -->
   </main>
 
 </template>

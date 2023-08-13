@@ -256,7 +256,9 @@ const getLoggedFollows = function(){
 watch(route, ()=>{
     user_slug.value = route.params.user_slug;
     query_string.value = `posts/?author=${user_slug.value}`;
-    getUser(user_slug.value);
+    if(user_slug.value){
+        getUser(user_slug.value);
+    }
 })
 
 // jesli zmieni sie zalogowany uzytkownik - nowa lista followowanych

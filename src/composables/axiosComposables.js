@@ -3,6 +3,8 @@ import axios from "axios";
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
+
+// po prostu pobieranie obiektu data z odpowiedzi
 export async function getDataFromLink(link) {
   const data = ref();
   await axios
@@ -16,10 +18,7 @@ export async function getDataFromLink(link) {
   return data;
 }
 
-// TODO: czemu niby odbieranie z destrukturyzacja mialoby nie dzialc z axiosem?
-// przeciez zwracac powinno tylko jak przejdzie przez wszystko?
-// czy raczej albo zrobic await data = get
-// lub robic return w .then zeby bylo tylko po skonczeniu
+// FIXME: nonfunctioning rn
 export function getDataWithSuccess(link) {
   const data = ref();
   const success = ref(false);
@@ -29,15 +28,19 @@ export function getDataWithSuccess(link) {
     .then((response) => {
       data.value = response.data;
       success.value = true;
+      return { data, success};
     })
     .catch((error) => {
       console.log(error);
       success.value = false;
       errorMsg.value = error;
+      return errorMsg;
     });
-  return { data, success, errorMsg };
+  
 }
 
+
+// konfiguracje pod uniwersalniejsza funkcje do requestow
 const getConfig = {
   headers: {},
   method: "get",
@@ -61,6 +64,7 @@ const patchConfig = {
  *
  * @param {String} url - API endpoint in string format
  * @returns
+ * funkcja pobierania z API, powinna zwracac dane i status z podanego url
  */
 export async function getFromAPI(url) {
   return await axios({
