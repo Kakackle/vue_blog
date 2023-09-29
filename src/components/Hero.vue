@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue';
+import { getImageUrl } from '../composables/getImageUrl';
 const banner_index = ref(0);
 
 const base_image_path = "/src/assets/images/";
@@ -10,7 +11,8 @@ const image_paths = [
 ];
 const num_of_images = image_paths.length;
 const image_path = ref(base_image_path + image_paths[0]);
-const image_url = ref(`url(${image_path.value})`);
+// const image_url = ref(`url(${image_path.value})`);
+const image_url = ref(getImageUrl(image_path));
 
 //funkcja aktualizujaca licznik liczbowo
 const update_index = function(){
@@ -22,7 +24,8 @@ const update_index = function(){
 //funkcja wyswietlajaca banner na bazie licznika
 const change_path = function(index) {
     image_path.value = base_image_path + image_paths[index];
-    image_url.value = `url(${image_path.value})`;
+    // image_url.value = `url(${image_path.value})`;
+    image_url.value = getImageUrl(image_path);
     // console.log(`banner_index: ${banner_index}, new image path: ${image_path.value}`);
 }
 let bannerInterval = setInterval(update_index, 5000);
