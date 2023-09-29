@@ -9,8 +9,7 @@ import router from './router'
 
 import axios from 'axios'
 
-// "http://127.0.0.1:8000/api/"
-axios.default.baseURL = "https://web-production-4c6b.up.railway.app/api/"
+axios.defaults.baseURL = "https://web-production-4c6b.up.railway.app/api/"
 
 import Toast from "vue-toastification"
 import "vue-toastification/dist/index.css";
