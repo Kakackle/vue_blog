@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 62.5%;
+  font-family: 'Inter', sans-serif;
+}
+
+body{
+  background-color: var(--almost-white);
+  padding-top: 40px;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-basic {
+    @apply rounded-sm bg-slate-300 p-2 text-xl;
+  }
+  .form-text-input{
+    @apply border-2 rounded w-72;
+  }
+  .input-label-aligned{
+    @apply flex gap-24 text-xl;
+  }
+}
+
+/* toasts */
+
+.Vue-Toastification__toast--default.toast-class{
+  /* background-color: red; */
+  padding: 0;
+  max-height: 20px;
+  min-height: 0px;
+  /* line-height: 0px; */
+}
+
+/* Applied to the toast body when using regular strings as content */
+.Vue-Toastification__toast-body.toast-body-class-1 {
+  font-size: 15px;
+  padding: 0;
+  max-height: 20px;
+  min-height: 0px;
+  /* line-height: 0px; */
+}
+
+/* Applied to a wrapper div when using a custom component as content */
+.Vue-Toastification__toast-component-body.toast-body-class-2 {
+  width: 100%;
+}
+
+/* https://flatuicolors.com/palette/us */
