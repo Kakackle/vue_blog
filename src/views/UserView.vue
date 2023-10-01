@@ -156,7 +156,6 @@ const getFollowedUsers = function(){
     axios.get(`users/${user_slug.value}/followed`)
     .then((res)=>{
         followed_users.value = res.data.followed;
-        console.log(`value: ${JSON.stringify(followed_users.value)}`)
     })
     .then((res)=>{
         followed_users.value.forEach((user)=>{
@@ -234,7 +233,6 @@ const getLoggedFollows = function(){
     axios.get(`users/${loggedUser.value.slug}/followed`)
     .then((res)=>{
         loggedUserFollows.value = res.data.followed;
-        console.log(`loggedvalue: ${JSON.stringify(loggedUserFollows.value)}`)
     })
     .then(()=>{
         set_is_followed();
@@ -341,14 +339,14 @@ watch(loggedUser, ()=>{
             <p v-if="success" class="success">{{success}}</p>
             <p v-if="error" class="error">{{error}}</p>
             <!-- posty etc -->
-            <subsection class="post-sect">
+            <section class="post-sect">
                 <p class="title"> {{ user.name }}'s posts:</p>
                 <div class="posts">
                     <PostsPaginated :type="'large'" :page_sizes="PAGE_SIZES"
                         :query_string="query_string"></PostsPaginated>
                 </div>
-            </subsection>
-            <subsection class="tags">
+            </section>
+            <section class="tags">
                 <p class="title">{{ user.name }}'s most popular tags</p>
                 <div class="tags-div">
                     <Tag :tag="'programming'"></Tag>
@@ -357,8 +355,8 @@ watch(loggedUser, ()=>{
                     <Tag :tag="'hobby'"></Tag>
                     <Tag :tag="'diy'"></Tag>
                 </div>
-            </subsection>
-            <subsection class="followed">
+            </section>
+            <section class="followed">
                 <p class="title">Users followed by {{ user.name }}: {{user.followed_count}}</p>
                 <div class="followed-users" v-if="followed_users_full">
                     <img class="followed-user hover" v-for="(user, user_id) in followed_users_full"
@@ -366,7 +364,7 @@ watch(loggedUser, ()=>{
                         @click="router.push({name: 'user', params: {'user_slug': user.slug}})">
                 </div>
                 <p class="title">Users following {{ user.name }}: {{user.followed_by_count}}</p>
-            </subsection>
+            </section>
         </section>
     </main>
 </template>

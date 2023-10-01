@@ -29,7 +29,6 @@ let bannerInterval = setInterval(update_index, 5000);
 
 const changeBanner = function(index){
     banner_index.value = index - 1;
-    console.log(`banner_index: ${banner_index.value}`);
     change_path(banner_index.value);
     clearInterval(bannerInterval);
     bannerInterval = setInterval(update_index, 5000);

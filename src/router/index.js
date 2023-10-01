@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import BlogView from "../views/BlogView.vue";
 import AboutView from "../views/AboutView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 
@@ -15,7 +14,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: BlogView,
+      component: HomeView,
       meta: {
         desc: "Home view with a banner etc",
         title: "Home",

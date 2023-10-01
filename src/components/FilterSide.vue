@@ -93,7 +93,6 @@ const get_query_string = function(tags, users, search){
     if(search){
         query_string += `&title=${search}`;
     }
-    console.log(`own.value: ${own.value}`);
     if(own.value){
         if(loggedUser.value){
             query_string += `&own=${loggedUser.value.slug}`;

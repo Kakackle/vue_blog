@@ -15,6 +15,9 @@ np. tu:
 Ale jakie sa benefity tego?
 
 # 2. Majac custom usera (nie jest to wymog) authentication
+
+**AD. 01.10.23** - w przypadku rozdzielonych domain pozostaje jedynie poprzez token
+
 Zrodla ogolne:
 - https://www.reddit.com/r/django/comments/poqe09/best_way_to_do_authentication_with/
 - https://www.django-rest-framework.org/api-guide/authentication/

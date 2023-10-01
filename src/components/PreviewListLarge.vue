@@ -133,10 +133,14 @@ const compiledMarkdown = computed(() => {
             <div class="content prose" v-html="compiledMarkdown"></div>
         </div>
     </div>
+    
+    <p class="hover-underline read-more"
+    @click="router.push({name: 'post', params:{post_slug: post.slug}})">
+        <span>read more</span>
+        <ion-icon class="arr-icon" name="arrow-forward-outline"
+        ></ion-icon>
+    </p>
 
-    <ion-icon class="arr-icon hover" name="arrow-forward-outline"
-        @click="router.push({name: 'post', params:{post_slug: post.slug}})"
-    ></ion-icon>
     
 </div>
 </template>
@@ -220,11 +224,19 @@ const compiledMarkdown = computed(() => {
     visibility: visible;
 }
 
-.arr-icon{
+.read-more{
     position: absolute;
-    font-size: 1.5rem;
-    bottom: 1rem;
-    right: 1rem;
+    font-size: 20px;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.arr-icon{
+    font-size: 15px;
+    visibility: visible;
 }
 
 .title{

@@ -1,33 +1,89 @@
+<!--
+  View z glownym przegladem postow, tzn w postaci komponentow PreviewListLarge
+  wraz z bocznym elementem FilterSide do tworzenia query
+  do pobierania i wyswietlania stron w komponencie PostsPaginated
+-->
+
 <script setup>
 import Hero from '../components/Hero.vue';
-import Banner from '../components/Banner.vue'
-import PreviewList from '../components/PreviewList.vue';
-import PostsPaginated from '../components/PostsPaginated.vue';
-import PreviewCard from '../components/PreviewCard.vue';
+import Banner from '../components/Banner.vue';
 import Carousel from '../components/Carousel.vue';
-
-import { ref} from 'vue';
+import FilterSide from '../components/FilterSide.vue';
+import PreviewListLarge from '../components/PreviewListLarge.vue';
+import PostsPaginated from '../components/PostsPaginated.vue';
+import GoBackButton from '../components/GoBackButton.vue';
+import SubscribeForm from '../components/SubscribeForm.vue';
+import Footer from '../components/Footer.vue';
+import { RouterLink, RouterView } from 'vue-router'
+import { nextTick, ref, render } from 'vue';
 import axios from 'axios';
 
-import { getDataFromLink } from '../composables/axiosComposables';
+import { useRoute } from 'vue-router';
+import {useRouteStore} from '../stores/routeHistory'
+import { storeToRefs } from 'pinia';
 
-const posts = ref()
-const pages = ref()
+const routeStore = useRouteStore();
+const {routeHistory} = storeToRefs(routeStore); 
+const route = useRoute();
+routeStore.pushRoute(route);
+
+//posts przechowywane jako backup wszystkich postow
+const posts = ref([]);
+//renderPosts jako posty uzyskiwane poprzez API z filtracja z query
+const renderPosts = ref(posts);
+const pages = ref([]);
 
 const PAGE_SIZES = [5,10,15];
 
-const getPosts = async function(){
-  // posts.value = (await getDataFromLink(`http://127.0.0.1:8000/api/posts/`)).value;
-  axios.get('posts/')
+//from filterSide
+const query_string = ref('posts/?');
+
+const changed = ref(0);
+
+// dropdowns
+const sideDropOpen = ref(0); //is open?
+
+const openSideDrop = function(){
+  //flip the value on each click
+  sideDropOpen.value? sideDropOpen.value = 0 : sideDropOpen.value=1;
+  //if closed, will add border class and open drop
+  //if open, will remove border class and close drop
+};
+
+
+/**
+ * Dokonuje filtracji poprzez wykonanie query do API
+ * z wybranymi tagami, query term
+ * przeksztalcanymi w query_string dodawany do adresu endpointu
+ * @param {*} tags 
+ * @param {*} search 
+ */
+
+/**
+* Na podstawie otrzymanego z emitu query
+  Wywoluje aktualizacje PostsPaginated poprzez zmiane wartosi changed,
+  co powoduje rerender komponentu z nową wartością query_string do filtracji postów
+  @param {String} query
+*/
+const filterByQuery = async function(query){
+  changed.value = 1;
+  query_string.value = query;
+  // renderPosts.value=[];
+  await nextTick();
+  changed.value = 0;
+}
+
+const trending_posts = ref([]);
+const getTrendingPosts = async function(){
+  axios.get(`posts/trending/`)
   .then((res)=>{
-    posts.value = res.data.results;
-    pages.value = res.data.context.page_links;
+    trending_posts.value = res.data;
   })
   .catch((err)=>{
-    console.log(`home get posts err: ${err}`);
+    console.log(err);
   })
 }
-getPosts();
+getTrendingPosts();
 
 </script>
 
@@ -35,43 +91,135 @@ getPosts();
   <main>
     <Banner></Banner>
     <Hero></Hero>
-    <Carousel></Carousel>
-    <section class="main-section">
-      <div class="preview-list">
-        <!-- <PreviewList v-for="post in posts" :post="post"></PreviewList> -->
-        <PostsPaginated :posts="posts" :pages="pages" :type="'large'"
-        v-if="posts"></PostsPaginated>
-        <!-- <PostsPaginated :type="'large'"></PostsPaginated> -->
-      </div>
+    <section class="blog-sect">
+      <div class="posts-sect">
+        <PostsPaginated :type="'large'" :query_string="query_string" 
+          :page_sizes="PAGE_SIZES"
+          v-if="changed === 0"></PostsPaginated>
+        </div>
+        
       <div class="side">
+        <FilterSide @filterQuery="filterByQuery" class="filter-side"></FilterSide>
       </div>
-    </section>  
+      <!-- dropdown for mobile devices -->
+      <div class="side-drop"
+        :class="{'drop-open': sideDropOpen}">
+        <ion-icon class="hover side-burger" @click="openSideDrop" name="menu-sharp"></ion-icon>
+        <div v-if="sideDropOpen" class="drop-filter-side">
+          <FilterSide @filterQuery="filterByQuery"></FilterSide></div>
+      </div>
+    </section>
+    <section class="carousel-sect" v-if="trending_posts">
+      <p class="title">CHECK OUT THESE TRENDING POSTS</p>
+      <Carousel :posts=trending_posts v-if="trending_posts.length"></Carousel>
+    </section>
+    <section class="subscribe-sect">
+      <SubscribeForm></SubscribeForm>
+    </section>
+    <Footer></Footer>
   </main>
 </template>
 
 <style scoped>
 *{
   font-size: 62.5%;
+  background-color: var(--almost-white);
 }
-.main-section{
-  display: flex;
+.blog-title{
+  font-size: 6rem;
+  font-weight: 500;
+  padding: 0 4rem;
 }
-.preview-list{
-  width: clamp(40rem, 75vw, 100rem);
+.blog-sect{
+  width: 100%;
+  max-width: var(--max-page-width);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  margin-top: 2rem;
+  margin: var(--section-margin) auto;
+  gap: 10px;
+}
+.posts-sect{
+  width: 100%;
+  max-width: 900px;
 }
 
 .side{
-  width: clamp(20rem, 25vw, 40rem);
-  height: 40rem;
-  background-color: #636e72;
+  width: clamp(150px, 100%, 290px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2.5rem;
 }
 
-.big{
-  font-size: 2.4rem;
+.side-drop{
+  display: none;
+  position: relative;
+  height: 4rem;
+}
+.side-burger{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  color: var(--dark-gray);
+}
+
+.drop-filter-side{
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  width: 200px;
+  z-index: 2;
+}
+
+.drop-open{
+  border-radius: 5px;
+  border: 2px solid var(--dark-gray);
+}
+
+
+@media (max-width: 768px){
+  .side-drop{
+    display: flex;
+  }
+  .side{
+    display: none;
+  }
+  .side{
+
+  }
+}
+.pages{
+    display: flex;
+    justify-content: center;
+    font-size: 2.5rem;
+    gap: 1rem;
+    color: #636e72;
+}
+
+.page:hover{
+    font-weight: 600;
+    cursor: pointer;
+}
+.selected{
+    font-weight: 700;
+}
+
+.carousel-sect{
+  max-width: var(--max-page-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: var(--section-margin);
+}
+.title{
+  font-size: 3rem;
+}
+
+.subscribe-sect{
+  width: 100%;
+  margin: auto;
+  margin-bottom: var(--section-margin);
 }
 </style>

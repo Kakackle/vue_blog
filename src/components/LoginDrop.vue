@@ -56,7 +56,7 @@ const emitRegister = () =>{
 .login-div{
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
     gap: 5px;
     width: 200px;

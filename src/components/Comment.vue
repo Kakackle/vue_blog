@@ -19,7 +19,6 @@ const newContent = ref('');
 
 const addNewComment = async function(){
     if (!loggedUser.value) {
-        console.log('log in to add a comment');
         return;
     }
     if (newContent.value.length > 500){
@@ -72,7 +71,6 @@ const openEdit = () =>{
 
 const editComment = async function(){
     if (!loggedUser.value) {
-        console.log('log in to add a comment');
         return;
     }
     if(loggedUser.value.slug !== comment.value.author){

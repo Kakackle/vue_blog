@@ -7,7 +7,6 @@ import { useRouter, useRoute, routerKey } from "vue-router";
 import { ref, computed } from "vue";
 import { getDataFromLink, getDataWithSuccess } from "../composables/axiosComposables";
 import GoBackButton from "../components/GoBackButton.vue";
-// import Comment from "../components/Comment.vue";
 import CommentsPaginated from "../components/CommentsPaginated.vue";
 import Tag from "../components/Tag.vue";
 import Footer from "../components/Footer.vue";
@@ -43,18 +42,6 @@ const getPost = async function () {
   postExists.value = 1;
   getPostsByAuthor(post.value.author);
   getAuthor();
-  // aktualizacja wyswietlen w database
-  // axios.patch(
-  //   `http://127.0.0.1:8000/api/posts/${post_slug}`,
-  //   {
-  //     views: post.value.views + 1,
-  //   },
-  //   {
-  //     headers: {
-  //       "Content-Type": "multipart/form-data",
-  //     },
-  //   }
-  // );
   axios.patch(`posts/${post_slug}/view`);
 };
 
@@ -80,21 +67,6 @@ const compiledMarkdown = computed(() => {
   }));
 });
 
-// const comments = ref();
-// const pages = ref();
-// const getCommentsByPost = async function(post){
-//     axios.get(`comments/?post=${post}`)
-//     .then((res)=>{
-//         comments.value = res.data.results;
-//         pages.value = res.data.context.page_links;
-//         console.log(res);
-//     })
-//     .catch((err)=>{
-//         console.log(err);
-//     })
-// }
-
-// getCommentsByPost(post_slug);
 
 const author_posts = ref([]);
 // posty uzytkownika do karuzeli
@@ -167,7 +139,6 @@ const updateLikedNew = async function(){
         success.value = `updated likes, ${res.status}, ${res.statusText}`;
         toast.success(success.value);
         getPost();
-        // comment.value.liked_by = res.data.liked_by;
     })
     .catch((err)=>{
         console.log(err);
@@ -268,30 +239,22 @@ const post_liked = computed(()=>{
   display: flex;
   max-width: var(--max-page-width);
   margin: 0 auto;
-  /* justify-content: center; */
+
   flex-direction: column;
   align-items: center;
   background-color: var(--almost-white);
 }
 .post-main {
   margin-top: 30px;
-  /* padding: 0 4rem; */
   width: 100%;
   display: flex;
   border-bottom: 8px solid var(--accent-yellow);
 }
-/* unused */
-/* .post-side {
-  width: clamp(20rem, 25vw, 40rem);
-  background-color: #636e72;
-  height: 60rem;
-} */
+
 .post {
-  /* width: clamp(40rem, 75vw, 120rem); */
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* gap: 5px; */
   position: relative;
   padding: 10px;
 }
@@ -321,9 +284,6 @@ const post_liked = computed(()=>{
   align-items: center;
   padding: 0px 5px;
 }
-/* .centerdot {
-  font-size: 2rem;
-} */
 .post-author {
   font-size: 1.5rem;
   color: var(--mid-gray);
@@ -351,24 +311,17 @@ const post_liked = computed(()=>{
   font-size: 1.5rem;
 }
 .post-img {
-  /* width: 120%; */
   height: 500px;
   object-fit: cover;
   margin-bottom: 10px;
 }
 
 .post-content {
-  /* font-size: unset !important; */
   font-size: 2rem;
   color: var(--dark-gray);
-  /* line-height: 1; */
   display: flex;
   flex-direction: column;
-  /* width: 100%; */
-  /* min-width: 1200px; */
   min-width: 100%;
-  /* justify-content: center; */
-  /* padding: 10px; */
 }
 
 .comments {
@@ -401,27 +354,22 @@ const post_liked = computed(()=>{
 .section-bottom{
   display: flex;
   flex-direction: column;
-  /* width: 100%; */
   max-width: var(--max-page-width);
   margin: 0 auto;
-  /* flex-shrink: 1; */
   align-items: flex-start;
 }
 
 
 .likes{
-    /* color:var(--dark-gray); */
-    display: flex;
-    align-items: center;
-    font-size: 2.5rem;
-    gap: 10px;
-    color: var(--mid-gray);
+  display: flex;
+  align-items: center;
+  font-size: 2.5rem;
+  gap: 10px;
+  color: var(--mid-gray);
 }
 .like-icon{
-    font-size: 2rem;
-    /* color: var(--dark-gray); */
-    /* right: 3rem; */
-    visibility: visible;
+  font-size: 2rem;
+  visibility: visible;
 }
 
 .post-liked{

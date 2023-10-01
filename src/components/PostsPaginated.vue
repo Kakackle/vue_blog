@@ -124,10 +124,9 @@ const {loggedUser} = storeToRefs(userStore);
                     >{{ page[1] }}</p>
             </div>
         </div>
-        <div v-else class="no-posts-message">
-            <p>NO POSTS TO DISPLAY WITH CURRENTLY APPLIED FILTERS, PLEASE TRY A DIFFERENT COMBINATION</p>
-            <p> THANKS ;]</p>
-        </div>
+    </div>
+    <div v-else class="no-posts-message">
+        <p>NO POSTS TO DISPLAY WITH CURRENTLY APPLIED FILTERS, PLEASE TRY A DIFFERENT COMBINATION</p>
     </div>
 </template>
 
@@ -147,10 +146,7 @@ const {loggedUser} = storeToRefs(userStore);
 .order{
     right: 4rem;
 }
-.hover:hover{
-  cursor: pointer;
-  filter: brightness(0.7);
-}
+
 .pages{
     display: flex;
     justify-content: center;
@@ -161,6 +157,7 @@ const {loggedUser} = storeToRefs(userStore);
     display: flex;
     flex-direction: column;
     gap: 10px;
+    /* width: clamp(500px, 100%, 900px); */
 }
 
 .page:hover{

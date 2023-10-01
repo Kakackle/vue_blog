@@ -15,8 +15,6 @@ const route = useRoute();
 const router = useRouter();
 const routes = router.getRoutes();
 
-// routeHistory.value.push(route.path);
-
 routeStore.pushRoute(route);
 /**
  * sort routes from vue router alphabetically, return in array form
@@ -43,7 +41,7 @@ const routesSorted = routes.sort(function (a, b) {
         <img class="author-img">
         <div class="author-details">
           <p class="author-name">Kakackle</p>
-          <div class="bio">Yeah this is my blog I am a dev this is a very simple temporary bio I hope you don't notice</div>
+          <div class="bio">This is a temporary bio, have fun on the site!</div>
           <div class="mail">markowskimaciej98@gmail.com</div>
           <div class="socials">
             <div class="soc-icon"></div>
@@ -81,7 +79,7 @@ const routesSorted = routes.sort(function (a, b) {
         </div>
 
         <div class="right">
-          <p class="subtitle">DRF ROUTES: [base: http://127.0.0.1:8000]</p>
+          <p class="subtitle">DRF API ROUTES: [base: https://web-production-4c6b.up.railway.app]</p>
           <ul class="route-list">
             <li class="route">/admin - admin</li>
             <li class="route">
@@ -108,18 +106,15 @@ const routesSorted = routes.sort(function (a, b) {
 .main {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
   gap: 20px;
   color: var(--dark-gray);
 }
 .title {
   font-size: 3rem;
-  /* border-bottom: 1px solid black; */
 }
 
 .subtitle{
   font-size: 2rem;
-  /* text-decoration: underline; */
   font-weight: 500;
 }
 
@@ -135,7 +130,6 @@ const routesSorted = routes.sort(function (a, b) {
   padding-left: 1rem;
 }
 .route-list {
-  /* font-size: 2rem; */
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -163,8 +157,6 @@ const routesSorted = routes.sort(function (a, b) {
 .author-div{
   display: flex;
   gap: 50px;
-  /* width: 100%; */
-  /* margin: 0 auto; */
 }
 
 .author-img{
