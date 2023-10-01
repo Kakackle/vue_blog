@@ -1,6 +1,5 @@
 <!-- 
     Komponent realizujacy funkcję navbara z routerlinkami
-    TODO: rozwiaz ten error z awatarem bo wnerwia
 -->
 <script setup>
 import axios from "axios";
@@ -17,7 +16,6 @@ const {loggedUser} = storeToRefs(userStore)
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-// import Dropdown from "primevue/dropdown";
 import Dropdown from "./Dropdown.vue";
 
 const dropdown_list_routes = [
@@ -42,7 +40,6 @@ import Breadcrumb from "primevue/breadcrumb";
 
 const routeStore = useRouteStore();
 const { routeHistory, breadcrumbList } = storeToRefs(routeStore);
-// const breadcrumbList = ref(routeHistory.value)
 
 // const user = ref()
 const loggedIn = ref(0);
@@ -65,7 +62,6 @@ const getUser = function (user_slug) {
     axios
         .get(`users/${user_slug}`)
         .then((res) => {
-            // user.value = res.data;
             userStore.setUser(res.data);
         })
         .catch((err) => {
@@ -93,7 +89,6 @@ const logout = () => {
     loggedIn.value = 0;
     accDrop.value = 0;
     userStore.setUser(undefined);
-    // user.value = undefined;
 };
 </script>
 
@@ -111,16 +106,7 @@ const logout = () => {
                 <div class="links links-horizontal">
                     <router-link class="hover" to="/">Home</router-link>
                     <RouterLink class="hover" to="/about">About</RouterLink>
-                    <!-- <RouterLink class="hover" to="/blog">Blog</RouterLink> -->
                     <RouterLink class="hover" to="/create">New post</RouterLink>
-                    <!-- <Dropdown
-                        v-model="selected_list"
-                        :options="dropdown_list_routes"
-                        optionLabel="name"
-                        placeholder="LISTS"
-                        @change="router.push({ name: selected_list.path })"
-                    >
-                    </Dropdown> -->
                     <Dropdown :items="dropdown_list_routes" :title="'Lists'"></Dropdown>
                 </div>
                 
@@ -137,16 +123,12 @@ const logout = () => {
                             placeholder="LISTS"
                             @change="router.push({ name: selected_list.path })"
                         >
-                        <!-- <template #optiongroup="slotProps" @click="router.push({name: slotProps.option.path})">
-                        <RouterLink class="hover" :to="{name: slotProps.option.path}">{{ slotProps.option.name }}</RouterLink>
-                        </template> -->
                         </Dropdown>
                     </div>
                 </div>
                 
                 <div class="nav-acc">
                     <span v-if="loggedIn" class="acc hover" @click="accDrop = !accDrop">
-                        <!-- ACC <ion-icon name="heart"></ion-icon> -->
                         <img :src="loggedUser.avatar" class="nav-avatar"
                             :class="{'nav-avatar-open': accDrop}"
                             v-if="loggedUser">
@@ -163,23 +145,11 @@ const logout = () => {
                 <AccDrop v-if="accDrop" :user="userStore.getUser()" @logout="logout"></AccDrop>
             </div>
         </nav>
-
-        <!-- <div class="bread-disappear">
-            <div class="bread">
-                <Breadcrumb :model="routeHistory" class="bread" />
-            </div>
-        </div> -->
     </div>
     <p></p>
 </template>
 
 <style scoped>
-/* *{
-  font-size: 62.5% !important;
-}
-.nav-main{
-    font-size: 62.5% !important;
-} */
 .navbar {
     height: 40px;
     width: 100%;
@@ -217,15 +187,6 @@ const logout = () => {
 
 .login-drop,
 .acc-drop {
-    /* position: absolute;
-    top: 3rem;
-    right: -4rem;
-    background-color: #636e72;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    border: 1px solid white;
-    gap: 0.5rem; */
     z-index: 2;
 }
 
@@ -258,7 +219,6 @@ const logout = () => {
 .links a.router-link-active {
     color: var(--accent-yellow);
     text-decoration: underline;
-    /* text-decoration-line: underline; */
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
 }
@@ -282,9 +242,6 @@ const logout = () => {
     display: flex;
     flex-direction: row-reverse;
     overflow-x: auto;
-    /* justify-content: center; */
-    /* justify-self: start; */
-    /* transform: translate(-50%); */
 }
 .nav-main {
     display: flex;
@@ -293,7 +250,6 @@ const logout = () => {
 }
 .bread-disappear {
     width: 100%;
-    /* transform: translate(-50%); */
     display: flex;
     justify-content: flex-start;
 }
@@ -303,12 +259,10 @@ const logout = () => {
     width: 34px;
     border-radius: 50%;
 }
-
 .nav-avatar-open{
     padding: 2px;
     border: 2px solid var(--almost-white);
 }
-
 .nav-drop{
   display: none;
   position: relative;
@@ -316,15 +270,12 @@ const logout = () => {
   z-index: 2;
 }
 .nav-burger{
-  /* height: 4rem;
-  width: 4rem; */
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 3.5rem;
   color: var(--almost-white);
 }
-
 .drop-links{
   position: absolute;
   top: 40px;
@@ -344,7 +295,6 @@ const logout = () => {
 .drop-open{
   border-radius: 5px;
   border: 2px solid var(--almost-white);
-  /* color: var(--accent-yellow); */
 }
 
 @media (max-width: 768px){
@@ -355,7 +305,6 @@ const logout = () => {
     display: none;
   }
   .side{
-
   }
 }
 

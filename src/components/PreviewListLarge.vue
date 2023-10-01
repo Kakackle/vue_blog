@@ -68,7 +68,6 @@ const updateLikedNew = async function(){
         success.value = `updated likes, ${res.status}, ${res.statusText}`;
         toast.success(success.value);
         emit('refresh');
-        // comment.value.liked_by = res.data.liked_by;
     })
     .catch((err)=>{
         console.log(err);
@@ -85,13 +84,6 @@ const post_liked = computed(()=>{
     else return false;
 })
 
-// const post_liked = ()=>{
-//     if(loggedUser.value && user.value)
-//     return loggedUser.value.slug === user.value.slug;
-//     else return false;
-// }
-
-
 // Try using markdown in preview
 import { marked } from "marked";
 const compiledMarkdown = computed(() => {
@@ -100,7 +92,6 @@ const compiledMarkdown = computed(() => {
     headerIds: false,
   }));
 });
-
 
 </script>
 
@@ -114,10 +105,8 @@ const compiledMarkdown = computed(() => {
         <div class="top">
             <div class="top-left">
                 <p class="title">{{ post.title }}</p>
-                <!-- <p v-if=post_liked>Post liked</p> -->
             </div>
             <div class="top-right">
-                <!-- <p class="post_id">id: {{ post.id }}</p> -->
                 <p class="likes">
                     <ion-icon class="like-icon hover" name="thumbs-up-sharp"
                     @click="updateLikedNew()"
@@ -142,7 +131,6 @@ const compiledMarkdown = computed(() => {
                 @click="router.push({name: 'user', params: {user_slug: user.slug}})"
             >{{ user.name }}</p>
             <div class="content prose" v-html="compiledMarkdown"></div>
-            <!-- <p class="content">{{ post.content.slice(0,250) }}...</p> -->
         </div>
     </div>
 
@@ -155,13 +143,9 @@ const compiledMarkdown = computed(() => {
 
 <style scoped>
 .list-preview{
-    /* width: 900px; */
     width: clamp(500px, 100%, 900px);
-    /* height: 10rem; */
     height: 220px;
     padding: 1rem;
-    /* box-shadow: 0px 5px 12px rgba(0,0,0,0.15); */
-    /* border-radius: 0.5rem; */
     display: flex;
     position: relative;
     border-bottom: 8px solid var(--dark-gray);
@@ -171,7 +155,6 @@ const compiledMarkdown = computed(() => {
 
 .left{
     display: flex;
-    /* align-items: center; */
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
@@ -188,7 +171,6 @@ const compiledMarkdown = computed(() => {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    /* padding-bottom: 20px; */
     overflow: hidden;
 }
 
@@ -231,7 +213,6 @@ const compiledMarkdown = computed(() => {
     font-size: 1.5rem;
     color: var(--dark-gray);
     visibility: visible;
-    /* right: 3rem; */
 }
 
 .post-liked{
@@ -248,8 +229,6 @@ const compiledMarkdown = computed(() => {
 
 .title{
     font-size: 2.4rem;
-    /* border-bottom: 2px solid black; */
-    /* width: 100%; */
 }
 .author{
     font-size: 1.5rem;
@@ -264,7 +243,6 @@ const compiledMarkdown = computed(() => {
 .content{
     margin-top: 10px;
     font-size: 1.2rem;
-    /* min-width: 500px; */
     max-width: 700px;
 }
 

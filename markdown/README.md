@@ -1,6 +1,12 @@
 # vue_blog
 
-This template should help get you started developing with Vue 3 in Vite.
+Front end part of the Blog PRoject built in Vue, consuming requests to API endpoints built in Django as seen in [Django blog](https://github.com/Kakackle/django_blog)
+
+For ease of use all endpoints are prepended by setting default base url of all axios requests in app's config main.js file
+
+current api path: https://web-production-4c6b.up.railway.app/api/
+
+deploy: https://vue-blog-front.netlify.app/
 
 ## Recommended IDE Setup
 

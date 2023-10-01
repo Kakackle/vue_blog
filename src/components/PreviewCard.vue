@@ -47,7 +47,6 @@ getAuthor();
             <p class="date">{{ post.date_posted }}</p>
         </div>
 
-        <!-- <p class="post_id">{{ post.id }}</p> -->
         <ion-icon class="arr-icon hover" name="arrow-forward-outline"
             @click="router.push({name: 'post', params:{post_slug : post.slug}})"
         ></ion-icon>
@@ -57,15 +56,10 @@ getAuthor();
 <style scoped>
 .card-preview{
     width: 360px;
-    /* height: 100%; */
-    /* box-shadow: 0px 5px 12px rgba(0,0,0,0.10); */
-    /* border-radius: 5px; */
     display: flex;
     flex-direction: column;
     position: relative;
     flex-shrink: 0;
-    /* flex-grow: 1; */
-    /* flex: 1; */
 }
 .top, .card-img{
     width: 100%;
@@ -75,14 +69,12 @@ getAuthor();
 .bottom{
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     font-size: 2rem;
     position: relative;
     padding: 1rem;
 }
 .tags{
     display: flex;
-    /* color: #636e72cc; */
     font-size: 1.2rem;
     gap: 1rem;
 }
@@ -93,7 +85,6 @@ getAuthor();
 
 .title{
     font-size: 2rem;
-    /* width: 100%; */
 }
 .author{
     font-size: 1.2rem;

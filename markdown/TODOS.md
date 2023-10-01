@@ -1,5 +1,14 @@
 # Nowe funkcjonalnosci
+TODO: [Footer.vue] - uzupelnic linki do social media itd, ale to jak juz bedzie wszystko
 
+TODO: [Nav.vue] - rozwiaz ten error z awatarem bo wnerwia ?
+
+TODO: jakos w home ze jesli nie ma zadnych postow do "no posts to display"?
+
+FIXME: [axiosComposables] - getDataWithSuccess - nonfunctioning rn
+
+FIXME: bardzo specyficzny blad - przechodzac tylko i wylacznie od user/costam do home
+albo gdziekolwiek, transition sie nie konczy, przez co nic sie nie wyswietla 
 
 8. OPTIONAL: [Django] jakos zamienic to query na lepszy system filtracji/searchu,
    bo na pewno są, aktualnie jest dosyc kaleki

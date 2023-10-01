@@ -24,7 +24,6 @@ const emitRegister = () =>{
         <div class="login-div">
             <span class="login-text">Log into your account</span>
             <div class="input-div">
-                <!-- <ion-icon name="key-outline" class="login-input"></ion-icon> -->
                 <ion-icon name="person-outline" class="login-icon"></ion-icon>
                 <input type="text" placeholder="admin" class="login-input"
                 v-model="username">
@@ -93,18 +92,15 @@ const emitRegister = () =>{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* align-items: center; */
     margin-top: 0.5rem;
     width: 100%;
     font-size: 2rem;
-    /* gap: 1rem; */
 }
 .login-button{
     background-color: var(--dark-gray);
     color: var(--almost-white);
     width: 90%;
     align-self: center;
-    /* padding: 2px 4px; */
 }
 .register-button{
     font-size: 1rem;

@@ -30,15 +30,6 @@ const router = createRouter({
         title: "About",
       },
     },
-    // {
-    //   path: "/blog",
-    //   name: "blog",
-    //   component: BlogView,
-    //   meta: {
-    //     desc: "Blog view with posts displayed in multiple forms and side filtering",
-    //     title: "Blog",
-    //   },
-    // },
     ...userRoutes,
     ...postRoutes,
     ...tagRoutes,

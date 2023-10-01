@@ -53,8 +53,6 @@ const updateLiked = async function(){
     }
     if(post.liked_by.filter((slug)=>{ return slug === loggedUser.value.slug}).length === 0){
         console.log(`logged user not in liked_by`);
-        // liked_by.value.push(post.liked_by);
-        // liked_by.value.push(new_liked_by.value.slug);
         post.liked_by.push(new_liked_by.value.slug);
 
         axios.patch(`posts/${post.slug}`, {
@@ -119,7 +117,6 @@ const updateLiked = async function(){
 <style scoped>
 .list-preview{
     width: 95%;
-    /* height: 10rem; */
     padding: 1rem;
     box-shadow: 0px 5px 12px rgba(0,0,0,0.15);
     border-radius: 0.5rem;
@@ -144,7 +141,6 @@ const updateLiked = async function(){
 .title{
     font-size: 2.4rem;
     border-bottom: 2px solid black;
-    /* width: 100%; */
 }
 .author{
     font-size: 1.5rem;

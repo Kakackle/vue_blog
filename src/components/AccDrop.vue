@@ -1,7 +1,6 @@
 <!-- 
     Component for displaying the dropdown of either login/acc or register
     forms depending on user loggedIn state
-    [To be used or deleted]
  -->
 <script setup>
 import {ref} from "vue";
@@ -54,7 +53,6 @@ const goToProfile = () =>{
     padding: 10px;
     border: 1px solid var(--mid-gray);
     gap: 5px;
-    /* font-size: 2rem; */
     width: 220px;
 }
 .av-img{

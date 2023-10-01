@@ -49,7 +49,6 @@ position: "bottom-right",
 }
 
 const app = createApp(App)
-// app.config.compilerOptions.isCustomElement = tag => tag.startsWith('ion-');
 app.use(router)
 app.use(createPinia())
 app.use(Toast, options)

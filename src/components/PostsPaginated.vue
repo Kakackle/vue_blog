@@ -18,13 +18,9 @@
 import { nextTick, ref, watch } from 'vue';
 import PreviewList from './PreviewList.vue';
 import PreviewListLarge from './PreviewListLarge.vue'
-// import { getDataFromLink } from "../composables/axiosComposables";
 import axios from 'axios';
 
-// const props = defineProps(['posts', 'pages', 'type', 'page_sizes']);
 const props = defineProps({
-    // posts:{},
-    // pages:{},
     type:{
         type: String,
         default: "small"
@@ -50,10 +46,8 @@ const query_string = ref(props.query_string);
 //pelny query zawierajacy takze page oraz page_size
 const full_query = ref(query_string.value);
 
-// const emit = defineEmits(['set_page_size'])
 const set_page_size = async function(size){
     selected_size.value = size;
-    // query_string.value += `?page_size=${size}`;
     let full_query = query_string.value + `&page_size=${size}`;
     posts.value = [];
     pages.value = [];
@@ -62,7 +56,6 @@ const set_page_size = async function(size){
 
 const set_order = async function(order){
     selected_order.value = order;
-    // query_string.value += `?page_size=${size}`;
     let full_query = query_string.value + `&ordering=${order}`;
     posts.value = [];
     pages.value = [];
@@ -92,22 +85,12 @@ const getPostsByPage = async function(link, page_id){
     selectedPage.value = page_id;
 }
 
-// getPostsByPage('posts/', selectedPage.value);
 getPosts(query_string.value);
-
-
-// tutaj poki co zrobie watchem wykrywanie zmiany zalogowanego uzytkownika
-// i uzasadnie renderowanie calosci od tej wartosci, co powinno rerenderowac
-// cale postspaginated, bez zadnego dodatkowego pobierania
-// ALE problem z tym moze byc taki, ze musze to zrobic tutaj oraz np. w filtrach
-// w celu filtracji po aktualnie zalogowanym uzytkowniku itd
-// i czy zamiast w wielu miejscach nie mozna by tego zrobic gdzies wyzej typu blog view
 
 import { useUserStore } from '../stores/user';
 import { storeToRefs } from 'pinia';
 const userStore = useUserStore();
 const {loggedUser} = storeToRefs(userStore);
-// const current_user = ref()
 
 </script>
 
@@ -119,8 +102,6 @@ const {loggedUser} = storeToRefs(userStore);
                 @click="set_page_size(size)"
                 :class="(selected_size === page_sizes[size_id])? 'selected' : 'normal'"
             >{{size}}</p>
-            <!-- <p>selected: {{ selected_size }}</p>
-            <p>size_id: {{ page_sizes[size_id] }}</p> --> 
             </div>
             
             <div class="page_size order">
@@ -128,8 +109,6 @@ const {loggedUser} = storeToRefs(userStore);
                 @click="set_order(order)"
                 :class="(selected_order === page_orders[order_id])? 'selected' : 'normal'"
             >{{order}}</p>
-            <!-- <p>selected: {{ selected_size }}</p>
-            <p>size_id: {{ page_sizes[size_id] }}</p> -->
             </div>
         </div>
         <div clas="post-list" v-if="posts.length != 0">
@@ -157,14 +136,11 @@ const {loggedUser} = storeToRefs(userStore);
     display: flex;
     gap: 2rem;
     align-self: end;
-    /* transform: translateX(-4rem); */
-    /* font-size: 2rem; */
 }
 .page_size{
   display: flex;
   gap: 1rem;
   font-size: 2rem;
-  /* right: 1rem; */
   align-self: end;
   transform: translateX(-4rem);
 }
@@ -205,6 +181,5 @@ const {loggedUser} = storeToRefs(userStore);
     font-size: 2.5rem;
     color: var(--dark-gray);
     padding: 20px;
-    /* margin: 0 auto; */
 }
 </style>

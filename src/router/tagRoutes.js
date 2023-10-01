@@ -18,10 +18,4 @@ export default [
         desc: 'Tag/category list view',
         title: 'Tag List'}
       },
-      // {
-    //   path: `/tag/:tag_id(//d+)`,
-    //   name: 'tag_id',
-    //   component: TagView
-    //   meta: {desc: 'Makes no sense, would need a component that accepts both slug and id'}
-    // }
 ]

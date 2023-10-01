@@ -44,10 +44,8 @@ main{
     background-color: var(--dark-gray);
     color: var(--almost-white);
     font-size: 3rem;
-    /* font-weight: 500; */
     height: 30px;
     padding: 2px 10px;
-    /* text-transform: uppercase; */
     display: flex;
     gap: 5px;
     align-items: center;
@@ -60,7 +58,6 @@ main{
 }
 
 .is-open{
-    /* border: 2px solid var(--almost-white); */
     text-decoration: underline;
     text-decoration-thickness: 2px;
 }
@@ -68,9 +65,7 @@ main{
 .dropdown{
     position: absolute;
     top: 40px;
-    /* left: 0px; */
     background-color: var(--dark-gray);
-    /* width: 100px; */
     min-width: 100px;
     z-index: 2;
     border: 2px solid var(--mid-gray);
@@ -81,7 +76,6 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* padding: 10px 0px; */
     gap: 5px;
 }
 
@@ -100,11 +94,4 @@ main{
 .item:last-of-type{
     border-bottom: none;
 }
-
-/* .item:nth-of-type(2n+1){
-    
-} */
-
-
-
 </style>

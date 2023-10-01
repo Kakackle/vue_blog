@@ -1,17 +1,16 @@
 <script setup>
 import {ref, computed} from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 import { storeToRefs } from 'pinia';
+const router = useRouter();
 const userStore = useUserStore();
 const {loggedUser} = storeToRefs(userStore);
 const props = defineProps(['comment']);
 const comment = ref(props.comment);
 const displayReply = ref(0);
 const displayEdit = ref(0);
-
-// dodac linki to autora etc
-// i chyba tego czescia bedzie obsluga odpowiedzi i edycji i lajkow
 
 const emit = defineEmits(['refresh']);
 
@@ -130,7 +129,6 @@ const updateLikedNew = async function(){
         success.value = `updated likes, ${res.status}, ${res.statusText}`;
         toast.success(success.value);
         emit('refresh');
-        // comment.value.liked_by = res.data.liked_by;
     })
     .catch((err)=>{
         console.log(err);
@@ -157,13 +155,11 @@ const deleteComment = async function(){
     <div class="comment-main">
         <div class="top">
             <div class="top-left">
-                <p class="author">{{ comment.author }}</p>
-                <!-- <p>-</p> -->
+                <p class="author" @click="router.push({name: 'user', params: {user_slug: comment.author}})"
+                >{{ comment.author }}</p>
                 <p class="date">{{ comment.date_posted }}</p>
-                <!-- <p>-</p> -->
             </div>
             <div class="top-right">
-                <!-- <p>-</p> -->
                 <div class="likes">
                     <ion-icon class="like-icon hover" name="thumbs-up-sharp"
                     @click="updateLikedNew()"
@@ -211,11 +207,7 @@ const deleteComment = async function(){
     display: flex;
     flex-direction: column;
     flex-shrink: 1;
-    /* position: relative; */
     gap: 5px;
-    /* padding: 0px 10px; */
-    /* width: 100%; */
-    /* max-width: 800px; */
     width: clamp(400px, 90vw, 1000px);
     flex-wrap: wrap;
 }
@@ -231,7 +223,6 @@ const deleteComment = async function(){
 }
 .top{
     display: flex;
-    /* gap: 1rem; */
     border-bottom: 2px solid var(--dark-gray);
     margin-bottom: 10px;
     justify-content: space-between;
@@ -297,7 +288,6 @@ const deleteComment = async function(){
     height: 50px;
 }
 .close-reply{
-    /* width: 60px; */
     background-color: var(--mid-gray);
     font-weight: 600;
     color: var(--almost-white);
@@ -308,9 +298,6 @@ const deleteComment = async function(){
     filter: brightness(0.5);
 }
 .reply{
-    /* position: absolute;s */
-    /* top: 20px; */
-    /* left: 10px; */
     transform: translateX(20px);
 }
 
@@ -322,9 +309,4 @@ const deleteComment = async function(){
     align-items: center;
     font-size: 1.5rem;
 }
-
-/* .hover:hover{
-    cursor: pointer;
-    filter: brightness(0.7);
-} */
 </style>

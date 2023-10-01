@@ -12,7 +12,6 @@ const image_paths = [
 const num_of_images = image_paths.length;
 const image_path = ref(base_image_path + image_paths[0]);
 const image_url = ref(`url(${image_path.value})`);
-// const image_url = ref(getImageUrl(image_path));
 
 //funkcja aktualizujaca licznik liczbowo
 const update_index = function(){
@@ -25,8 +24,6 @@ const update_index = function(){
 const change_path = function(index) {
     image_path.value = base_image_path + image_paths[index];
     image_url.value = `url(${image_path.value})`;
-    // image_url.value = getImageUrl(image_path);
-    // console.log(`banner_index: ${banner_index}, new image path: ${image_path.value}`);
 }
 let bannerInterval = setInterval(update_index, 5000);
 
@@ -41,19 +38,7 @@ const changeBanner = function(index){
 </script>
 
 <template>
-    <!-- <main class="hero" :style="{backgroundImage: image_url}"> -->
     <main class="hero">
-        <!-- <img :src=image_path class="banner"> -->
-        <!-- <img class="banner" :src=image_path> -->
-
-        <!-- <transition name="fade" mode="out-in"> -->
-        
-        <!-- <div class="banner">
-        <img class="banner" v-for="(img_path, index) in image_paths"
-            :src=base_image_path+img_path
-            v-if="index===banner_index">
-        </div> -->
-
         <transition name="fade" mode="out-in">
             <div class="banner-wrapper" :key=banner_index>
                 <img class="banner" :src=image_path>
@@ -64,33 +49,19 @@ const changeBanner = function(index){
                 </div>
             </div>
         </transition>
-
-        
-        
     </main>
 </template>
 
 <style scoped>
-/* #a29bfe */
 *{
   font-size: 62.5%;
 }
 .hero{
     width: 100vw;
-    /* height: 800px; */
-    /* background-size: cover; */
-    /* background-repeat: no-repeat; */
-    /* -webkit-transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out; */
-    /* margin: 0 auto; */
 }
 .banner-wrapper{
-    /* max-width: 100%; */
-    /* max-width: var(--max-page-width); */
     width: clamp(400px, 100%, var(--max-page-width));
     position: relative;
-    /* max-height: 600px; */
     margin: 0 auto;
 }
 
@@ -108,7 +79,6 @@ const changeBanner = function(index){
     border-radius: 50%;
     background-color: var(--almost-white-opacity)
 }
-
 .active{
     background-color: var(--accent-yellow);
 }

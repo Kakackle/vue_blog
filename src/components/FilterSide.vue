@@ -95,7 +95,6 @@ const get_query_string = function(tags, users, search){
     }
     console.log(`own.value: ${own.value}`);
     if(own.value){
-        // console.log(`own logged: ${loggedUser.value.slug}`);
         if(loggedUser.value){
             query_string += `&own=${loggedUser.value.slug}`;
         }
@@ -118,10 +117,7 @@ const get_query_string = function(tags, users, search){
     console.log(`resulting filter query: ${query_string}`);
     return query_string
 }
-
-// emity
-
-// const emit = defineEmits(['filterBox', 'filterTerm'])
+// emits
 const emit = defineEmits(['filterQuery'])
 
 const emitQuery = async () =>{
@@ -196,13 +192,6 @@ const specials = [
         </div>
         <!-- specjalne -->
         <div class="boxes boxes-special" v-if="specials.length">
-            <!-- <div v-for="(spec, spec_id) in specials" class="box">    
-                <input type="checkbox" :id=spec_id name="tag-box"
-                    class="tag-box hover"
-                    :value=spec v-model="checkedSpecial"
-                    @change="emitQuery">
-                <label :for=spec_id>{{ spec }}</label>
-            </div>  -->
             <div class="box">
                 <input type="checkbox" id="liked_by" class="tag-box hover"
                     v-model="liked_by"
@@ -235,7 +224,6 @@ const specials = [
 <style scoped>
 .side-div{
     background-color: var(--almost-white);
-    /* box-shadow: 0px 5px 10px rgba(0,0,0,0.15); */
     height: 100%;
     width: 100%;
     flex-direction: column;
@@ -254,8 +242,6 @@ const specials = [
 }
 .boxes{
     width: 90%;
-    /* box-shadow: 0px 5px 10px rgba(0,0,0,0.15); */
-    /* padding: 1rem; */
     height: 120px;
     overflow-y: auto;
     display: flex;

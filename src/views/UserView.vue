@@ -50,9 +50,6 @@ const getUser = function(slug){
         user.value = res.data;
         userExists.value = 1;
     })
-    // .then(()=>{
-    //     getPosts(`posts/?author=${user_slug}`);
-    // })
     .catch((error)=>{
         userExists.value = 0;
         errorMsg.value = error;
@@ -160,7 +157,6 @@ const getFollowedUsers = function(){
     .then((res)=>{
         followed_users.value = res.data.followed;
         console.log(`value: ${JSON.stringify(followed_users.value)}`)
-        // console.log(res);
     })
     .then((res)=>{
         followed_users.value.forEach((user)=>{
@@ -271,7 +267,6 @@ watch(loggedUser, ()=>{
 </script>
 
 <template>
-    <!-- <main v-if="user_slug" :key="is_followed"> -->
     <main :key="user_slug">
         <GoBackButton></GoBackButton>
         <section class="main" v-if="userExists">
@@ -383,7 +378,6 @@ watch(loggedUser, ()=>{
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    /* margin-top: 50px; */
     margin: 50px auto;
     max-width: var(--max-page-width);
 }
@@ -403,7 +397,6 @@ watch(loggedUser, ()=>{
 .user-right{
     display: flex;
     flex-direction: column;
-    /* gap: 5px; */
     font-size: 2rem;
     color: var(--dark-gray);
 }
@@ -440,15 +433,6 @@ watch(loggedUser, ()=>{
     flex-wrap: wrap;
 }
 
-/* .user-info, .user-posts{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    flex-direction: column;
-    font-size: 2rem;
-} */
-
 /* -------------------------------------------------------------------------- */
 /*                               during editing                               */
 /* -------------------------------------------------------------------------- */
@@ -463,12 +447,7 @@ watch(loggedUser, ()=>{
     align-items: center;
     gap: 1rem;
     text-transform: capitalize;
-    /* font-size: 1.5rem; */
 }
-/* 
-.label-div-img{
-    flex-direction: column;
-} */
 
 .label-div label{
     font-size: 1.5rem;
@@ -500,16 +479,11 @@ watch(loggedUser, ()=>{
 
 .follow-button{
     font-size: 1.2rem;
-    /* height: 2.8rem; */
     width: 12rem;
     padding: 0 10px;
     border-radius: 25px;
 
 }
-
-/* .submit-button:hover{
-    text-decoration: underline;
-} */
 
 .success, .error{
     font-size: 2rem;
@@ -519,7 +493,6 @@ watch(loggedUser, ()=>{
 .error{
     color: red;
 }
-
 
 .post-sect{
     width: 100%;
@@ -538,7 +511,6 @@ watch(loggedUser, ()=>{
 .posts{
     max-width: 900px;
 }
-
 .tags, .followed{
     display: flex;
     flex-direction: column;
@@ -546,7 +518,6 @@ watch(loggedUser, ()=>{
     width: 100%;
     padding: 0 10px;
 }
-
 .tags-div{
     display: flex;
     gap: 5px;
@@ -561,7 +532,6 @@ watch(loggedUser, ()=>{
     border-radius: 50%;
     border: 4px solid var(--dark-gray);
 }
-
 .user-data, .user-data-list{
     width: 100%;
     padding: 10px;    
@@ -571,7 +541,6 @@ watch(loggedUser, ()=>{
     gap: 10px;
     font-size: 2rem;
 }
-
 .user-data{
     border-top: 4px dashed var(--dark-gray);
 }

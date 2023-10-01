@@ -16,7 +16,6 @@ const newAvatar = ref()
 const previewImage = ref()
 import GoBackButton from '../components/GoBackButton.vue';
 import axios from 'axios';
-// import router from '../router';
 import { useRouter } from 'vue-router';
 const router = useRouter()
 
@@ -103,7 +102,6 @@ const cleanInputs = async function(){
                 <label for="avatar">avatar:</label>
                 <input type="file" accept="image/jpeg, image/jpg,
                 image/png, image/gif" @change=uploadImage>
-                <!-- <input type="text" class="text-input" id="avatar" v-model="newAvatar"> -->
             </div>
             <div class="label-format">
                 <p>IMAGE PREVIEW:</p>
@@ -124,7 +122,6 @@ const cleanInputs = async function(){
     gap: 2rem;
     padding: 2rem;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.15);
-    /* width: 60%; */
 }
 .input-form{
     display: flex;
@@ -138,7 +135,6 @@ const cleanInputs = async function(){
     flex-direction: column;
     gap: 1rem;
     font-size: 2rem;
-    /* height: 1.5rem; */
     padding: 0;
 }
 .label-format{

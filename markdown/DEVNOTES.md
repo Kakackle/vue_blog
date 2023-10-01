@@ -1,7 +1,3 @@
-Tutaj Moze wgl dev notatnik, jakie wystapily problemy, jak zostaly rozwiazane itd.. teoretycznie kod powinien byc takim notatkiem ale jest jak jest czasami, szczegolnie po czasie
-
-TODO: moze jakis notatnik lekcji z realizacji tego projektu, bo w sumie nie bylo by malo a te dev notes takie hacky
-
 # Porzucone elementy
 1. JSDOC
 

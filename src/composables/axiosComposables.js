@@ -3,7 +3,6 @@ import axios from "axios";
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
-
 // po prostu pobieranie obiektu data z odpowiedzi
 export async function getDataFromLink(link) {
   const data = ref();
@@ -18,7 +17,6 @@ export async function getDataFromLink(link) {
   return data;
 }
 
-// FIXME: nonfunctioning rn
 export function getDataWithSuccess(link) {
   const data = ref();
   const success = ref(false);
@@ -38,7 +36,6 @@ export function getDataWithSuccess(link) {
     });
   
 }
-
 
 // konfiguracje pod uniwersalniejsza funkcje do requestow
 const getConfig = {

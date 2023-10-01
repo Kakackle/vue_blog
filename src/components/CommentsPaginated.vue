@@ -97,7 +97,6 @@ const addNewComment = async function(){
             <Comment :comment="comm" @refresh="refresh"
             v-if="!comm.parent"></Comment>
         </div>
-        <!-- <Comment v-for="(comm, comm_id) in comments" :comment="comm"></Comment> -->
         <!-- pages -->
         <div class="pages" v-if="pages">
             <p class="page" v-for="(page, page_id) in pages"
@@ -114,9 +113,6 @@ const addNewComment = async function(){
 .comments-main{
     padding: 0px 10px;
     max-width: var(--max-page-width);
-    /* margin: 0 auto; */
-    /* width: 100%; */
-    /* width: 100vw; */
     flex-shrink: 1;
     display: flex;
 }

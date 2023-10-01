@@ -421,7 +421,6 @@ const selectOpen = ref(0);
     </div>
     <section class="select-sect section-separator" v-if="selectOpen">
         <!-- wybor postu -->
-        <!-- <p class="title">SELECT A POST TO UPDATE:</p> -->
         <!-- PrimeVue -->
         <div class="select-cont">
             <div class="select-left">
@@ -478,13 +477,6 @@ const selectOpen = ref(0);
                         <label for="title">title:</label>
                         <input type="text" class="text-input" id="title" v-model="newTitle">
                     </div>
-                    <!-- author select -->
-                    <!-- <div class="form-label">
-                        <label for="author">author:</label>
-                        <select class="text-input" id="author" v-model="newAuthor">
-                            <option v-for="user in users" :value=user>{{ user.name }}</option>
-                        </select>
-                    </div> -->
                     <!-- tags select -->
                     <div class="form-label">
                         <label for="tags">tags:</label>
@@ -552,8 +544,6 @@ const selectOpen = ref(0);
             </div>
             <!-- raport sukcesu dodania/edycji postu -->
             <p class="sub-title error" v-if="!loggedUser">You must first log in to be able to send POST/PATCH requests</p>
-            <!-- <p v-if="success" class="success">{{success}}</p>
-            <p v-if="error" class="error">{{error}}</p> -->
         </div>
 
         <!-- Post preview -->
@@ -624,7 +614,7 @@ const selectOpen = ref(0);
     <section class="extras-section section-separator">
         <div class="cheatsheet">
             <p class="title">SHORT MARKDOWN CHEATSHEET:</p>
-            <img src="../assets/images/markdown_cheatsheet.jpg">
+            <img src="/assets/images/markdown_cheatsheet.jpg">
         </div>
         <div class="useful">
                 <p class="title">OTHER USEFUL LINKS:</p>
@@ -697,26 +687,6 @@ const selectOpen = ref(0);
     color: var(--mid-light);
 }
 
-/* :deep(.p-component .p-autocomplete-items){
-    background-color: red;
-    font-size: 20px;
-} */
-
-/*
-
-:deep(.p-autocomplete-panel){
-    background-color: var(--almost-white);
-}
-
-:deep(.p-autocomplete-items){
-    font-size: 20px;
-    background-color: var(--almost-white);
-}
-
-:deep(.p-autocomplete-item){
-
-} */
-
 .filters div{
     font-size: 2rem;
     display: flex;
@@ -726,14 +696,11 @@ const selectOpen = ref(0);
 
 .post-selection{
     font-size: 1.8rem;
-    /* max-width: 200px; */
     width: 100%;
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
     gap: 5px;
     color: var(--dark-gray);
-    /* border: 2px dashed var(--mid-light); */
 }
 .post-selection p:nth-of-type(2n){
     background-color: var(--mid-lighter);
@@ -789,8 +756,6 @@ const selectOpen = ref(0);
 .select-open{
     visibility: visible;
     font-size: 2rem;
-    /* color: var(--accent-yellow); */
-    /* border-radius: 50%; */
     border-radius: 3px;
     border: 2px solid var(--dark-gray);
 }
@@ -805,12 +770,7 @@ const selectOpen = ref(0);
 /* -------------------------------------------------------------------------- */
 
 .post-columns{
-    /* max-width: var(--max-page-width); */
-    /* margin: 0 auto; */
     display: flex;
-    /* width: 100vw; */
-    /* width: 780px; */
-    /* border: 2px dashed var(--dark-gray); */
     flex-wrap: wrap;
 }
 .post-form{
@@ -818,13 +778,9 @@ const selectOpen = ref(0);
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
     gap: 20px;
     padding: 20px;
-    /* width: 760px;    */
-    /* width: 60%; */
     position: relative;
-    /* flex-shrink: 1; */
     width: clamp(400px, 100%, 650px);
     border-right: 6px solid var(--dark-gray);
 }
@@ -838,11 +794,7 @@ const selectOpen = ref(0);
 .form-inputs{
     display: flex;
     flex-direction: column;
-    /* justify-content: space-evenly; */
     gap: 10px;
-    /* font-size: 2rem; */
-    /* height: 1.5rem; */
-    /* padding: 0; */
 }
 .form-label{
     font-size: 2rem;
@@ -877,7 +829,6 @@ const selectOpen = ref(0);
 }
 
 .form-label textarea{
-    /* width: 100%; */
     font-size: 1.5rem;
     width: clamp(25rem, 100%, 50rem);
     height: 30rem;
@@ -894,8 +845,6 @@ const selectOpen = ref(0);
     border-radius: 3px;
     color: var(--almost-white);
     font-size: 1.5rem;
-    /* width: 28px;
-    height: 20px; */
     padding: 0 4px;
 }
 
@@ -909,12 +858,9 @@ const selectOpen = ref(0);
     color: var(--dark-gray);
     height: 35px;
     width: 50rem;
-    /* size: 60px; */
 }
 
 .preview-img{
-    /* max-height: 400px; */
-    /* max-width: 600px; */
     width: clamp(300px, 100%, 500px);
 }
 
@@ -938,8 +884,6 @@ const selectOpen = ref(0);
 
 .post-preview{
     padding: 10px;
-    /* position: absolute;
-    transform: translateX(780px); */
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -967,7 +911,6 @@ const selectOpen = ref(0);
 
 .preview-text{
     font-size: 1.2rem;
-    /* align-self: flex-start; */
 }
 
 /* -------------------------------------------------------------------------- */
@@ -983,13 +926,10 @@ const selectOpen = ref(0);
     border-top: 2px dashed var(--dark-gray);
 }
 .upload-grid{
-    /* display: grid;
-    grid-template-columns: 1fr 3fr 1fr; */
     align-self: flex-start;
     display: flex;
     justify-content: flex-start;
     gap: 20px;
-    /* align-items: center; */
 }
 
 #up-img{
@@ -997,14 +937,12 @@ const selectOpen = ref(0);
     color: var(--dark-gray);
     height: 35px;
     width: 25rem;
-    /* size: 60px; */
 }
 
 .upload-preview{
     height: 200px;
     width: 320px;
 }
-
 
 .img-name{
     display: flex;
@@ -1024,7 +962,6 @@ const selectOpen = ref(0);
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* border: 1px dashed rgba(0,0,0,0.5); */
     padding: 10px;
 }
 .uploaded-list{
@@ -1062,11 +999,9 @@ const selectOpen = ref(0);
 }
 
 .useful{
-    /* position: absolute; */
     display: flex;
     flex-direction: column;
     gap: 5px;
-    /* right: 2rem; */
     font-size: 2rem;
 }
 .cheatsheet{
@@ -1108,10 +1043,8 @@ const selectOpen = ref(0);
 /*                                   useful                                   */
 /* -------------------------------------------------------------------------- */
 .useful{
-    /* position: absolute; */
     display: flex;
     flex-direction: column;
-    /* right: 2rem; */
     font-size: 2rem;
 }
 .cheatsheet{
@@ -1121,11 +1054,3 @@ const selectOpen = ref(0);
 }
 
 </style>
-
-<!-- <style module>
-    .autocomp{
-        /* background-color: red; */
-        font-size: 1.5rem;
-
-    }
-</style> -->

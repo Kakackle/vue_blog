@@ -11,15 +11,6 @@ import axios from 'axios';
 const props = defineProps(['posts']);
 const posts = ref(props.posts);
 
-// const posts = ref()
-
-// const getPosts = function(){
-//   axios.get(`posts/`)
-//   .then((res)=>{
-//     posts.value = res.data.results;
-//   })
-// }
-// getPosts();
 </script>
 
 <template>
@@ -32,15 +23,9 @@ const posts = ref(props.posts);
 
 <style scoped>
 .sect{
-    /* width: 100vw; */
     width: 100%;
-    /* flex-grow: 0; */
-    /* flex-shrink: 1; */
-    /* padding: 2rem; */
 }
 .carousel{
-    /* width: 90%; */
-    /* max-width: var(--max-page-width); */
     margin: 0 auto;
     max-width: var(--max-page-width);
     display: flex;
@@ -49,6 +34,5 @@ const posts = ref(props.posts);
     gap: 20px;
     padding: 10px;
     overflow-x: scroll;
-    /* flex-grow: 0; */
 }
 </style>

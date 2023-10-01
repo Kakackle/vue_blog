@@ -1,4 +1,4 @@
-# Idk, zobaczymy czy okaze sie przydatne takie zapisywanie
+# Potencjalnie przydatna sciezka rozwiazywania problemow
 
 1. Mozliwosc dodawania ~~tagow~~ i userow [POST] (chodzi o czy beda problemy ze slug)
 4. Routowanie w vue po slugach do postow i uzytkownikow - ale duzo bedzie naprawiania

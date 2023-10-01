@@ -1,7 +1,5 @@
 <!-- 
     [So far] static banner element
-
-
  -->
 <script setup>
 
@@ -19,15 +17,10 @@
 </template>
 
 <style scoped>
-/* *{
-  font-size: 62.5%;
-} */
 .banner{
     background-color: black;
     height: 2rem;
     padding: 0 4rem;
-    /* display: flex; */
-    /* align-items: center; */
 }
 .banner-items{
     height: 100%;
